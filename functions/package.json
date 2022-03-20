@@ -2,7 +2,9 @@
   "name": "functions",
   "description": "Cloud Functions for Firebase",
   "scripts": {
-    "serve": "firebase emulators:start",
+    "start-clean": "npx kill-port --port 9099,5001,8181,5000,9199,4001,4500,4400,4001 && firebase emulators:start --import='./dev/firebase-emulator/' --export-on-exit='./dev/firebase-emulator/'",
+    "start-serve": "firebase emulators:start --import='./dev/firebase-emulator/' --export-on-exit='./dev/firebase-emulator/'",
+    "stop-serve": "npx kill-port --port 9099,5001,8181,5000,9199,4001,4500,4400,4001",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
