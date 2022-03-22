@@ -4,10 +4,15 @@ import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 
 function App() {
+  const runStartup = () => {
+    document.getElementById("video").requestPictureInPicture();
+  };
+
   return (
     <div>
-      <Button variant="contained" component={Link} to="/open-collective">
-        Hello World
+      <video id="video" controls src="video.mp4"></video>
+      <Button id="pipButton" variant="contained" onClick={() => runStartup()}>
+        Enter PiP
       </Button>
     </div>
   );
