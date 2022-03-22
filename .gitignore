@@ -24,3 +24,6 @@ yarn-error.log*
 
 # dev
 *.log
+/dev
+/dev_keys
+credentials.json
