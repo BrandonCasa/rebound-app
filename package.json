@@ -13,7 +13,7 @@
     "@testing-library/user-event": "^13.2.1",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
-    "firebase": "^9.6.8",
+    "firebase": "^9.6.9",
     "firebase-admin": "^10.0.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -22,6 +22,7 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
+    "em-clean": "cross-env GOOGLE_APPLICATION_CREDENTIALS=dev_keys/rebound-380d6-firebase-adminsdk-odnv5-fcff4d3bbd.json && npx kill-port --port 9099,5001,8181,5000,9199,4001,4500,4400,4001 && firebase emulators:start --import=dev/firebase-emulator/ --export-on-exit=dev/firebase-emulator/",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -46,6 +47,7 @@
     ]
   },
   "devDependencies": {
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "kill-port": "^1.6.1"
   }
 }

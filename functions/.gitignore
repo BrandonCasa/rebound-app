@@ -1,5 +1,1 @@
 node_modules/
-*.log
-/dev
-/dev_keys
-credentials.json
