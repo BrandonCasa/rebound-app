@@ -9,7 +9,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { BrowserRouter } from "react-router-dom";
 import Button from "@mui/material/Button";
-import { app, analytics, db, auth } from "./server/index";
+import "./server/index";
 
 ReactDOM.render(
   <React.StrictMode>

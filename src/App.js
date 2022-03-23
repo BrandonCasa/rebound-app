@@ -8,14 +8,34 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import { app, analytics, db, auth } from "./server/index";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import isDev from "./helpers/devDetect";
 
 function App() {
   const runStartup = () => {
     document.getElementById("video").requestPictureInPicture();
   };
 
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [currentUser, setCurrentUser] = React.useState(null);
+
+  const signInDev = () => {
+    if (isDev()) {
+      const config = require("./dev_config/config.js");
+      const auth = getAuth();
+      signInWithEmailAndPassword(auth, config.email, config.password);
+    }
+  };
+
+  React.useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user);
+      } else {
+        setCurrentUser(null);
+      }
+    });
+  }, []);
 
   return (
     <div>
@@ -27,6 +47,15 @@ function App() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Rebound
           </Typography>
+          {currentUser ? (
+            <Typography variant="h6" component="div">
+              {currentUser.uid}
+            </Typography>
+          ) : (
+            <Button color="inherit" onClick={signInDev}>
+              Login
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
       <video id="video" controls src="video.mp4"></video>
