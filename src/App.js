@@ -46,9 +46,9 @@ function App() {
   );
 
   return (
-    <div>
+    <div style={{ width: "100%", height: "100%", overflow: "hidden" }}>
       <ThemeProvider theme={theme}>
-        <div style={{ width: "100vw", height: "100vh", backgroundColor: theme.palette.background.default }}>
+        <div style={{ width: "100%", height: "100%", backgroundColor: theme.palette.background.default, overflow: "hidden" }}>
           <BrowserRouter>
             <AppBar position="static">
               <Toolbar variant="dense">
