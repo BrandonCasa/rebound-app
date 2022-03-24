@@ -1,20 +1,12 @@
-import * as React from "react";
-import ReactDOM from "react-dom";
-import { Link } from "react-router-dom";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
+import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import * as React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import LandingPage from "routes/Landing/Landing";
 import isDev from "./helpers/devDetect";
 
 function App() {
-  const runStartup = () => {
-    document.getElementById("video").requestPictureInPicture();
-  };
-
   const [currentUser, setCurrentUser] = React.useState(null);
 
   const signInDev = () => {
@@ -38,29 +30,30 @@ function App() {
 
   return (
     <div>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Rebound
-          </Typography>
-          {currentUser ? (
-            <Typography variant="h6" component="div">
-              {currentUser.uid}
+      <BrowserRouter>
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              Rebound
             </Typography>
-          ) : (
-            <Button color="inherit" onClick={signInDev}>
-              Login
-            </Button>
-          )}
-        </Toolbar>
-      </AppBar>
-      <video id="video" controls src="video.mp4"></video>
-      <Button id="pipButton" variant="contained" onClick={() => runStartup()}>
-        Enter PiP
-      </Button>
+            {currentUser ? (
+              <Typography variant="h6" component="div">
+                {currentUser.uid}
+              </Typography>
+            ) : (
+              <Button color="inherit" onClick={signInDev}>
+                Login
+              </Button>
+            )}
+          </Toolbar>
+        </AppBar>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
