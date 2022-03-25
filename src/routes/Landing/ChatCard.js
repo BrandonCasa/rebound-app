@@ -26,14 +26,14 @@ function ChatCard() {
     <Card sx={{ width: "20vw", minWidth: "200px", maxWidth: "300px" }}>
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: theme.palette.mode === "light" ? "cadetblue" : "teal" }}>
+          <Avatar sx={{ bgcolor: theme.palette.mode === "light" ? "cadetblue" : "#007878" }}>
             <IconSvgs.Chat sx={{ color: "white" }} />
           </Avatar>
         }
-        title="The Next Evolution of Text Chat"
-        subheader="Powerful tools made easy"
+        title="Text Chat"
+        subheader="Innovative messaging"
       />
-      <CardMedia component="img" image="/TextChat.png" alt="Chat" sx={{ height: "58.72%", width: "65%", margin: "auto" }} />
+      <CardMedia component="img" image="/images/TextChat.png" alt="Chat" sx={{ height: "65%", width: "65%", margin: "auto" }} />
       <br />
       <Divider variant="middle" />
       <CardActions disableSpacing>

@@ -2,6 +2,8 @@ import { Divider, Paper, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import * as React from "react";
 import ChatCard from "./ChatCard";
+import CommunitiesCard from "./CommunitiesCard";
+import ThemeCard from "./ThemeCard";
 
 function LandingPage() {
   const theme = useTheme();
@@ -26,9 +28,15 @@ function LandingPage() {
           </Typography>
         </Paper>
       </div>
-      <div style={{ margin: "32px 16px", flexGrow: 1, justifyContent: "center", display: "flex" }}>
-        <div style={{ margin: "0px 16px" }}>
+      <div style={{ padding: "32px 16px", flexGrow: 1, justifyContent: "center", display: "inline-flex", flexWrap: "wrap", gap: "32px" }}>
+        <div>
           <ChatCard />
+        </div>
+        <div>
+          <CommunitiesCard />
+        </div>
+        <div>
+          <ThemeCard />
         </div>
       </div>
     </div>
