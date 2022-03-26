@@ -23,12 +23,12 @@ function LandingPage() {
             Introducing Rebound
           </Typography>
           <Divider variant="middle" />
-          <Typography variant="h3" fontWeight={400} fontSize="0.75vmax" component="div" textAlign={"center"} sx={{ flexGrow: 1, padding: "8px", color: "gray" }}>
+          <Typography variant="h3" fontWeight={400} fontSize="0.75vmax" component="div" textAlign={"center"} sx={{ flexGrow: 1, padding: "8px", color: "text.secondary" }}>
             Online communities have never been more streamlined.
           </Typography>
         </Paper>
       </div>
-      <div style={{ padding: "32px 16px", flexGrow: 1, justifyContent: "center", display: "inline-flex", flexWrap: "wrap", gap: "32px" }}>
+      <div style={{ padding: "0px 16px 32px 16px", width: "100%", justifyContent: "center", display: "inline-flex", flexWrap: "wrap", gap: "32px" }}>
         <div>
           <ChatCard />
         </div>
