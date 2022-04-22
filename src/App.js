@@ -102,7 +102,7 @@ function App() {
                       Settings
                     </Typography>
                     <div style={{ flexGrow: 1 }} />
-                    <IconButton sx={{ padding: "6px", margin: "-6px 0px" }}>
+                    <IconButton sx={{ padding: "6px", margin: "-6px 0px" }} onClick={() => setSettingsDrawer(false)}>
                       <IconSvgs.LastPage />
                     </IconButton>
                   </ListItem>
