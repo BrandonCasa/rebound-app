@@ -1,38 +1,19 @@
 import * as IconSvgs from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { AppBar, Box, Button, Divider, Drawer, IconButton, List, ListItem, ListItemText, ThemeProvider, ToggleButton, ToggleButtonGroup, Toolbar, Typography } from "@mui/material";
-import { createTheme, styled } from "@mui/material/styles";
+import { AppBar, Button, IconButton, ThemeProvider, Toolbar, Typography } from "@mui/material";
+import { createTheme } from "@mui/material/styles";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import getDesignTokens from "helpers/designTokens";
 import * as React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import SettingsDrawer from "routes/All/SettingsDrawer";
 import LandingPage from "routes/Landing/Landing";
 import isDev from "./helpers/devDetect";
 
-const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
-  "&": {
-    border: "1px solid #1f1f1f",
-    backgroundColor: theme.palette.background.paper,
-  },
-  "& .MuiToggleButtonGroup-grouped": {
-    margin: theme.spacing(0.5),
-    border: 0,
-    "&.Mui-disabled": {
-      border: 0,
-    },
-    "&:not(:first-of-type)": {
-      borderRadius: theme.shape.borderRadius,
-    },
-    "&:first-of-type": {
-      borderRadius: theme.shape.borderRadius,
-    },
-  },
-}));
-
 function App() {
   // Function State
-  const [currentUser, setCurrentUser] = React.useState(null);
-  const [settingsDrawer, setSettingsDrawer] = React.useState(false);
+  const [currentUser, setCurrentUser] = React.useState({});
+  const [settingsDrawerOpen, setSettingsDrawerOpen] = React.useState(false);
   const [mode, setMode] = React.useState("dark");
   const theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
 
@@ -89,49 +70,12 @@ function App() {
                     Login
                   </Button>
                 )}
-                <IconButton onClick={() => setSettingsDrawer(true)} sx={{ mr: "12px", ml: "12px", padding: "6px" }}>
+                <IconButton onClick={() => setSettingsDrawerOpen(true)} sx={{ mr: "12px", ml: "12px", padding: "6px" }}>
                   <IconSvgs.Settings sx={{ fontSize: 24 }} />
                 </IconButton>
               </Toolbar>
             </AppBar>
-            <Drawer anchor={"right"} open={settingsDrawer} onClose={() => setSettingsDrawer(false)}>
-              <Box sx={{ width: 350 }}>
-                <List disablePadding>
-                  <ListItem style={{ padding: "8px 12px" }}>
-                    <Typography variant="h5" fontWeight={200}>
-                      Settings
-                    </Typography>
-                    <div style={{ flexGrow: 1 }} />
-                    <IconButton sx={{ padding: "6px", margin: "-6px 0px" }} onClick={() => setSettingsDrawer(false)}>
-                      <IconSvgs.LastPage />
-                    </IconButton>
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <div style={{ width: "100%" }}>
-                      <ListItemText primary={"Theme"} sx={{ color: "text.secondary" }} />
-                      <StyledToggleButtonGroup value="dark" exclusive fullWidth>
-                        <ToggleButton value="dark">
-                          <IconSvgs.DarkMode />
-                          <span style={{ width: "6px" }} />
-                          Dark
-                        </ToggleButton>
-                        <ToggleButton value="system">
-                          <IconSvgs.SettingsBrightness />
-                          <span style={{ width: "6px" }} />
-                          System
-                        </ToggleButton>
-                        <ToggleButton value="light">
-                          <IconSvgs.LightMode />
-                          <span style={{ width: "6px" }} />
-                          Light
-                        </ToggleButton>
-                      </StyledToggleButtonGroup>
-                    </div>
-                  </ListItem>
-                </List>
-              </Box>
-            </Drawer>
+            <SettingsDrawer setCurrentUser={setCurrentUser} setSettingsDrawerOpen={setSettingsDrawerOpen} settingsDrawerOpen={settingsDrawerOpen} setMode={setMode} />
             <Routes>
               <Route path="/" element={<LandingPage />} />
             </Routes>

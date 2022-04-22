@@ -33,7 +33,7 @@ function CommunitiesCard() {
         title="Community"
         subheader="Groups built to scale"
       />
-      <CardMedia component="img" image="/images/Servers.png" alt="Chat" sx={{ height: "65%", width: "65%", margin: "auto" }} />
+      <CardMedia component="img" image="/images/Servers.png" alt="Chat" sx={{ margin: "auto" }} />
       <br />
       <Divider variant="middle" />
       <CardActions disableSpacing>

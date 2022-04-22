@@ -30,10 +30,10 @@ function ThemeCard() {
             <IconSvgs.Brush sx={{ color: "white" }} />
           </Avatar>
         }
-        title="Customizeable Theme"
-        subheader="Design your own theme"
+        title="Custom Themes"
+        subheader="Design your theme"
       />
-      <CardMedia component="img" image="/images/Theme.png" alt="Chat" sx={{ height: "65%", width: "65%", margin: "auto" }} />
+      <CardMedia component="img" image="/images/Theme.png" alt="Chat" sx={{ margin: "auto" }} />
       <br />
       <Divider variant="middle" />
       <CardActions disableSpacing>

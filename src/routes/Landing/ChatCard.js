@@ -33,7 +33,7 @@ function ChatCard() {
         title="Text Chat"
         subheader="Innovative messaging"
       />
-      <CardMedia component="img" image="/images/TextChat.png" alt="Chat" sx={{ height: "65%", width: "65%", margin: "auto" }} />
+      <CardMedia component="img" image="/images/TextChat.png" alt="Chat" sx={{ margin: "auto" }} />
       <br />
       <Divider variant="middle" />
       <CardActions disableSpacing>
