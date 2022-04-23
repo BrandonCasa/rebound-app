@@ -1,13 +1,16 @@
+// @ts-nocheck
 import * as IconSvgs from "@mui/icons-material";
 import { Box, Divider, Drawer, IconButton, List, ListItem, ListItemText, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import * as React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setMode } from "redux/Theme/theme.slice";
 import isDev from "../../helpers/devDetect";
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   "&": {
-    border: "1px solid #1f1f1f",
+    border: `2px solid ${theme.palette.text.primary}`,
     backgroundColor: theme.palette.background.paper,
   },
   "& .MuiToggleButtonGroup-grouped": {
@@ -26,6 +29,9 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
 }));
 
 function SettingsDrawer(props) {
+  const themeValue = useSelector((state) => state.theme.value);
+  const dispatch = useDispatch();
+
   // Function Methods
   const signInDev = () => {
     if (isDev()) {
@@ -47,16 +53,6 @@ function SettingsDrawer(props) {
     });
   }, []);
 
-  const colorMode = React.useMemo(
-    () => ({
-      // The dark mode switch would invoke this method
-      toggleColorMode: () => {
-        props.setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
-      },
-    }),
-    []
-  );
-
   return (
     <Drawer anchor={"right"} open={props.settingsDrawerOpen} onClose={() => props.setSettingsDrawerOpen(false)}>
       <Box sx={{ width: 350 }}>
@@ -74,7 +70,14 @@ function SettingsDrawer(props) {
           <ListItem>
             <div style={{ width: "100%" }}>
               <ListItemText primary={"Theme"} sx={{ color: "text.secondary" }} />
-              <StyledToggleButtonGroup value="dark" exclusive fullWidth>
+              <StyledToggleButtonGroup
+                value={themeValue}
+                exclusive
+                fullWidth
+                onChange={(event, newTheme) => {
+                  dispatch(setMode(newTheme));
+                }}
+              >
                 <ToggleButton value="dark">
                   <IconSvgs.DarkMode />
                   <span style={{ width: "6px" }} />
