@@ -75,18 +75,20 @@ function SettingsDrawer(props) {
                 exclusive
                 fullWidth
                 onChange={(event, newTheme) => {
-                  dispatch(setMode(newTheme));
+                  if (newTheme !== null) {
+                    dispatch(setMode(newTheme));
+                  }
                 }}
               >
-                <ToggleButton value="dark">
-                  <IconSvgs.DarkMode />
-                  <span style={{ width: "6px" }} />
-                  Dark
-                </ToggleButton>
                 <ToggleButton value="system">
                   <IconSvgs.SettingsBrightness />
                   <span style={{ width: "6px" }} />
                   System
+                </ToggleButton>
+                <ToggleButton value="dark">
+                  <IconSvgs.DarkMode />
+                  <span style={{ width: "6px" }} />
+                  Dark
                 </ToggleButton>
                 <ToggleButton value="light">
                   <IconSvgs.LightMode />
