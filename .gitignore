@@ -27,5 +27,5 @@ yarn-error.log*
 /dev
 /dev_keys
 credentials.json
-/src/dev_config/**
+/dev_config/**
 .firebase/**

@@ -2,7 +2,7 @@
 import * as IconSvgs from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { AppBar, Button, IconButton, ThemeProvider, Toolbar, Typography } from "@mui/material";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -17,11 +17,62 @@ function App() {
   const themeActual = useSelector((state) => state.theme.actualTheme);
 
   // Function Methods
-  const signInDev = () => {
+  const signIn = () => {
     if (isDev()) {
-      const config = require("./dev_config/config.js");
+      const config = require("../dev_config/config.js");
       const auth = getAuth();
-      signInWithEmailAndPassword(auth, config.email, config.password);
+      if (config.provider === "google") {
+        const auth = getAuth();
+        const provider = new GoogleAuthProvider();
+        provider.addScope("email");
+        signInWithPopup(auth, provider)
+          .then((result) => {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+            // The signed-in user info.
+            const user = result.user;
+            // ...
+          })
+          .catch((error) => {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.error(errorCode, errorMessage);
+            // The email of the user's account used.
+            const email = error.email;
+            // The AuthCredential type that was used.
+            const credential = GoogleAuthProvider.credentialFromError(error);
+            // ...
+          });
+      } else if (config.provider === "email") {
+        signInWithEmailAndPassword(auth, config.email, config.password);
+      }
+    } else {
+      const auth = getAuth();
+      const provider = new GoogleAuthProvider();
+      provider.addScope("profile");
+      provider.addScope("email");
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          const token = credential.accessToken;
+          // The signed-in user info.
+          const user = result.user;
+          // ...
+        })
+        .catch((error) => {
+          // Handle Errors here.
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.error(errorCode, errorMessage);
+          // The email of the user's account used.
+          const email = error.email;
+          // The AuthCredential type that was used.
+          const credential = GoogleAuthProvider.credentialFromError(error);
+          // ...
+        });
     }
   };
 
@@ -54,8 +105,8 @@ function App() {
                     {currentUser.uid}
                   </Typography>
                 ) : (
-                  <Button variant="contained" onClick={signInDev}>
-                    Login
+                  <Button variant="contained" onClick={signIn}>
+                    Sign In
                   </Button>
                 )}
                 <IconButton onClick={() => setSettingsDrawerOpen(true)} sx={{ mr: "12px", ml: "12px", padding: "6px" }}>
