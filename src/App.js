@@ -1,8 +1,8 @@
 // @ts-nocheck
 import * as IconSvgs from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { AppBar, Button, IconButton, ThemeProvider, Toolbar, Typography } from "@mui/material";
-import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { AppBar, Avatar, Button, IconButton, ThemeProvider, Toolbar, Typography } from "@mui/material";
+import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "firebase/auth";
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -17,62 +17,42 @@ function App() {
 
   // Function Methods
   const signIn = () => {
-    if (process.env.NODE_ENV !== "production") {
-      const config = require("../dev_config/config.js");
-      const auth = getAuth();
-      if (config.provider === "google") {
-        const auth = getAuth();
-        const provider = new GoogleAuthProvider();
-        provider.addScope("email");
-        signInWithPopup(auth, provider)
-          .then((result) => {
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            const credential = GoogleAuthProvider.credentialFromResult(result);
-            const token = credential.accessToken;
-            // The signed-in user info.
-            const user = result.user;
-            // ...
-          })
-          .catch((error) => {
-            // Handle Errors here.
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.error(errorCode, errorMessage);
-            // The email of the user's account used.
-            const email = error.email;
-            // The AuthCredential type that was used.
-            const credential = GoogleAuthProvider.credentialFromError(error);
-            // ...
-          });
-      } else if (config.provider === "email") {
-        signInWithEmailAndPassword(auth, config.email, config.password);
-      }
-    } else {
-      const auth = getAuth();
-      const provider = new GoogleAuthProvider();
-      provider.addScope("profile");
-      provider.addScope("email");
-      signInWithPopup(auth, provider)
-        .then((result) => {
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          const credential = GoogleAuthProvider.credentialFromResult(result);
-          const token = credential.accessToken;
-          // The signed-in user info.
-          const user = result.user;
-          // ...
-        })
-        .catch((error) => {
-          // Handle Errors here.
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.error(errorCode, errorMessage);
-          // The email of the user's account used.
-          const email = error.email;
-          // The AuthCredential type that was used.
-          const credential = GoogleAuthProvider.credentialFromError(error);
-          // ...
-        });
-    }
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    provider.addScope("profile");
+    provider.addScope("email");
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        // ...
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error(errorCode, errorMessage);
+        // The email of the user's account used.
+        const email = error.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
+  };
+  const signOut = () => {
+    const auth = getAuth();
+    auth
+      .signOut()
+      .then(() => {
+        // Sign-out successful.
+      })
+      .catch((error) => {
+        // An error happened.
+        console.error(error);
+      });
   };
 
   // Function Hooks
@@ -86,6 +66,7 @@ function App() {
       }
     });
   }, []);
+
   return (
     <div style={{ width: "100%", height: "100%", overflow: "hidden" }}>
       <ThemeProvider theme={{ ...themeActual }}>
@@ -100,9 +81,14 @@ function App() {
                   Rebound
                 </Typography>
                 {currentUser ? (
-                  <Typography variant="h6" component="div">
-                    {currentUser.uid}
-                  </Typography>
+                  <Avatar
+                    alt="Remy Sharp"
+                    src="/images/Avatar1.jpg"
+                    sx={{ width: 38, height: 38 }}
+                    onClick={() => {
+                      signOut();
+                    }}
+                  />
                 ) : (
                   <Button variant="contained" onClick={signIn}>
                     Sign In
