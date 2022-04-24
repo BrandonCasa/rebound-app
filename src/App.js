@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SettingsDrawer from "routes/Common/SettingsDrawer";
 import LandingPage from "routes/Landing/Landing";
-import isDev from "./helpers/devDetect";
 
 function App() {
   // Function State
@@ -18,7 +17,7 @@ function App() {
 
   // Function Methods
   const signIn = () => {
-    if (isDev()) {
+    if (process.env.NODE_ENV !== "production") {
       const config = require("../dev_config/config.js");
       const auth = getAuth();
       if (config.provider === "google") {
