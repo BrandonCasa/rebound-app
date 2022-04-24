@@ -1,45 +1,15 @@
 // @ts-nocheck
 import * as IconSvgs from "@mui/icons-material";
-import { Box, Divider, Drawer, IconButton, List, ListItem, ListItemText, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import { Box, Divider, Drawer, IconButton, List, ListItem, ListItemText, ToggleButton, Typography } from "@mui/material";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode } from "redux/Theme/theme.slice";
-import isDev from "../../helpers/devDetect";
-
-const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
-  "&": {
-    border: `2px solid ${theme.palette.text.primary}`,
-    backgroundColor: theme.palette.background.paper,
-  },
-  "& .MuiToggleButtonGroup-grouped": {
-    margin: theme.spacing(0.5),
-    border: 0,
-    "&.Mui-disabled": {
-      border: 0,
-    },
-    "&:not(:first-of-type)": {
-      borderRadius: theme.shape.borderRadius,
-    },
-    "&:first-of-type": {
-      borderRadius: theme.shape.borderRadius,
-    },
-  },
-}));
+import StyledToggleButtonGroup from "./StyledToggleButtonGroup.comp";
 
 function SettingsDrawer(props) {
   const themeValue = useSelector((state) => state.theme.value);
   const dispatch = useDispatch();
-
-  // Function Methods
-  const signInDev = () => {
-    if (isDev()) {
-      const config = require("../../dev_config/config.js");
-      const auth = getAuth();
-      signInWithEmailAndPassword(auth, config.email, config.password);
-    }
-  };
 
   // Function Hooks
   React.useEffect(() => {

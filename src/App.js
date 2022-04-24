@@ -51,10 +51,7 @@ function App() {
                 </Typography>
                 {currentUser ? (
                   <Typography variant="h6" component="div">
-                    {
-                      // @ts-ignore
-                      currentUser.uid
-                    }
+                    {currentUser.uid}
                   </Typography>
                 ) : (
                   <Button variant="contained" onClick={signInDev}>
