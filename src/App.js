@@ -6,6 +6,7 @@ import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import PageDrawer from "routes/Common/PageDrawer";
 import SettingsDrawer from "routes/Common/SettingsDrawer";
 import LandingPage from "routes/Landing/Landing";
 
@@ -13,6 +14,7 @@ function App() {
   // Function State
   const [currentUser, setCurrentUser] = React.useState({});
   const [settingsDrawerOpen, setSettingsDrawerOpen] = React.useState(false);
+  const [pageDrawerOpen, setPageDrawerOpen] = React.useState(false);
   const themeActual = useSelector((state) => state.theme.actualTheme);
 
   // Function Methods
@@ -74,7 +76,7 @@ function App() {
           <BrowserRouter>
             <AppBar position="static">
               <Toolbar variant="dense" disableGutters>
-                <IconButton edge="start" color="inherit" sx={{ ml: "12px", mr: "12px", padding: "6px" }}>
+                <IconButton onClick={() => setPageDrawerOpen(true)} edge="start" color="inherit" sx={{ ml: "12px", mr: "12px", padding: "6px" }}>
                   <MenuIcon />
                 </IconButton>
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -99,7 +101,8 @@ function App() {
                 </IconButton>
               </Toolbar>
             </AppBar>
-            <SettingsDrawer setCurrentUser={setCurrentUser} setSettingsDrawerOpen={setSettingsDrawerOpen} settingsDrawerOpen={settingsDrawerOpen} />
+            <PageDrawer setPageDrawerOpen={setPageDrawerOpen} pageDrawerOpen={pageDrawerOpen} />
+            <SettingsDrawer setSettingsDrawerOpen={setSettingsDrawerOpen} settingsDrawerOpen={settingsDrawerOpen} />
             <Routes>
               <Route path="/" element={<LandingPage />} />
             </Routes>

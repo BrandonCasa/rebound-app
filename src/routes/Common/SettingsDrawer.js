@@ -1,7 +1,6 @@
 // @ts-nocheck
 import * as IconSvgs from "@mui/icons-material";
 import { Box, Divider, Drawer, IconButton, List, ListItem, ListItemText, ToggleButton, Typography } from "@mui/material";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode } from "redux/Theme/theme.slice";
@@ -11,24 +10,12 @@ function SettingsDrawer(props) {
   const themeValue = useSelector((state) => state.theme.value);
   const dispatch = useDispatch();
 
-  // Function Hooks
-  React.useEffect(() => {
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        props.setCurrentUser(user);
-      } else {
-        props.setCurrentUser(null);
-      }
-    });
-  }, []);
-
   return (
     <Drawer anchor={"right"} open={props.settingsDrawerOpen} onClose={() => props.setSettingsDrawerOpen(false)}>
       <Box sx={{ width: 350 }}>
         <List disablePadding>
           <ListItem style={{ padding: "8px 12px" }}>
-            <Typography variant="h5" fontWeight={200}>
+            <Typography variant="h5" fontWeight={200} sx={{ ml: "12px" }}>
               Settings
             </Typography>
             <div style={{ flexGrow: 1 }} />
