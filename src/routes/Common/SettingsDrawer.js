@@ -7,7 +7,6 @@ import { setMode } from "redux/Theme/theme.slice";
 
 function SettingsDrawer(props) {
   const themeValue = useSelector((state) => state.theme.value);
-  const themeActual = useSelector((state) => state.theme.actualTheme);
   const dispatch = useDispatch();
 
   return (
