@@ -1,59 +1,56 @@
 // @ts-nocheck
 import * as IconSvgs from "@mui/icons-material";
-import { Box, Divider, Drawer, IconButton, List, ListItem, ListItemText, ToggleButton, Typography } from "@mui/material";
+import { Box, Drawer, IconButton, List, ListItem, ListItemText, ListSubheader, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode } from "redux/Theme/theme.slice";
-import StyledToggleButtonGroup from "./StyledToggleButtonGroup.comp";
 
 function SettingsDrawer(props) {
   const themeValue = useSelector((state) => state.theme.value);
+  const themeActual = useSelector((state) => state.theme.actualTheme);
   const dispatch = useDispatch();
 
   return (
     <Drawer anchor={"right"} open={props.settingsDrawerOpen} onClose={() => props.setSettingsDrawerOpen(false)}>
       <Box sx={{ width: 350 }}>
-        <List disablePadding>
-          <ListItem style={{ padding: "8px 12px" }}>
-            <Typography variant="h5" fontWeight={200} sx={{ ml: "12px" }}>
+        <List
+          sx={{ width: "100%" }}
+          subheader={
+            <ListSubheader component="div">
               Settings
-            </Typography>
-            <div style={{ flexGrow: 1 }} />
-            <IconButton sx={{ padding: "6px", margin: "-6px 0px" }} onClick={() => props.setSettingsDrawerOpen(false)}>
-              <IconSvgs.LastPage />
-            </IconButton>
-          </ListItem>
-          <Divider />
+              <IconButton sx={{ padding: "6px", margin: "6px 0px", float: "right", right: "-4px" }} onClick={() => props.setSettingsDrawerOpen(false)}>
+                <IconSvgs.LastPage />
+              </IconButton>
+            </ListSubheader>
+          }
+        >
           <ListItem>
-            <div style={{ width: "100%" }}>
-              <ListItemText primary={"Theme"} sx={{ color: "text.secondary" }} />
-              <StyledToggleButtonGroup
-                value={themeValue}
-                exclusive
-                fullWidth
-                onChange={(event, newTheme) => {
-                  if (newTheme !== null) {
-                    dispatch(setMode(newTheme));
-                  }
-                }}
-              >
-                <ToggleButton value="system">
-                  <IconSvgs.SettingsBrightness />
-                  <span style={{ width: "6px" }} />
-                  System
-                </ToggleButton>
-                <ToggleButton value="dark">
-                  <IconSvgs.DarkMode />
-                  <span style={{ width: "6px" }} />
-                  Dark
-                </ToggleButton>
-                <ToggleButton value="light">
-                  <IconSvgs.LightMode />
-                  <span style={{ width: "6px" }} />
-                  Light
-                </ToggleButton>
-              </StyledToggleButtonGroup>
-            </div>
+            <ListItemText primary="Theme" />
+          </ListItem>
+          <ListItem sx={{ pl: 4 }}>
+            <ToggleButtonGroup
+              value={themeValue}
+              fullWidth
+              exclusive
+              onChange={(event, newTheme) => {
+                if (newTheme !== null) {
+                  dispatch(setMode(newTheme));
+                }
+              }}
+            >
+              <ToggleButton value="system">
+                <IconSvgs.SettingsBrightness />
+                System
+              </ToggleButton>
+              <ToggleButton value="dark">
+                <IconSvgs.DarkMode />
+                Dark
+              </ToggleButton>
+              <ToggleButton value="light">
+                <IconSvgs.LightMode />
+                Light
+              </ToggleButton>
+            </ToggleButtonGroup>
           </ListItem>
         </List>
       </Box>
