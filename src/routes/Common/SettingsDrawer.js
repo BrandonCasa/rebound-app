@@ -1,6 +1,6 @@
 // @ts-nocheck
 import * as IconSvgs from "@mui/icons-material";
-import { Box, Drawer, IconButton, List, ListItem, ListItemText, ListSubheader, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { Box, Divider, Drawer, IconButton, List, ListItem, ListItemText, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode } from "redux/Theme/theme.slice";
@@ -12,21 +12,19 @@ function SettingsDrawer(props) {
   return (
     <Drawer anchor={"right"} open={props.settingsDrawerOpen} onClose={() => props.setSettingsDrawerOpen(false)}>
       <Box sx={{ width: 350 }}>
-        <List
-          sx={{ width: "100%" }}
-          subheader={
-            <ListSubheader component="div">
-              Settings
-              <IconButton sx={{ padding: "6px", margin: "6px 0px", float: "right", right: "-4px" }} onClick={() => props.setSettingsDrawerOpen(false)}>
-                <IconSvgs.LastPage />
-              </IconButton>
-            </ListSubheader>
-          }
-        >
+        <List sx={{ width: "100%" }}>
+          <ListItem sx={{ margin: "-16px 0px -8px 0px" }}>
+            <IconSvgs.Settings sx={{ fontSize: 32 }} />
+            <ListItemText primary="Settings" sx={{ pl: 2 }} />
+            <IconButton sx={{ padding: "6px", margin: "6px 0px", float: "right", right: "-4px" }} onClick={() => props.setSettingsDrawerOpen(false)}>
+              <IconSvgs.LastPage />
+            </IconButton>
+          </ListItem>
+          <Divider />
           <ListItem>
             <ListItemText primary="Theme" />
           </ListItem>
-          <ListItem sx={{ pl: 4 }}>
+          <ListItem>
             <ToggleButtonGroup
               value={themeValue}
               fullWidth
