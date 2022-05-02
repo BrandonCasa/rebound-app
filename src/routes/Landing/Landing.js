@@ -31,13 +31,13 @@ function LandingPage() {
       <Grid item xs={10} height="100%">
         <Paper elevation={2} sx={{ padding: 2, height: "80vh" }}>
           <Grid container spacing={2} justifyContent="center">
-            <Grid item md={3} sm={6}>
+            <Grid item md={4} sm={6} xs={12}>
               <ChatCard />
             </Grid>
-            <Grid item md={3} sm={6}>
+            <Grid item md={4} sm={6} xs={12}>
               <CommunitiesCard />
             </Grid>
-            <Grid item md={3} sm={6}>
+            <Grid item md={4} sm={6} xs={12}>
               <ThemeCard />
             </Grid>
           </Grid>
