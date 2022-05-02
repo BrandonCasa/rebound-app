@@ -1,5 +1,5 @@
 import * as IconSvgs from "@mui/icons-material";
-import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, Divider, IconButton, styled, Typography } from "@mui/material";
+import { Avatar, Card, CardActions, CardContent, CardHeader, Collapse, Divider, IconButton, styled, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import * as React from "react";
 
@@ -23,7 +23,7 @@ function ChatCard() {
   };
 
   return (
-    <Card sx={{ width: "20vw", minWidth: "200px", maxWidth: "300px" }}>
+    <Card sx={{ maxWidth: "100%" }}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: theme.palette.mode === "light" ? "cadetblue" : "#007878" }}>
@@ -33,9 +33,8 @@ function ChatCard() {
         title="Text Chat"
         subheader="Innovative messaging"
       />
-      <CardMedia component="img" image="/images/TextChat.png" alt="Chat" sx={{ margin: "auto" }} />
-      <br />
       <Divider variant="middle" />
+      <div style={{ height: "100%" }} />
       <CardActions disableSpacing>
         <ExpandMore expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
           <IconSvgs.ExpandMore />

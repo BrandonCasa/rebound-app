@@ -23,7 +23,7 @@ function ThemeCard() {
   };
 
   return (
-    <Card sx={{ width: "20vw", minWidth: "200px", maxWidth: "300px" }}>
+    <Card sx={{ maxWidth: "100%" }}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: theme.palette.mode === "light" ? "cadetblue" : "#00781e" }}>
@@ -33,9 +33,8 @@ function ThemeCard() {
         title="Custom Themes"
         subheader="Design your theme"
       />
-      <CardMedia component="img" image="/images/Theme.png" alt="Chat" sx={{ margin: "auto" }} />
-      <br />
       <Divider variant="middle" />
+      <div style={{ height: "100%" }} />
       <CardActions disableSpacing>
         <ExpandMore expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
           <IconSvgs.ExpandMore />

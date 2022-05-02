@@ -1,4 +1,4 @@
-import { Divider, Paper, Typography } from "@mui/material";
+import { Divider, Grid, Paper, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import * as React from "react";
 import ChatCard from "./ChatCard";
@@ -9,9 +9,9 @@ function LandingPage() {
   const theme = useTheme();
 
   return (
-    <div>
-      <div style={{ margin: "32px 35vw", flexGrow: 1, justifyContent: "center", display: "flex" }}>
-        <Paper elevation={3} sx={{ minWidth: "300px", width: "100%" }}>
+    <Grid container spacing={2} justifyContent="center" sx={{ padding: 2 }}>
+      <Grid item xs={6} md={4}>
+        <Paper elevation={1}>
           <Typography
             variant="h3"
             fontWeight={700}
@@ -27,19 +27,23 @@ function LandingPage() {
             Online communities have never been more streamlined.
           </Typography>
         </Paper>
-      </div>
-      <div style={{ padding: "0px 16px 32px 16px", width: "100%", justifyContent: "center", display: "inline-flex", flexWrap: "wrap", gap: "32px" }}>
-        <div>
-          <ChatCard />
-        </div>
-        <div>
-          <CommunitiesCard />
-        </div>
-        <div>
-          <ThemeCard />
-        </div>
-      </div>
-    </div>
+      </Grid>
+      <Grid item xs={10} height="100%">
+        <Paper elevation={2} sx={{ padding: 2, height: "80vh" }}>
+          <Grid container spacing={2} justifyContent="center">
+            <Grid item md={3} sm={6}>
+              <ChatCard />
+            </Grid>
+            <Grid item md={3} sm={6}>
+              <CommunitiesCard />
+            </Grid>
+            <Grid item md={3} sm={6}>
+              <ThemeCard />
+            </Grid>
+          </Grid>
+        </Paper>
+      </Grid>
+    </Grid>
   );
 }
 
