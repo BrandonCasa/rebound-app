@@ -32,7 +32,7 @@ function LandingPage() {
       </Grid>
       <Grid container spacing={2} justifyContent="center" sx={{ pt: 0, pl: 2, pr: 2, pb: 2, flexGrow: 1 }}>
         <Grid item xs={10} height="100%">
-          <Paper elevation={2} sx={{ padding: 2, minHeight: "75%", maxHeight: "auto" }}>
+          <Paper elevation={2} sx={{ padding: 2, minHeight: "25%", maxHeight: "auto" }}>
             <Grid container spacing={2} justifyContent="center">
               <Grid item md={4} sm={6} xs={12}>
                 <ChatCard />
