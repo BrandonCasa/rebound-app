@@ -34,7 +34,6 @@ function ChatCard() {
         subheader="Innovative messaging"
       />
       <Divider variant="middle" />
-      <div style={{ height: "100%" }} />
       <CardActions disableSpacing>
         <ExpandMore expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
           <IconSvgs.ExpandMore />

@@ -1,5 +1,5 @@
 import * as IconSvgs from "@mui/icons-material";
-import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, Divider, IconButton, styled, Typography } from "@mui/material";
+import { Avatar, Card, CardActions, CardContent, CardHeader, Collapse, Divider, IconButton, styled, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import * as React from "react";
 
@@ -34,7 +34,6 @@ function ThemeCard() {
         subheader="Design your theme"
       />
       <Divider variant="middle" />
-      <div style={{ height: "100%" }} />
       <CardActions disableSpacing>
         <ExpandMore expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
           <IconSvgs.ExpandMore />

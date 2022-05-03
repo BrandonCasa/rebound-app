@@ -34,7 +34,6 @@ function CommunitiesCard() {
         subheader="Groups built to scale"
       />
       <Divider variant="middle" />
-      <div style={{ height: "100%" }} />
       <CardActions disableSpacing>
         <ExpandMore expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
           <IconSvgs.ExpandMore />
