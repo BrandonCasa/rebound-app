@@ -1,7 +1,7 @@
 // @ts-nocheck
 import * as IconSvgs from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { AppBar, Avatar, Box, Button, IconButton, ThemeProvider, Toolbar, Typography } from "@mui/material";
+import { AppBar, Avatar, Button, CssBaseline, IconButton, ThemeProvider, Toolbar, Typography } from "@mui/material";
 import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "firebase/auth";
 import * as React from "react";
 import { useSelector } from "react-redux";
@@ -70,49 +70,43 @@ function App() {
   }, []);
 
   return (
-    <div style={{ width: "100%", height: "100vh" }}>
-      <ThemeProvider theme={{ ...themeActual }}>
-        <div style={{ width: "100%", height: "100vh", backgroundColor: themeActual.palette.background.default }}>
-          <BrowserRouter>
-            <Box sx={{ flexGrow: 1 }}>
-              <AppBar position="fixed" height="48px">
-                <Toolbar variant="dense" disableGutters>
-                  <IconButton onClick={() => setPageDrawerOpen(true)} edge="start" color="inherit" sx={{ ml: "12px", mr: "12px", padding: "6px" }}>
-                    <MenuIcon />
-                  </IconButton>
-                  <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                    Rebound
-                  </Typography>
-                  {currentUser ? (
-                    <Avatar
-                      alt="Remy Sharp"
-                      src="/images/Avatar1.jpg"
-                      sx={{ width: 38, height: 38 }}
-                      onClick={() => {
-                        signOut();
-                      }}
-                    />
-                  ) : (
-                    <Button variant="contained" onClick={signIn}>
-                      Sign In
-                    </Button>
-                  )}
-                  <IconButton onClick={() => setSettingsDrawerOpen(true)} sx={{ mr: "12px", ml: "12px", padding: "6px" }}>
-                    <IconSvgs.Settings sx={{ fontSize: 24 }} />
-                  </IconButton>
-                </Toolbar>
-              </AppBar>
-              <Toolbar variant="dense" disableGutters />
-            </Box>
-            <PageDrawer setPageDrawerOpen={setPageDrawerOpen} pageDrawerOpen={pageDrawerOpen} />
-            <SettingsDrawer setSettingsDrawerOpen={setSettingsDrawerOpen} settingsDrawerOpen={settingsDrawerOpen} />
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-            </Routes>
-          </BrowserRouter>
-        </div>
-      </ThemeProvider>
-    </div>
+    <ThemeProvider theme={{ ...themeActual }}>
+      <CssBaseline />
+      <BrowserRouter>
+        <AppBar position="static" height="48px">
+          <Toolbar variant="dense" disableGutters>
+            <IconButton onClick={() => setPageDrawerOpen(true)} edge="start" color="inherit" sx={{ ml: "12px", mr: "12px", padding: "6px" }}>
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              Rebound
+            </Typography>
+            {currentUser ? (
+              <Avatar
+                alt="Remy Sharp"
+                src="/images/Avatar1.jpg"
+                sx={{ width: 38, height: 38 }}
+                onClick={() => {
+                  signOut();
+                }}
+              />
+            ) : (
+              <Button variant="contained" onClick={signIn}>
+                Sign In
+              </Button>
+            )}
+            <IconButton onClick={() => setSettingsDrawerOpen(true)} sx={{ mr: "12px", ml: "12px", padding: "6px" }}>
+              <IconSvgs.Settings sx={{ fontSize: 24 }} />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <PageDrawer setPageDrawerOpen={setPageDrawerOpen} pageDrawerOpen={pageDrawerOpen} />
+        <SettingsDrawer setSettingsDrawerOpen={setSettingsDrawerOpen} settingsDrawerOpen={settingsDrawerOpen} />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
