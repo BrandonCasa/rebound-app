@@ -19,7 +19,13 @@ exports.addServerMessage = functions.https.onRequest(async (req, res) => {
 });
 
 exports.addServerChannel = functions.https.onRequest(async (req, res) => {
-  res.json({ result: "xd" });
+  const writtenChannel = await admin
+    .firestore()
+    .collection("server_chat")
+    .doc(req.body.serverID)
+    .collection("channels")
+    .add({ channelData: { name: req.body.name, description: req.body.description } });
+  res.json({ result: `Channel with ID ${writtenChannel.id} added to server with ID ${req.body.serverID}` });
 });
 
 exports.addServer = functions.https.onRequest(async (req, res) => {
@@ -31,6 +37,6 @@ exports.addServer = functions.https.onRequest(async (req, res) => {
     ownerID: "",
   };
   const writtenServer = await admin.firestore().collection("server_chat").add({ serverData: serverData });
-  const writtenChannel = await writtenServer.collection("channels").add({ channelData: { name: "general", description: "General Chat." } });
+  const writtenChannel = await writtenServer.collection("channels").add({ channelData: { name: "general", description: "A generalized place to talk" } });
   res.json({ result: `Server with ID ${writtenServer.id} created. Channel with ID ${writtenChannel.id} added.` });
 });
