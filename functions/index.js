@@ -6,22 +6,31 @@ const admin = require("firebase-admin");
 
 admin.initializeApp();
 
-// Take the text parameter passed to this HTTP endpoint and insert it into
-// Firestore under the path /messages/:documentId/original
-exports.addMessage = functions.https.onRequest(async (req, res) => {
-  // Grab the text parameter.
-  const data = [
-    {
-      pos: 0,
-      text: req.body.text,
-      media: null,
-      mentions: null,
-      references: null,
-    },
-  ];
-  // Push the new message into Firestore using the Firebase Admin SDK.
-  //const writeResult = await admin.firestore().collection("messages").add({ original: original });
-  const writeResult = await admin.firestore().collection("channels").doc("testChannel").collection("messages").add({ data: data });
-  // Send back a message that we've successfully written the message
+exports.addServerMessage = functions.https.onRequest(async (req, res) => {
+  const writeResult = await admin
+    .firestore()
+    .collection("server_chat")
+    .doc(req.body.serverID)
+    .collection("channels")
+    .doc(req.body.channelID)
+    .collection("messages")
+    .add({ message: req.body.message, timestamp: admin.firestore.FieldValue.serverTimestamp() });
   res.json({ result: `Message with ID: ${writeResult.id} added.` });
+});
+
+exports.addServerChannel = functions.https.onRequest(async (req, res) => {
+  res.json({ result: "xd" });
+});
+
+exports.addServer = functions.https.onRequest(async (req, res) => {
+  const serverData = {
+    name: req.body.name,
+    description: req.body.description,
+    iconPath: "",
+    bannerPath: "",
+    ownerID: "",
+  };
+  const writtenServer = await admin.firestore().collection("server_chat").add({ serverData: serverData });
+  const writtenChannel = await writtenServer.collection("channels").add({ channelData: { name: "general", description: "General Chat." } });
+  res.json({ result: `Server with ID ${writtenServer.id} created. Channel with ID ${writtenChannel.id} added.` });
 });
