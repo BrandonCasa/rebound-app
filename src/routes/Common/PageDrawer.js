@@ -1,30 +1,30 @@
 // @ts-nocheck
 import * as IconSvgs from "@mui/icons-material";
-import { Box, Divider, Drawer, IconButton, List, ListItem, Typography } from "@mui/material";
+import { Box, Divider, Drawer, List, ListItem } from "@mui/material";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 function PageDrawer(props) {
-  const themeValue = useSelector((state) => state.theme.value);
+  const themeMode = useSelector((state) => state.theme.actualMode);
+  const themeActual = useSelector((state) => state.theme.actualTheme);
   const dispatch = useDispatch();
+  console.log(themeActual.components);
 
   return (
-    <Drawer anchor={"left"} open={props.pageDrawerOpen} onClose={() => props.setPageDrawerOpen(false)}>
-      <Box sx={{ width: 350 }}>
-        <List disablePadding>
-          <ListItem style={{ padding: "8px 12px" }}>
-            <IconButton sx={{ padding: "6px", margin: "-6px 0px" }} onClick={() => props.setPageDrawerOpen(false)}>
-              <IconSvgs.FirstPage />
-            </IconButton>
-            <div style={{ flexGrow: 1 }} />
-            <Typography variant="h5" fontWeight={200} sx={{ mr: "12px" }}>
-              Pages
-            </Typography>
+    <Drawer anchor={"left"} open={true} onClose={() => props.setPageDrawerOpen(false)} variant="permanent">
+      <Box sx={{ width: 60 }}>
+        <List sx={{ width: "100%" }}>
+          <ListItem
+            sx={{
+              margin: "-8px 0px 0px 0px",
+              height: "48px",
+              backgroundColor: themeActual.palette.primary.dark,
+              backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))",
+            }}
+          >
+            <IconSvgs.Dns sx={{ fontSize: 32, width: "100%", color: "white" }} />
           </ListItem>
           <Divider />
-          <ListItem>
-            <div style={{ width: "100%" }}>pages go here</div>
-          </ListItem>
         </List>
       </Box>
     </Drawer>

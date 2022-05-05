@@ -1,6 +1,5 @@
 // @ts-nocheck
 import * as IconSvgs from "@mui/icons-material";
-import MenuIcon from "@mui/icons-material/Menu";
 import { AppBar, Avatar, Button, CssBaseline, IconButton, ThemeProvider, Toolbar, Typography } from "@mui/material";
 import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "firebase/auth";
 import * as React from "react";
@@ -73,11 +72,9 @@ function App() {
     <ThemeProvider theme={{ ...themeActual }}>
       <CssBaseline />
       <BrowserRouter>
-        <AppBar position="fixed" height="48px">
+        <AppBar position="fixed" height="48px" sx={{ backgroundColor: themeActual.palette.primary.dark, backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))" }}>
           <Toolbar variant="dense" disableGutters>
-            <IconButton onClick={() => setPageDrawerOpen(true)} edge="start" color="inherit" sx={{ ml: "12px", mr: "12px", padding: "6px" }}>
-              <MenuIcon />
-            </IconButton>
+            <div style={{ width: "72px" }} />
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               Rebound
             </Typography>
@@ -96,7 +93,7 @@ function App() {
               </Button>
             )}
             <IconButton onClick={() => setSettingsDrawerOpen(true)} sx={{ mr: "12px", ml: "12px", padding: "6px" }}>
-              <IconSvgs.Settings sx={{ fontSize: 24 }} />
+              <IconSvgs.Settings sx={{ fontSize: 24, color: "white" }} />
             </IconButton>
           </Toolbar>
         </AppBar>

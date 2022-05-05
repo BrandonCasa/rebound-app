@@ -13,9 +13,9 @@ function SettingsDrawer(props) {
     <Drawer anchor={"right"} open={props.settingsDrawerOpen} onClose={() => props.setSettingsDrawerOpen(false)}>
       <Box sx={{ width: 350 }}>
         <List sx={{ width: "100%" }}>
-          <ListItem sx={{ margin: "-16px 0px -8px 0px" }}>
+          <ListItem sx={{ margin: "-8px 0px 0px 0px", height: "48px" }}>
             <IconSvgs.Settings sx={{ fontSize: 32 }} />
-            <ListItemText primary="Settings" sx={{ pl: 2 }} />
+            <ListItemText primary="Settings" sx={{ textAlign: "center" }} />
             <IconButton sx={{ padding: "6px", margin: "6px 0px", float: "right", right: "-4px" }} onClick={() => props.setSettingsDrawerOpen(false)}>
               <IconSvgs.LastPage />
             </IconButton>
