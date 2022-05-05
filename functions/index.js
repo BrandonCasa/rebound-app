@@ -43,7 +43,7 @@ exports.addServerChannel = functions.https.onRequest(async (req, res) => {
   }
 });
 
-exports.addServer = functions.https.onRequest(async (req, res) => {
+exports.addServerWhole = functions.https.onRequest(async (req, res) => {
   const serverData = {
     name: req.body.name,
     description: req.body.description,
