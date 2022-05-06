@@ -19,7 +19,8 @@ function App() {
   const themeActual = useSelector((state) => state.theme.actualTheme);
 
   // Function Methods
-  const signIn = () => {
+  const signIn = (event) => {
+    //event.preventDefault();
     const auth = getAuth();
     const provider = new GoogleAuthProvider();
     provider.addScope("profile");
@@ -92,7 +93,7 @@ function App() {
                 }}
               />
             ) : (
-              <Button variant="contained" onClick={signIn}>
+              <Button variant="contained" onClick={(event) => signIn(event)}>
                 Sign In
               </Button>
             )}
