@@ -15,7 +15,8 @@ function CreateServerDialog(props) {
 
   const addServer = () => {
     addServerNew({ name: serverName, description: serverDescription, subject: serverSubject }).then((result) => {
-      //const data = result.data; // Includes IDs of the created server and channel
+      const data = result.data; // Includes IDs of the created server and channel
+      console.log(data);
     });
   };
 
