@@ -9,6 +9,7 @@ import PageDrawer from "routes/Common/PageDrawer";
 import SettingsDrawer from "routes/Common/SettingsDrawer";
 import LandingPage from "routes/Landing/Landing";
 import CreateServerDialog from "./routes/Dialogs/CreateServerDialog";
+import { auth } from "./server/index";
 
 function App(props) {
   // Function State
@@ -24,7 +25,7 @@ function App(props) {
     const provider = new GoogleAuthProvider();
     provider.addScope("profile");
     provider.addScope("email");
-    signInWithPopup(props.auth, provider)
+    signInWithPopup(auth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -46,7 +47,7 @@ function App(props) {
       });
   };
   const signOut = () => {
-    props.auth
+    auth
       .signOut()
       .then(() => {
         // Sign-out successful.
@@ -59,7 +60,7 @@ function App(props) {
 
   // Function Hooks
   React.useEffect(() => {
-    onAuthStateChanged(props.auth, (user) => {
+    onAuthStateChanged(auth, (user) => {
       if (user) {
         setCurrentUser(user);
         setCreateServerDialogOpen(true);

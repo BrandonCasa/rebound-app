@@ -1,12 +1,11 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { connectFunctionsEmulator, getFunctions, httpsCallable } from "firebase/functions";
+import { httpsCallable } from "firebase/functions";
 import * as React from "react";
+import { functions } from "../../server/index";
 
 function CreateServerDialog(props) {
   const theme = useTheme();
-  const functions = getFunctions();
-  connectFunctionsEmulator(functions, "localhost", 5001);
   const addServerNew = httpsCallable(functions, "addServerNew");
 
   const [serverName, setServerName] = React.useState("");

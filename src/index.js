@@ -9,12 +9,12 @@ import App from "./App";
 import "./index.css";
 import store from "./redux/store";
 import reportWebVitals from "./reportWebVitals";
-import { auth } from "./server/index";
+import "./server/index";
 
 ReactDOM.render(
   <Provider store={store}>
     <React.StrictMode>
-      <App auth={auth} />
+      <App />
     </React.StrictMode>
   </Provider>,
   document.getElementById("root")
