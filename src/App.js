@@ -1,7 +1,7 @@
 // @ts-nocheck
 import * as IconSvgs from "@mui/icons-material";
 import { AppBar, Avatar, Button, CssBaseline, IconButton, ThemeProvider, Toolbar, Typography } from "@mui/material";
-import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "firebase/auth";
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -10,7 +10,7 @@ import SettingsDrawer from "routes/Common/SettingsDrawer";
 import LandingPage from "routes/Landing/Landing";
 import CreateServerDialog from "./routes/Dialogs/CreateServerDialog";
 
-function App() {
+function App(props) {
   // Function State
   const [currentUser, setCurrentUser] = React.useState({});
   const [settingsDrawerOpen, setSettingsDrawerOpen] = React.useState(false);
@@ -21,11 +21,10 @@ function App() {
   // Function Methods
   const signIn = (event) => {
     //event.preventDefault();
-    const auth = getAuth();
     const provider = new GoogleAuthProvider();
     provider.addScope("profile");
     provider.addScope("email");
-    signInWithPopup(auth, provider)
+    signInWithPopup(props.auth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -47,8 +46,7 @@ function App() {
       });
   };
   const signOut = () => {
-    const auth = getAuth();
-    auth
+    props.auth
       .signOut()
       .then(() => {
         // Sign-out successful.
@@ -61,8 +59,7 @@ function App() {
 
   // Function Hooks
   React.useEffect(() => {
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(props.auth, (user) => {
       if (user) {
         setCurrentUser(user);
         setCreateServerDialogOpen(true);
