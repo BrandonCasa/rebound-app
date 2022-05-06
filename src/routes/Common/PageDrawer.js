@@ -8,7 +8,6 @@ function PageDrawer(props) {
   const themeMode = useSelector((state) => state.theme.actualMode);
   const themeActual = useSelector((state) => state.theme.actualTheme);
   const dispatch = useDispatch();
-  console.log(themeActual.components);
 
   return (
     <Drawer anchor={"left"} open={true} onClose={() => props.setPageDrawerOpen(false)} variant="permanent">

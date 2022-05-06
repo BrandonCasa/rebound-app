@@ -8,12 +8,14 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PageDrawer from "routes/Common/PageDrawer";
 import SettingsDrawer from "routes/Common/SettingsDrawer";
 import LandingPage from "routes/Landing/Landing";
+import CreateServerDialog from "./routes/Dialogs/CreateServerDialog";
 
 function App() {
   // Function State
   const [currentUser, setCurrentUser] = React.useState({});
   const [settingsDrawerOpen, setSettingsDrawerOpen] = React.useState(false);
   const [pageDrawerOpen, setPageDrawerOpen] = React.useState(false);
+  const [createServerDialogOpen, setCreateServerDialogOpen] = React.useState(false);
   const themeActual = useSelector((state) => state.theme.actualTheme);
 
   // Function Methods
@@ -62,6 +64,7 @@ function App() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setCurrentUser(user);
+        setCreateServerDialogOpen(true);
       } else {
         setCurrentUser(null);
       }
@@ -72,6 +75,7 @@ function App() {
     <ThemeProvider theme={{ ...themeActual }}>
       <CssBaseline />
       <BrowserRouter>
+        <CreateServerDialog createServerDialogOpen={createServerDialogOpen} setCreateServerDialogOpen={setCreateServerDialogOpen} />
         <AppBar position="fixed" height="48px" sx={{ backgroundColor: themeActual.palette.primary.dark, backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))" }}>
           <Toolbar variant="dense" disableGutters>
             <div style={{ width: "72px" }} />

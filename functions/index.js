@@ -1,10 +1,12 @@
 // The Cloud Functions for Firebase SDK to create Cloud Functions and set up triggers.
 const functions = require("firebase-functions");
+const cors = require("cors")({ origin: true });
 
 // The Firebase Admin SDK to access Firestore.
 const admin = require("firebase-admin");
 
 admin.initializeApp();
+admin.firestore().settings({ ignoreUndefinedProperties: true });
 
 exports.addServerMessage = functions.https.onRequest(async (req, res) => {
   const serverDoc = await admin.firestore().collection("server_chat").doc(req.body.serverID).get();
@@ -42,16 +44,41 @@ exports.addServerChannel = functions.https.onRequest(async (req, res) => {
     res.json({ result: `Server with ID ${req.body.serverID} does not exist.` });
   }
 });
-
-exports.addServerWhole = functions.https.onRequest(async (req, res) => {
+/*
+exports.addServerNew = functions.https.onRequest(async (req, res) => {
   const serverData = {
     name: req.body.name,
     description: req.body.description,
+    subject: req.body.subject,
     iconPath: "",
     bannerPath: "",
     ownerID: "",
   };
   const writtenServer = await admin.firestore().collection("server_chat").add({ serverData: serverData });
-  const writtenChannel = await writtenServer.collection("channels").add({ channelData: { name: "general", description: "A generalized place to talk" } });
+  const writtenChannel = await writtenServer.collection("channels").add({ channelData: { name: "General", description: "A generalized place to talk." } });
   res.json({ result: `Server with ID ${writtenServer.id} created. Channel with ID ${writtenChannel.id} added.` });
+});
+*/
+
+exports.addServerNew = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    return "Not Authenticated";
+  }
+  if (data === undefined) {
+    return "Not Authenticated";
+  }
+  console.log(data);
+  const serverData = {
+    name: data.name,
+    description: data.description,
+    subject: data.subject,
+    iconPath: "",
+    bannerPath: "",
+    ownerID: context.auth.uid,
+  };
+  const writtenServer = await admin.firestore().collection("server_chat").add({ serverData: serverData });
+  const writtenChannel = await writtenServer.collection("channels").add({ channelData: { name: "General", description: "A generalized place to talk." } });
+
+  console.log(`Server with ID ${writtenServer.id} created. Channel with ID ${writtenChannel.id} added.`);
+  return { server: writtenServer.id, channel: writtenChannel.id };
 });

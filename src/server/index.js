@@ -1,7 +1,8 @@
-import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import { initializeApp } from "firebase/app";
+import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
 import isDev from "../helpers/devDetect";
 
 const firebaseConfig = {
@@ -18,8 +19,10 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getFirestore(app);
 const auth = getAuth(app);
+const functions = getFunctions(app);
 
 if (isDev()) {
   connectAuthEmulator(auth, "http://localhost:9099");
+  connectFunctionsEmulator(functions, "localhost", 5001);
 }
-export { app, analytics, db, auth };
+export { app, analytics, db, auth, functions };
