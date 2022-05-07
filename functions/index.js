@@ -70,10 +70,27 @@ exports.addServerNew = functions.https.onRequest(async (req, res) => {
       bannerPath: "",
       ownerID: JSON.parse(req.body).auth.currentUser.uid,
     };
-    const writtenServer = await admin.firestore().collection("server_chat").add({ serverData: serverData });
+    const writtenServer = await admin.firestore().collection("servers").add({ serverData: serverData });
     const writtenChannel = await writtenServer.collection("channels").add({ channelData: { name: "General", description: "A generalized place to talk." } });
-
     console.log(`Server with ID ${writtenServer.id} created. Channel with ID ${writtenChannel.id} added.`);
+
+    const userDoc = await admin.firestore().collection("users").doc(serverData.ownerID).get();
+    if (userDoc.exists) {
+      const writtenUser = await admin
+        .firestore()
+        .collection("users")
+        .doc(serverData.ownerID)
+        .update({
+          servers: admin.firestore.FieldValue.arrayUnion(writtenServer.id),
+        });
+    } else {
+      await admin
+        .firestore()
+        .collection("users")
+        .doc(serverData.ownerID)
+        .set({ servers: [writtenServer.id] });
+    }
+
     res.json({ server: writtenServer.id, channel: writtenChannel.id });
   });
 });

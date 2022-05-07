@@ -1,7 +1,7 @@
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
 import isDev from "../helpers/devDetect";
 
@@ -24,6 +24,7 @@ const functions = getFunctions(app);
 if (isDev()) {
   connectAuthEmulator(auth, "http://localhost:9099");
   connectFunctionsEmulator(functions, "localhost", 5001);
+  connectFirestoreEmulator(db, "localhost", 8181);
   functions.customDomain = "http://localhost:5001/rebound-380d6/us-central1";
 } else {
   functions.customDomain = "https://us-central1-rebound-380d6.cloudfunctions.net";
