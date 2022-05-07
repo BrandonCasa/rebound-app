@@ -2,22 +2,27 @@
 import * as IconSvgs from "@mui/icons-material";
 import { AppBar, Avatar, Button, CssBaseline, IconButton, ThemeProvider, Toolbar, Typography } from "@mui/material";
 import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "firebase/auth";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import * as React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PageDrawer from "routes/Common/PageDrawer";
 import SettingsDrawer from "routes/Common/SettingsDrawer";
 import LandingPage from "routes/Landing/Landing";
+import { flushActualServers, setActualServer, setMyServers } from "./redux/Firestuff/firestuff.slice";
 import CreateServerDialog from "./routes/Dialogs/CreateServerDialog";
-import { auth } from "./server/index";
+import { auth, db } from "./server/index";
 
 function App(props) {
+  const dispatch = useDispatch();
+
   // Function State
   const [currentUser, setCurrentUser] = React.useState({});
   const [settingsDrawerOpen, setSettingsDrawerOpen] = React.useState(false);
   const [pageDrawerOpen, setPageDrawerOpen] = React.useState(false);
   const [createServerDialogOpen, setCreateServerDialogOpen] = React.useState(false);
   const themeActual = useSelector((state) => state.theme.actualTheme);
+  const [listenedServers, setListenedServers] = React.useState([]);
 
   // Function Methods
   const signIn = (event) => {
@@ -63,9 +68,24 @@ function App(props) {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setCurrentUser(user);
+
+        // Listen to User
+        onSnapshot(doc(db, "users", auth.currentUser.uid), async (userSnap) => {
+          if (userSnap.data() && userSnap.data().servers) {
+            for (const serverId of userSnap.data().servers) {
+              const serverSnap = await getDoc(doc(db, "servers", serverId));
+              dispatch(setActualServer({ serverId: serverId, serverData: serverSnap.data().serverData }));
+            }
+
+            dispatch(setMyServers(userSnap.data().servers));
+          }
+          //console.log("Current data: ", doc.data());
+        });
         setCreateServerDialogOpen(true);
       } else {
         setCurrentUser(null);
+        dispatch(setMyServers([]));
+        dispatch(flushActualServers());
       }
     });
   }, []);
@@ -83,7 +103,7 @@ function App(props) {
             </Typography>
             {currentUser ? (
               <Avatar
-                alt="Remy Sharp"
+                alt="Among Us"
                 src="/images/Avatar1.jpg"
                 sx={{ width: 38, height: 38 }}
                 onClick={() => {
