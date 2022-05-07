@@ -10,9 +10,8 @@ function CreateServerDialog(props) {
   const [serverDescription, setServerDescription] = React.useState("");
   const [serverSubject, setServerSubject] = React.useState("");
 
-  const addServer = async () => {
-    console.log(functions.customDomain);
-    const rawResponse = await fetch("https://us-central1-rebound-380d6.cloudfunctions.net/addServerNew", {
+  const addServer = () => {
+    fetch(`${functions.customDomain}/addServerNew`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -22,9 +21,6 @@ function CreateServerDialog(props) {
       mode: "no-cors",
       body: JSON.stringify({ name: serverName, description: serverDescription, subject: serverSubject, currentUser: auth.currentUser }),
     });
-    const res = await rawResponse.json();
-
-    console.log(res);
   };
 
   return (

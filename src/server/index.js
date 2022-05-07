@@ -24,5 +24,8 @@ const functions = getFunctions(app);
 if (isDev()) {
   connectAuthEmulator(auth, "http://localhost:9099");
   connectFunctionsEmulator(functions, "localhost", 5001);
+  functions.customDomain = "http://localhost:5001/rebound-380d6/us-central1";
+} else {
+  functions.customDomain = "https://us-central1-rebound-380d6.cloudfunctions.net";
 }
 export { app, analytics, db, auth, functions };
