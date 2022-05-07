@@ -19,7 +19,7 @@ function CreateServerDialog(props) {
         "Access-Control-Allow-Origin": "*",
       },
       mode: "no-cors",
-      body: JSON.stringify({ name: serverName, description: serverDescription, subject: serverSubject, currentUser: auth.currentUser }),
+      body: JSON.stringify({ name: serverName, description: serverDescription, subject: serverSubject, auth: auth }),
     });
   };
 

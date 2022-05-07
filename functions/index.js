@@ -68,7 +68,7 @@ exports.addServerNew = functions.https.onRequest(async (req, res) => {
       subject: JSON.parse(req.body).subject,
       iconPath: "",
       bannerPath: "",
-      ownerID: JSON.parse(req.body).currentUser.uid,
+      ownerID: JSON.parse(req.body).auth.currentUser.uid,
     };
     const writtenServer = await admin.firestore().collection("server_chat").add({ serverData: serverData });
     const writtenChannel = await writtenServer.collection("channels").add({ channelData: { name: "General", description: "A generalized place to talk." } });

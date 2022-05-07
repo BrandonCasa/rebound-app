@@ -1,14 +1,18 @@
 // @ts-nocheck
 import * as IconSvgs from "@mui/icons-material";
 import { Box, Divider, Drawer, List, ListItem } from "@mui/material";
+import { doc, getFirestore } from "firebase/firestore";
 import * as React from "react";
+import { useDocument } from "react-firebase-hooks/firestore";
 import { useDispatch, useSelector } from "react-redux";
 
 function PageDrawer(props) {
   const themeMode = useSelector((state) => state.theme.actualMode);
   const themeActual = useSelector((state) => state.theme.actualTheme);
   const dispatch = useDispatch();
-
+  const [value, loading, error] = useDocument(doc(getFirestore(firebaseApp), "hooks", "nBShXiRGFAhuiPfBaGpt"), {
+    snapshotListenOptions: { includeMetadataChanges: true },
+  });
   return (
     <Drawer anchor={"left"} open={true} onClose={() => props.setPageDrawerOpen(false)} variant="permanent">
       <Box sx={{ width: 60 }}>
