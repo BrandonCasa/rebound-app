@@ -81,7 +81,6 @@ function App(props) {
           }
           //console.log("Current data: ", doc.data());
         });
-        setCreateServerDialogOpen(true);
       } else {
         setCurrentUser(null);
         dispatch(setMyServers([]));
@@ -121,7 +120,7 @@ function App(props) {
           </Toolbar>
         </AppBar>
         <Toolbar variant="dense" disableGutters />
-        <PageDrawer setPageDrawerOpen={setPageDrawerOpen} pageDrawerOpen={pageDrawerOpen} />
+        <PageDrawer setPageDrawerOpen={setPageDrawerOpen} pageDrawerOpen={pageDrawerOpen} setCreateServerDialogOpen={setCreateServerDialogOpen} />
         <SettingsDrawer setSettingsDrawerOpen={setSettingsDrawerOpen} settingsDrawerOpen={settingsDrawerOpen} />
         <Routes>
           <Route path="/" element={<LandingPage />} />

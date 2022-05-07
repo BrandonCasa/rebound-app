@@ -1,8 +1,9 @@
 // @ts-nocheck
 import * as IconSvgs from "@mui/icons-material";
-import { Avatar, Box, Divider, Drawer, List, ListItem } from "@mui/material";
+import { Avatar, Box, Divider, Drawer, IconButton, List, ListItem } from "@mui/material";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { auth } from "../../server/index";
 
 function PageDrawer(props) {
   const themeMode = useSelector((state) => state.theme.actualMode);
@@ -60,9 +61,28 @@ function PageDrawer(props) {
               }}
               disablePadding
             >
-              <Avatar sx={{ width: 38, height: 38, margin: "5px" }}>{myActualServers[serverId].name.split(/\s/).reduce((response, word) => (response += word.slice(0, 1)), "")}</Avatar>
+              <Avatar sx={{ width: 38, height: 38, margin: "5px" }}>
+                {myActualServers[serverId].name.length > 0 ? myActualServers[serverId].name.split(/\s/).reduce((response, word) => (response += word.slice(0, 1)), "") : "?"}
+              </Avatar>
             </ListItem>
           ))}
+          <ListItem
+            sx={{
+              height: "48px",
+              width: "48px",
+              backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))",
+              borderRadius: "30px",
+              margin: "6px",
+            }}
+            disabled={!auth.currentUser}
+            disablePadding
+          >
+            <IconButton sx={{ width: "100%", height: "100%", padding: 0 }} onClick={() => props.setCreateServerDialogOpen(true)} disabled={!auth.currentUser}>
+              <div style={{ width: 28, height: 28, margin: "10px", padding: 0 }}>
+                <IconSvgs.Add sx={{ width: "100%", height: "100%", color: "limegreen" }} />
+              </div>
+            </IconButton>
+          </ListItem>
         </List>
       </Box>
     </Drawer>

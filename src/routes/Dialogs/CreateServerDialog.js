@@ -41,7 +41,7 @@ function CreateServerDialog(props) {
         </div>
       </DialogContent>
       <DialogActions>
-        <Button>Cancel</Button>
+        <Button onClick={() => props.setCreateServerDialogOpen(false)}>Cancel</Button>
         <Button variant="contained" onClick={() => addServer()}>
           Create
         </Button>
