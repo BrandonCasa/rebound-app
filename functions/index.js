@@ -60,25 +60,20 @@ exports.addServerNew = functions.https.onRequest(async (req, res) => {
 });
 */
 
-exports.addServerNew = functions.https.onCall(async (data, context) => {
-  if (!context.auth) {
-    return "Not Authenticated";
-  }
-  if (data === undefined) {
-    return "Not Authenticated";
-  }
-  console.log(data);
-  const serverData = {
-    name: data.name,
-    description: data.description,
-    subject: data.subject,
-    iconPath: "",
-    bannerPath: "",
-    ownerID: context.auth.uid,
-  };
-  const writtenServer = await admin.firestore().collection("server_chat").add({ serverData: serverData });
-  const writtenChannel = await writtenServer.collection("channels").add({ channelData: { name: "General", description: "A generalized place to talk." } });
+exports.addServerNew = functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    const serverData = {
+      name: JSON.parse(req.body).name,
+      description: JSON.parse(req.body).description,
+      subject: JSON.parse(req.body).subject,
+      iconPath: "",
+      bannerPath: "",
+      ownerID: JSON.parse(req.body).currentUser.uid,
+    };
+    const writtenServer = await admin.firestore().collection("server_chat").add({ serverData: serverData });
+    const writtenChannel = await writtenServer.collection("channels").add({ channelData: { name: "General", description: "A generalized place to talk." } });
 
-  console.log(`Server with ID ${writtenServer.id} created. Channel with ID ${writtenChannel.id} added.`);
-  return { server: writtenServer.id, channel: writtenChannel.id };
+    console.log(`Server with ID ${writtenServer.id} created. Channel with ID ${writtenChannel.id} added.`);
+    res.json({ server: writtenServer.id, channel: writtenChannel.id });
+  });
 });

@@ -1,22 +1,30 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { httpsCallable } from "firebase/functions";
 import * as React from "react";
-import { functions } from "../../server/index";
+import { auth, functions } from "../../server/index";
 
 function CreateServerDialog(props) {
   const theme = useTheme();
-  const addServerNew = httpsCallable(functions, "addServerNew");
 
   const [serverName, setServerName] = React.useState("");
   const [serverDescription, setServerDescription] = React.useState("");
   const [serverSubject, setServerSubject] = React.useState("");
 
-  const addServer = () => {
-    addServerNew({ name: serverName, description: serverDescription, subject: serverSubject }).then((result) => {
-      const data = result.data; // Includes IDs of the created server and channel
-      console.log(data);
+  const addServer = async () => {
+    console.log(functions.customDomain);
+    const rawResponse = await fetch("https://us-central1-rebound-380d6.cloudfunctions.net/addServerNew", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      mode: "no-cors",
+      body: JSON.stringify({ name: serverName, description: serverDescription, subject: serverSubject, currentUser: auth.currentUser }),
     });
+    const res = await rawResponse.json();
+
+    console.log(res);
   };
 
   return (
