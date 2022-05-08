@@ -94,3 +94,49 @@ exports.addServerNew = functions.https.onRequest(async (req, res) => {
     res.json({ server: writtenServer.id, channel: writtenChannel.id });
   });
 });
+
+exports.joinServer = functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    /*
+    const docs = await admin.firestore().collection("servers").listDocuments();
+    let ids = [];
+    docs.forEach((doc) => {
+      ids.push(doc.id);
+    });
+    const result = ids.findIndex((id) => {
+      return id.startsWith(JSON.parse(req.body).serverID);
+    }, JSON.parse(req.body).serverID);
+    console.log(result);
+    */
+
+    //find server that starts with id substring
+    const foundServer = await admin
+      .firestore()
+      .collection("servers")
+      .where(admin.firestore.FieldPath.documentId(), ">=", JSON.parse(req.body).serverID)
+      .where(admin.firestore.FieldPath.documentId(), "<", JSON.parse(req.body).serverID + "\uf8ff")
+      .get();
+
+    // The below returns a list of search results
+    console.log(foundServer.docs);
+
+    const userDoc = await admin.firestore().collection("users").doc(JSON.parse(req.body).auth.currentUser.uid).get();
+    if (userDoc.exists) {
+      const writtenUser = await admin
+        .firestore()
+        .collection("users")
+        .doc(JSON.parse(req.body).auth.currentUser.uid)
+        .update({
+          servers: admin.firestore.FieldValue.arrayUnion(foundServer.docs[0].id),
+        });
+    } else {
+      await admin
+        .firestore()
+        .collection("users")
+        .doc(JSON.parse(req.body).auth.currentUser.uid)
+        .set({ servers: [foundServer.docs[0].id] });
+    }
+
+    return res.sendStatus(200);
+  });
+});

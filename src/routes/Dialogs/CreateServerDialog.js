@@ -21,6 +21,7 @@ function CreateServerDialog(props) {
       mode: "no-cors",
       body: JSON.stringify({ name: serverName, description: serverDescription, subject: serverSubject, auth: auth }),
     });
+    props.setCreateServerDialogOpen(false);
   };
 
   return (

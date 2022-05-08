@@ -11,6 +11,8 @@ import SettingsDrawer from "routes/Common/SettingsDrawer";
 import LandingPage from "routes/Landing/Landing";
 import { flushActualServers, setActualServer, setMyServers } from "./redux/Firestuff/firestuff.slice";
 import CreateServerDialog from "./routes/Dialogs/CreateServerDialog";
+import JoinServerDialog from "./routes/Dialogs/JoinServerDialog";
+import ServerDialog from "./routes/Dialogs/ServerDialog";
 import { auth, db } from "./server/index";
 
 function App(props) {
@@ -20,7 +22,9 @@ function App(props) {
   const [currentUser, setCurrentUser] = React.useState({});
   const [settingsDrawerOpen, setSettingsDrawerOpen] = React.useState(false);
   const [pageDrawerOpen, setPageDrawerOpen] = React.useState(false);
+  const [serverDialogOpen, setServerDialogOpen] = React.useState(false);
   const [createServerDialogOpen, setCreateServerDialogOpen] = React.useState(false);
+  const [joinServerDialogOpen, setJoinServerDialogOpen] = React.useState(false);
   const themeActual = useSelector((state) => state.theme.actualTheme);
   const [listenedServers, setListenedServers] = React.useState([]);
 
@@ -94,6 +98,13 @@ function App(props) {
       <CssBaseline />
       <BrowserRouter>
         <CreateServerDialog createServerDialogOpen={createServerDialogOpen} setCreateServerDialogOpen={setCreateServerDialogOpen} />
+        <JoinServerDialog joinServerDialogOpen={joinServerDialogOpen} setJoinServerDialogOpen={setJoinServerDialogOpen} />
+        <ServerDialog
+          serverDialogOpen={serverDialogOpen}
+          setServerDialogOpen={setServerDialogOpen}
+          setCreateServerDialogOpen={setCreateServerDialogOpen}
+          setJoinServerDialogOpen={setJoinServerDialogOpen}
+        />
         <AppBar position="fixed" height="48px" sx={{ backgroundColor: themeActual.palette.primary.dark, backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))" }}>
           <Toolbar variant="dense" disableGutters>
             <div style={{ width: "72px" }} />
@@ -120,7 +131,7 @@ function App(props) {
           </Toolbar>
         </AppBar>
         <Toolbar variant="dense" disableGutters />
-        <PageDrawer setPageDrawerOpen={setPageDrawerOpen} pageDrawerOpen={pageDrawerOpen} setCreateServerDialogOpen={setCreateServerDialogOpen} />
+        <PageDrawer setPageDrawerOpen={setPageDrawerOpen} pageDrawerOpen={pageDrawerOpen} setServerDialogOpen={setServerDialogOpen} />
         <SettingsDrawer setSettingsDrawerOpen={setSettingsDrawerOpen} settingsDrawerOpen={settingsDrawerOpen} />
         <Routes>
           <Route path="/" element={<LandingPage />} />
