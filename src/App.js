@@ -1,7 +1,6 @@
 // @ts-nocheck
 import * as IconSvgs from "@mui/icons-material";
-import { AppBar, Avatar, Badge, Button, CssBaseline, IconButton, Stack, ThemeProvider, Toolbar, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { AppBar, Avatar, Button, CssBaseline, IconButton, Stack, ThemeProvider, Toolbar, Typography } from "@mui/material";
 import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "firebase/auth";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import * as React from "react";
@@ -9,41 +8,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PageDrawer from "routes/Common/PageDrawer";
 import SettingsDrawer from "routes/Common/SettingsDrawer";
+import StatusBadge from "routes/Common/StatusBadge";
 import LandingPage from "routes/Landing/Landing";
 import { flushActualServers, setActualServer, setMyServers } from "./redux/Firestuff/firestuff.slice";
 import CreateServerDialog from "./routes/Dialogs/CreateServerDialog";
 import JoinServerDialog from "./routes/Dialogs/JoinServerDialog";
 import ServerDialog from "./routes/Dialogs/ServerDialog";
 import { auth, db } from "./server/index";
-
-const OnlineBadge = styled(Badge)(({ theme }) => ({
-  "& .MuiBadge-badge": {
-    backgroundColor: "#44b700",
-    color: "#44b700",
-    boxShadow: `0 0 4px 2px ${theme.palette.background.paper}95`,
-    "&::after": {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      borderRadius: "50%",
-      animation: "ripple 1.2s infinite ease-in-out",
-      border: "1px solid currentColor",
-      content: '""',
-    },
-  },
-  "@keyframes ripple": {
-    "0%": {
-      transform: "scale(.8)",
-      opacity: 1,
-    },
-    "100%": {
-      transform: "scale(2.4)",
-      opacity: 0,
-    },
-  },
-}));
 
 function App(props) {
   const dispatch = useDispatch();
@@ -133,16 +104,15 @@ function App(props) {
             </Typography>
             {currentUser ? (
               <Stack direction="row" spacing={2}>
-                <OnlineBadge overlap="circular" anchorOrigin={{ vertical: "bottom", horizontal: "right" }} variant="dot">
+                <StatusBadge status={"online"}>
                   <Avatar
-                    alt="Sus"
-                    src={auth.currentUser ? auth.currentUser.photoURL : "/images/Avatar1.jpg"}
+                    src={auth.currentUser && auth.currentUser.photoURL}
                     sx={{ width: 38, height: 38, boxShadow: `0 0 4px 2px ${themeActual.palette.background.paper}90` }}
                     onClick={() => {
                       signOut();
                     }}
                   />
-                </OnlineBadge>
+                </StatusBadge>
               </Stack>
             ) : (
               <Button variant="contained" onClick={(event) => signIn(event)}>
