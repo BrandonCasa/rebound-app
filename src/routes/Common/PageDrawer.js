@@ -112,8 +112,8 @@ function PageDrawer(props) {
           }}
         >
           <span>
-            <span style={{ fontWeight: "bold" }}>Name: </span>
-            {hoveredId === "addServer" ? "Add a Server" : myActualServers[hoveredId] && myActualServers[hoveredId].name}
+            <span style={{ fontWeight: "bold" }}>Action: </span>
+            {hoveredId === "addServer" ? "Add a server" : myActualServers[hoveredId] && myActualServers[hoveredId].name}
           </span>
           {hoveredId !== "addServer" && (
             <React.Fragment>
