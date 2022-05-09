@@ -20,7 +20,7 @@ const OnlineBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
     backgroundColor: "#44b700",
     color: "#44b700",
-    boxShadow: `0 0 2px 2px ${theme.palette.background.paper}90`,
+    boxShadow: `0 0 4px 2px ${theme.palette.background.paper}95`,
     "&::after": {
       position: "absolute",
       top: 0,
@@ -135,9 +135,9 @@ function App(props) {
               <Stack direction="row" spacing={2}>
                 <OnlineBadge overlap="circular" anchorOrigin={{ vertical: "bottom", horizontal: "right" }} variant="dot">
                   <Avatar
-                    alt="Among Us"
-                    src="/images/Avatar1.jpg"
-                    sx={{ width: 38, height: 38 }}
+                    alt="Sus"
+                    src={auth.currentUser ? auth.currentUser.photoURL : "/images/Avatar1.jpg"}
+                    sx={{ width: 38, height: 38, boxShadow: `0 0 4px 2px ${themeActual.palette.background.paper}90` }}
                     onClick={() => {
                       signOut();
                     }}
