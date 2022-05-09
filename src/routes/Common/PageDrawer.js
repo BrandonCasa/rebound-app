@@ -1,15 +1,16 @@
 // @ts-nocheck
 import * as IconSvgs from "@mui/icons-material";
 import { Avatar, Box, Divider, Drawer, IconButton, List, ListItem, Popover } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { openDialog } from "redux/Dialogs/dialogs.slice";
 import { auth } from "../../server/index";
 
 function PageDrawer(props) {
-  const themeMode = useSelector((state) => state.theme.actualMode);
-  const themeActual = useSelector((state) => state.theme.actualTheme);
+  const theme = useTheme();
   const dispatch = useDispatch();
-  const [serversCurr, setServersCurr] = React.useState([]);
+
   const myActualServers = useSelector((state) => state.firestuff.myActualServers);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [hoveredId, setHoveredId] = React.useState("");
@@ -27,15 +28,17 @@ function PageDrawer(props) {
 
   return (
     <React.Fragment>
-      <Drawer anchor={"left"} open={true} onClose={() => props.setPageDrawerOpen(false)} variant="permanent">
+      <Drawer anchor={"left"} open={true} variant="permanent">
         <Box sx={{ width: 60 }}>
           <List sx={{ width: "100%" }}>
             <ListItem
               sx={{
                 margin: "-8px 0px 0px 0px",
                 height: "48px",
-                backgroundColor: themeActual.palette.primary.dark,
+                backgroundColor: theme.palette.primary.dark,
                 backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))",
+                boxShadow: "0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)",
+                transition: "box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
               }}
             >
               <IconSvgs.Dns sx={{ fontSize: 32, width: "100%", color: "white" }} />
@@ -71,11 +74,13 @@ function PageDrawer(props) {
               disabled={!auth.currentUser}
               disablePadding
             >
-              <IconButton sx={{ width: "100%", height: "100%", padding: 0 }} onClick={() => props.setServerDialogOpen(true)} disabled={!auth.currentUser}>
-                <div style={{ width: 28, height: 28, margin: "10px", padding: 0 }}>
-                  <IconSvgs.Add sx={{ width: "100%", height: "100%", color: "limegreen" }} />
-                </div>
-              </IconButton>
+              <div style={{ width: "100%", height: "100%", padding: 0 }} onMouseEnter={(event) => handlePopoverOpen(event, "addServer")} onMouseLeave={() => handlePopoverClose()}>
+                <IconButton sx={{ width: "100%", height: "100%", padding: 0 }} onClick={() => dispatch(openDialog("serverDialog"))} disabled={!auth.currentUser}>
+                  <div style={{ width: 28, height: 28, margin: "10px", padding: 0 }}>
+                    <IconSvgs.Add sx={{ width: "100%", height: "100%", color: "limegreen" }} />
+                  </div>
+                </IconButton>
+              </div>
             </ListItem>
           </List>
         </Box>
@@ -100,7 +105,7 @@ function PageDrawer(props) {
       >
         <div
           style={{
-            height: "64px",
+            height: hoveredId === "addServer" ? (auth.currentUser ? "32px" : "64px") : "64px",
             padding: "4px",
             display: "flex",
             flexDirection: "column",
@@ -108,13 +113,26 @@ function PageDrawer(props) {
         >
           <span>
             <span style={{ fontWeight: "bold" }}>Name: </span>
-            {myActualServers[hoveredId] ? myActualServers[hoveredId].name : "No server"}
+            {hoveredId === "addServer" ? "Add a Server" : myActualServers[hoveredId] && myActualServers[hoveredId].name}
           </span>
-          <Divider sx={{ flexGrow: 1 }} />
-          <span>
-            <span style={{ fontWeight: "bold" }}>Code: </span>
-            {hoveredId.substring(0, 6)}
-          </span>
+          {hoveredId !== "addServer" && (
+            <React.Fragment>
+              <Divider sx={{ flexGrow: 1 }} />
+              <span>
+                <span style={{ fontWeight: "bold" }}>Code: </span>
+                {hoveredId.substring(0, 6)}
+              </span>
+            </React.Fragment>
+          )}
+          {!auth.currentUser && (
+            <React.Fragment>
+              <Divider sx={{ flexGrow: 1 }} />
+              <span>
+                <span style={{ fontWeight: "bold" }}>Error: </span>
+                Please login.
+              </span>
+            </React.Fragment>
+          )}
         </div>
       </Popover>
     </React.Fragment>

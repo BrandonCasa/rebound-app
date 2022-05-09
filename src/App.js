@@ -1,6 +1,7 @@
 // @ts-nocheck
 import * as IconSvgs from "@mui/icons-material";
-import { AppBar, Avatar, Button, CssBaseline, IconButton, ThemeProvider, Toolbar, Typography } from "@mui/material";
+import { AppBar, Avatar, Badge, Button, CssBaseline, IconButton, Stack, ThemeProvider, Toolbar, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "firebase/auth";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import * as React from "react";
@@ -15,18 +16,42 @@ import JoinServerDialog from "./routes/Dialogs/JoinServerDialog";
 import ServerDialog from "./routes/Dialogs/ServerDialog";
 import { auth, db } from "./server/index";
 
+const OnlineBadge = styled(Badge)(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    backgroundColor: "#44b700",
+    color: "#44b700",
+    boxShadow: `0 0 2px 2px ${theme.palette.background.paper}90`,
+    "&::after": {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      borderRadius: "50%",
+      animation: "ripple 1.2s infinite ease-in-out",
+      border: "1px solid currentColor",
+      content: '""',
+    },
+  },
+  "@keyframes ripple": {
+    "0%": {
+      transform: "scale(.8)",
+      opacity: 1,
+    },
+    "100%": {
+      transform: "scale(2.4)",
+      opacity: 0,
+    },
+  },
+}));
+
 function App(props) {
   const dispatch = useDispatch();
 
   // Function State
   const [currentUser, setCurrentUser] = React.useState({});
   const [settingsDrawerOpen, setSettingsDrawerOpen] = React.useState(false);
-  const [pageDrawerOpen, setPageDrawerOpen] = React.useState(false);
-  const [serverDialogOpen, setServerDialogOpen] = React.useState(false);
-  const [createServerDialogOpen, setCreateServerDialogOpen] = React.useState(false);
-  const [joinServerDialogOpen, setJoinServerDialogOpen] = React.useState(false);
   const themeActual = useSelector((state) => state.theme.actualTheme);
-  const [listenedServers, setListenedServers] = React.useState([]);
 
   // Function Methods
   const signIn = (event) => {
@@ -97,14 +122,9 @@ function App(props) {
     <ThemeProvider theme={{ ...themeActual }}>
       <CssBaseline />
       <BrowserRouter>
-        <CreateServerDialog createServerDialogOpen={createServerDialogOpen} setCreateServerDialogOpen={setCreateServerDialogOpen} />
-        <JoinServerDialog joinServerDialogOpen={joinServerDialogOpen} setJoinServerDialogOpen={setJoinServerDialogOpen} />
-        <ServerDialog
-          serverDialogOpen={serverDialogOpen}
-          setServerDialogOpen={setServerDialogOpen}
-          setCreateServerDialogOpen={setCreateServerDialogOpen}
-          setJoinServerDialogOpen={setJoinServerDialogOpen}
-        />
+        <CreateServerDialog />
+        <JoinServerDialog />
+        <ServerDialog />
         <AppBar position="fixed" height="48px" sx={{ backgroundColor: themeActual.palette.primary.dark, backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))" }}>
           <Toolbar variant="dense" disableGutters>
             <div style={{ width: "72px" }} />
@@ -112,14 +132,18 @@ function App(props) {
               Rebound
             </Typography>
             {currentUser ? (
-              <Avatar
-                alt="Among Us"
-                src="/images/Avatar1.jpg"
-                sx={{ width: 38, height: 38 }}
-                onClick={() => {
-                  signOut();
-                }}
-              />
+              <Stack direction="row" spacing={2}>
+                <OnlineBadge overlap="circular" anchorOrigin={{ vertical: "bottom", horizontal: "right" }} variant="dot">
+                  <Avatar
+                    alt="Among Us"
+                    src="/images/Avatar1.jpg"
+                    sx={{ width: 38, height: 38 }}
+                    onClick={() => {
+                      signOut();
+                    }}
+                  />
+                </OnlineBadge>
+              </Stack>
             ) : (
               <Button variant="contained" onClick={(event) => signIn(event)}>
                 Sign In
@@ -131,7 +155,7 @@ function App(props) {
           </Toolbar>
         </AppBar>
         <Toolbar variant="dense" disableGutters />
-        <PageDrawer setPageDrawerOpen={setPageDrawerOpen} pageDrawerOpen={pageDrawerOpen} setServerDialogOpen={setServerDialogOpen} />
+        <PageDrawer />
         <SettingsDrawer setSettingsDrawerOpen={setSettingsDrawerOpen} settingsDrawerOpen={settingsDrawerOpen} />
         <Routes>
           <Route path="/" element={<LandingPage />} />
