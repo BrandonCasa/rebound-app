@@ -112,7 +112,7 @@ function PageDrawer(props) {
           }}
         >
           <span>
-            <span style={{ fontWeight: "bold" }}>{hoveredId === "addServer" ? "Action:" : "Name:"}</span>
+            <span style={{ fontWeight: "bold" }}>{hoveredId === "addServer" ? "Action: " : "Name: "}</span>
             {hoveredId === "addServer" ? "Add a server" : myActualServers[hoveredId] && myActualServers[hoveredId].name}
           </span>
           {hoveredId !== "addServer" && (
