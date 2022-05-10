@@ -1,6 +1,6 @@
 // @ts-nocheck
 import * as IconSvgs from "@mui/icons-material";
-import { Avatar, Box, Divider, Drawer, IconButton, List, ListItem, Popover } from "@mui/material";
+import { Avatar, Box, Divider, Drawer, IconButton, List, ListItem, ListItemButton, Popover } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,14 +14,27 @@ function PageDrawer(props) {
   const myActualServers = useSelector((state) => state.firestuff.myActualServers);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [hoveredId, setHoveredId] = React.useState("");
+  const [currentTimeout, setCurrentTimeout] = React.useState("");
 
-  const handlePopoverOpen = (event, id) => {
-    setAnchorEl(event.currentTarget);
+  const handlePopoverOpen = async (event, id, popover) => {
+    //setCurrentTimeout("");
+    clearTimeout(currentTimeout);
     setHoveredId(id);
+    if (!popover) {
+      setAnchorEl(event.currentTarget);
+    }
   };
 
-  const handlePopoverClose = async () => {
+  const setPopoverClosed = async () => {
     setAnchorEl(null);
+  };
+
+  const handlePopoverClose = async (popover) => {
+    if (popover) {
+      setCurrentTimeout(setTimeout(setPopoverClosed, 125));
+    } else {
+      setCurrentTimeout(setTimeout(setPopoverClosed, 250));
+    }
   };
 
   const popoverOpen = Boolean(anchorEl);
@@ -45,23 +58,31 @@ function PageDrawer(props) {
             </ListItem>
             <Divider />
             {Object.keys(myActualServers).map((serverId) => (
-              <ListItem
-                key={serverId}
+              <ListItemButton
+                onMouseEnter={(event) => handlePopoverOpen(event, serverId, false)}
+                onMouseLeave={() => handlePopoverClose(false)}
                 sx={{
                   height: "48px",
                   width: "48px",
                   backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))",
                   borderRadius: "15px",
                   margin: "6px",
+                  padding: "0px",
                 }}
-                onMouseEnter={(event) => handlePopoverOpen(event, serverId)}
-                onMouseLeave={() => handlePopoverClose()}
-                disablePadding
               >
-                <Avatar sx={{ width: 38, height: 38, margin: "5px" }}>
+                <Avatar
+                  sx={{
+                    width: 38,
+                    height: 38,
+                    margin: "5px",
+                    backgroundColor: "transparent",
+                    backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))",
+                    color: theme.palette.text.primary,
+                  }}
+                >
                   {myActualServers[serverId].name.length > 0 ? myActualServers[serverId].name.split(/\s/).reduce((response, word) => (response += word.slice(0, 1)), "") : "?"}
                 </Avatar>
-              </ListItem>
+              </ListItemButton>
             ))}
             <ListItem
               sx={{
@@ -74,7 +95,7 @@ function PageDrawer(props) {
               disabled={!auth.currentUser}
               disablePadding
             >
-              <div style={{ width: "100%", height: "100%", padding: 0 }} onMouseEnter={(event) => handlePopoverOpen(event, "addServer")} onMouseLeave={() => handlePopoverClose()}>
+              <div style={{ width: "100%", height: "100%", padding: 0 }} onMouseEnter={(event) => handlePopoverOpen(event, "addServer", false)} onMouseLeave={() => handlePopoverClose(false)}>
                 <IconButton sx={{ width: "100%", height: "100%", padding: 0 }} onClick={() => dispatch(openDialog("serverDialog"))} disabled={!auth.currentUser}>
                   <div style={{ width: 28, height: 28, margin: "10px", padding: 0 }}>
                     <IconSvgs.Add sx={{ width: "100%", height: "100%", color: "limegreen" }} />
@@ -88,11 +109,13 @@ function PageDrawer(props) {
       <Popover
         sx={{
           pointerEvents: "none",
-          marginLeft: "12px",
+          marginLeft: "13px",
+          "& .MuiPaper-root": {
+            pointerEvents: "auto",
+          },
         }}
         open={popoverOpen}
         anchorEl={anchorEl}
-        onClose={handlePopoverClose}
         disableRestoreFocus
         anchorOrigin={{
           vertical: "center",
@@ -102,13 +125,15 @@ function PageDrawer(props) {
           vertical: "center",
           horizontal: "left",
         }}
+        PaperProps={{ onMouseEnter: (event) => handlePopoverOpen(event, hoveredId, true), onMouseLeave: (event) => handlePopoverClose(true) }}
       >
         <div
           style={{
-            height: hoveredId === "addServer" ? (auth.currentUser ? "32px" : "64px") : "64px",
-            padding: "4px",
+            maxWidth: "250px",
+            padding: "6px",
             display: "flex",
             flexDirection: "column",
+            wordWrap: "break-word",
           }}
         >
           <span>
