@@ -15,7 +15,6 @@ import CreateServerDialog from "./routes/Dialogs/CreateServerDialog";
 import JoinServerDialog from "./routes/Dialogs/JoinServerDialog";
 import ServerDialog from "./routes/Dialogs/ServerDialog";
 import { auth, db } from "./server/index";
-
 function App(props) {
   const dispatch = useDispatch();
 
@@ -23,9 +22,10 @@ function App(props) {
   const [currentUser, setCurrentUser] = React.useState({});
   const [settingsDrawerOpen, setSettingsDrawerOpen] = React.useState(false);
   const themeActual = useSelector((state) => state.theme.actualTheme);
+  const [currentSnapshot, setCurrentSnapshot] = React.useState({});
 
   // Function Methods
-  const signIn = (event) => {
+  const signInPopup = (event) => {
     //event.preventDefault();
     const provider = new GoogleAuthProvider();
     provider.addScope("profile");
@@ -51,6 +51,7 @@ function App(props) {
         // ...
       });
   };
+
   const signOut = () => {
     auth
       .signOut()
@@ -65,12 +66,14 @@ function App(props) {
 
   // Function Hooks
   React.useEffect(() => {
+    let unsubscribe;
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setCurrentUser(user);
 
         // Listen to User
-        onSnapshot(doc(db, "users", auth.currentUser.uid), async (userSnap) => {
+
+        unsubscribe = onSnapshot(doc(db, "users", auth.currentUser.uid), async (userSnap) => {
           if (userSnap.data() && userSnap.data().servers) {
             for (const serverId of userSnap.data().servers) {
               const serverSnap = await getDoc(doc(db, "servers", serverId));
@@ -82,6 +85,9 @@ function App(props) {
           //console.log("Current data: ", doc.data());
         });
       } else {
+        if (unsubscribe) {
+          unsubscribe();
+        }
         setCurrentUser(null);
         dispatch(setMyServers([]));
         dispatch(flushActualServers());
@@ -98,12 +104,12 @@ function App(props) {
         <ServerDialog />
         <AppBar position="fixed" height="48px" sx={{ backgroundColor: themeActual.palette.primary.dark, backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))" }}>
           <Toolbar variant="dense" disableGutters>
-            <div style={{ width: "72px" }} />
+            <div style={{ width: "76px" }} />
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               Rebound
             </Typography>
             {currentUser ? (
-              <Stack direction="row" spacing={2}>
+              <Stack direction="row" spacing={2} sx={{ mr: "10px" }}>
                 <StatusBadge status={"online"}>
                   <Avatar
                     src={auth.currentUser && auth.currentUser.photoURL}
@@ -115,11 +121,11 @@ function App(props) {
                 </StatusBadge>
               </Stack>
             ) : (
-              <Button variant="contained" onClick={(event) => signIn(event)}>
+              <Button variant="contained" onClick={(event) => signInPopup(event)} sx={{ mr: "10px" }}>
                 Sign In
               </Button>
             )}
-            <IconButton onClick={() => setSettingsDrawerOpen(true)} sx={{ mr: "12px", ml: "12px", padding: "6px" }}>
+            <IconButton onClick={() => setSettingsDrawerOpen(true)} sx={{ mr: "10px", padding: "6px" }}>
               <IconSvgs.Settings sx={{ fontSize: 24, color: "white" }} />
             </IconButton>
           </Toolbar>

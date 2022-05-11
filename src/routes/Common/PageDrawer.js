@@ -59,6 +59,7 @@ function PageDrawer(props) {
             <Divider />
             {Object.keys(myActualServers).map((serverId) => (
               <ListItemButton
+                key={serverId}
                 onMouseEnter={(event) => handlePopoverOpen(event, serverId, false)}
                 onMouseLeave={() => handlePopoverClose(false)}
                 sx={{
