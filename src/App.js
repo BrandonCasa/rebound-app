@@ -25,7 +25,7 @@ function App(props) {
   const [currentUser, setCurrentUser] = React.useState({});
   const [settingsDrawerOpen, setSettingsDrawerOpen] = React.useState(false);
   const themeActual = useSelector((state) => state.theme.actualTheme);
-  const [currentSnapshot, setCurrentSnapshot] = React.useState({});
+  const myActualServers = useSelector((state) => state.firestuff.myActualServers);
 
   // Function Methods
   const signInPopup = (event) => {
