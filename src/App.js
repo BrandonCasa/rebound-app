@@ -10,11 +10,13 @@ import PageDrawer from "routes/Common/PageDrawer";
 import SettingsDrawer from "routes/Common/SettingsDrawer";
 import StatusBadge from "routes/Common/StatusBadge";
 import LandingPage from "routes/Landing/Landing";
+import ServerPage from "routes/Server/ServerPage";
 import { flushActualServers, setActualServer, setMyServers } from "./redux/Firestuff/firestuff.slice";
 import CreateServerDialog from "./routes/Dialogs/CreateServerDialog";
 import JoinServerDialog from "./routes/Dialogs/JoinServerDialog";
 import ServerDialog from "./routes/Dialogs/ServerDialog";
 import { auth, db } from "./server/index";
+
 function App(props) {
   const dispatch = useDispatch();
 
@@ -104,7 +106,7 @@ function App(props) {
         <ServerDialog />
         <AppBar position="fixed" height="48px" sx={{ backgroundColor: themeActual.palette.primary.dark, backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))" }}>
           <Toolbar variant="dense" disableGutters>
-            <div style={{ width: "76px" }} />
+            <div style={{ width: "77px" }} />
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               Rebound
             </Typography>
@@ -134,7 +136,10 @@ function App(props) {
         <PageDrawer />
         <SettingsDrawer setSettingsDrawerOpen={setSettingsDrawerOpen} settingsDrawerOpen={settingsDrawerOpen} />
         <Routes>
-          <Route path="/" element={<LandingPage />} />
+          <Route exact path="/" element={<LandingPage />} />
+          <Route path="server">
+            <Route path=":serverId" element={<ServerPage />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

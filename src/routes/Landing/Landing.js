@@ -9,7 +9,7 @@ function LandingPage() {
   const theme = useTheme();
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, alignItems: "center", marginLeft: "60px" }}>
+    <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, alignItems: "center", marginLeft: "61px" }}>
       <div style={{ width: "50%", minWidth: "225px" }}>
         <Paper elevation={1} sx={{ margin: 2 }}>
           <Typography variant="h3" fontWeight={700} fontSize="24px" component="div" textAlign={"center"} sx={{ padding: "8px", color: theme.palette.mode === "light" ? "coral" : "orange" }}>

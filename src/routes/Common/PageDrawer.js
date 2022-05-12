@@ -4,12 +4,14 @@ import { Avatar, Box, Divider, Drawer, IconButton, List, ListItem, ListItemButto
 import { useTheme } from "@mui/material/styles";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { openDialog } from "redux/Dialogs/dialogs.slice";
 import { auth } from "../../server/index";
 
 function PageDrawer(props) {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const myActualServers = useSelector((state) => state.firestuff.myActualServers);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -37,6 +39,14 @@ function PageDrawer(props) {
     }
   };
 
+  const loadServer = async (serverId) => {
+    if (serverId === "home") {
+      navigate(`/`);
+    } else {
+      navigate(`/server/${serverId}`);
+    }
+  };
+
   const popoverOpen = Boolean(anchorEl);
 
   return (
@@ -57,8 +67,43 @@ function PageDrawer(props) {
               <IconSvgs.Dns sx={{ fontSize: 32, width: "100%", color: "white" }} />
             </ListItem>
             <Divider />
+            <ListItem
+              sx={{
+                height: "48px",
+                width: "48px",
+                backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))",
+                borderRadius: "15px",
+                margin: "6px",
+                padding: "0px",
+              }}
+              disablePadding
+            >
+              <div
+                style={{ width: "100%", height: "100%", padding: 0, margin: "0" }}
+                onMouseEnter={(event) => handlePopoverOpen(event, "addServer", false)}
+                onMouseLeave={() => handlePopoverClose(false)}
+              >
+                <IconButton
+                  sx={{
+                    width: "38px",
+                    height: "38px",
+                    margin: "5px",
+                    padding: 0,
+                    backgroundColor: "transparent",
+                    backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))",
+                    color: theme.palette.text.primary,
+                  }}
+                  onClick={() => loadServer("home")}
+                >
+                  <div style={{ width: "100%", height: "100%", margin: "0", padding: 0 }}>
+                    <IconSvgs.Home sx={{ width: "28px", height: "28px", margin: "5px" }} fontSize={"large"} />
+                  </div>
+                </IconButton>
+              </div>
+            </ListItem>
             {Object.keys(myActualServers).map((serverId) => (
               <ListItemButton
+                onClick={() => loadServer(serverId)}
                 key={serverId}
                 onMouseEnter={(event) => handlePopoverOpen(event, serverId, false)}
                 onMouseLeave={() => handlePopoverClose(false)}
