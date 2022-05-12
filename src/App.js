@@ -9,6 +9,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PageDrawer from "routes/Common/PageDrawer";
 import SettingsDrawer from "routes/Common/SettingsDrawer";
 import StatusBadge from "routes/Common/StatusBadge";
+import HubPage from "routes/Hub/HubPage";
 import LandingPage from "routes/Landing/Landing";
 import ServerPage from "routes/Server/ServerPage";
 import { flushActualServers, setActualServer, setMyServers } from "./redux/Firestuff/firestuff.slice";
@@ -137,6 +138,7 @@ function App(props) {
         <SettingsDrawer setSettingsDrawerOpen={setSettingsDrawerOpen} settingsDrawerOpen={settingsDrawerOpen} />
         <Routes>
           <Route exact path="/" element={<LandingPage />} />
+          <Route path="hub" element={<HubPage />} />
           <Route path="server">
             <Route path=":serverId" element={<ServerPage />} />
           </Route>

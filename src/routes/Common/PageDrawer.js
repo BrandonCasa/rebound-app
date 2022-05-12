@@ -40,8 +40,8 @@ function PageDrawer(props) {
   };
 
   const loadServer = async (serverId) => {
-    if (serverId === "home") {
-      navigate(`/`);
+    if (serverId === "hub") {
+      navigate(`/hub`);
     } else {
       navigate(`/server/${serverId}`);
     }
@@ -80,7 +80,7 @@ function PageDrawer(props) {
             >
               <div
                 style={{ width: "100%", height: "100%", padding: 0, margin: "0" }}
-                onMouseEnter={(event) => handlePopoverOpen(event, "addServer", false)}
+                onMouseEnter={(event) => handlePopoverOpen(event, "hubServer", false)}
                 onMouseLeave={() => handlePopoverClose(false)}
               >
                 <IconButton
@@ -93,7 +93,7 @@ function PageDrawer(props) {
                     backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))",
                     color: theme.palette.text.primary,
                   }}
-                  onClick={() => loadServer("home")}
+                  onClick={() => loadServer("hub")}
                 >
                   <div style={{ width: "100%", height: "100%", margin: "0", padding: 0 }}>
                     <IconSvgs.Home sx={{ width: "28px", height: "28px", margin: "5px" }} fontSize={"large"} />
@@ -183,27 +183,26 @@ function PageDrawer(props) {
           }}
         >
           <span>
-            <span style={{ fontWeight: "bold" }}>{hoveredId === "addServer" ? "Action: " : "Name: "}</span>
-            {hoveredId === "addServer" ? "Add a server" : myActualServers[hoveredId] && myActualServers[hoveredId].name}
+            {hoveredId === "addServer" && <span style={{ fontWeight: "bold" }}>Action: </span>}
+            {hoveredId === "addServer" && "Add a server"}
+
+            {hoveredId === "hubServer" && <span style={{ fontWeight: "bold" }}>Page: </span>}
+            {hoveredId === "hubServer" && "The Hub"}
+
+            {hoveredId !== "addServer" && hoveredId !== "hubServer" && <span style={{ fontWeight: "bold" }}>Server: </span>}
+            {hoveredId !== "addServer" && hoveredId !== "hubServer" && `${myActualServers[hoveredId] && myActualServers[hoveredId].name}`}
           </span>
-          {hoveredId !== "addServer" && (
-            <React.Fragment>
-              <Divider sx={{ flexGrow: 1 }} />
-              <span>
-                <span style={{ fontWeight: "bold" }}>Code: </span>
-                {hoveredId.substring(0, 6)}
-              </span>
-            </React.Fragment>
-          )}
-          {!auth.currentUser && (
-            <React.Fragment>
-              <Divider sx={{ flexGrow: 1 }} />
-              <span>
-                <span style={{ fontWeight: "bold" }}>Error: </span>
-                Please login.
-              </span>
-            </React.Fragment>
-          )}
+
+          {hoveredId !== "addServer" && hoveredId !== "hubServer" && <Divider sx={{ flexGrow: 1 }} />}
+
+          <span>
+            {hoveredId !== "addServer" && hoveredId !== "hubServer" && auth.currentUser && <span style={{ fontWeight: "bold" }}>Code: </span>}
+            {hoveredId !== "addServer" && hoveredId !== "hubServer" && auth.currentUser && hoveredId.substring(0, 6)}
+
+            {!auth.currentUser && hoveredId !== "hubServer" && <Divider sx={{ flexGrow: 1 }} />}
+            {!auth.currentUser && hoveredId !== "hubServer" && <span style={{ fontWeight: "bold" }}>Error: </span>}
+            {!auth.currentUser && hoveredId !== "hubServer" && "Please log in."}
+          </span>
         </div>
       </Popover>
     </React.Fragment>
