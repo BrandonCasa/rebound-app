@@ -2,7 +2,7 @@
 import * as IconSvgs from "@mui/icons-material";
 import { AppBar, Avatar, Button, CssBaseline, IconButton, Stack, ThemeProvider, Toolbar, Typography } from "@mui/material";
 import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "firebase/auth";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -55,16 +55,31 @@ function App(props) {
   }, []);
 
   React.useEffect(() => {
+    let serverSubscriptions = {};
+
+    // If logged in
     if (currentUser && currentUser.hasOwnProperty("uid")) {
-      const unsubscribeUser = onSnapshot(doc(db, "users", currentUser.uid), async (userSnap) => {
-        if (userSnap.data() && userSnap.data().servers) {
-          for (const serverId of userSnap.data().servers) {
-            const serverSnap = await getDoc(doc(db, "servers", serverId));
-            dispatch(setActualServer({ serverId: serverId, serverData: serverSnap.data().serverData }));
+      // Subscribe to the user
+      const unsubscribeUser = onSnapshot(doc(db, "users", currentUser.uid), async (userSnapshot) => {
+        if (userSnapshot.data() && userSnapshot.data().servers) {
+          // Loop through servers
+          for (const serverId of userSnapshot.data().servers) {
+            // Subscribe to the server
+            const unsubscribeServer = onSnapshot(doc(db, "servers", serverId), async (serverSnapshot) => {
+              if (serverSnapshot.data() && serverSnapshot.data().serverData) {
+                dispatch(setActualServer({ serverId: serverId, serverData: serverSnapshot.data().serverData }));
+              }
+            });
+            serverSubscriptions[serverId] = unsubscribeServer;
           }
         }
       });
+
       return () => {
+        for (const unsubServer in serverSubscriptions) {
+          serverSubscriptions[unsubServer]();
+        }
+        console.log(`${Object.keys(serverSubscriptions).length} Server Listeners Stopped.`);
         unsubscribeUser();
         dispatch(flushActualServers());
         console.log("User Listener Stopped.");
