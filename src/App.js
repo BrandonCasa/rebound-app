@@ -12,7 +12,7 @@ import StatusBadge from "routes/Common/StatusBadge";
 import HubPage from "routes/Hub/HubPage";
 import LandingPage from "routes/Landing/Landing";
 import ServerPage from "routes/Server/ServerPage";
-import { flushActualServers, setActualServer } from "./redux/Firestuff/firestuff.slice";
+import { flushActualServers, removeOldServers, setActualServer } from "./redux/Firestuff/firestuff.slice";
 import CreateServerDialog from "./routes/Dialogs/CreateServerDialog";
 import JoinServerDialog from "./routes/Dialogs/JoinServerDialog";
 import ServerDialog from "./routes/Dialogs/ServerDialog";
@@ -72,6 +72,7 @@ function App(props) {
             });
             serverSubscriptions[serverId] = unsubscribeServer;
           }
+          dispatch(removeOldServers(userSnapshot.data().servers));
         }
       });
 
