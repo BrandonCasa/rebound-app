@@ -26,6 +26,7 @@ function App(props) {
   const [initializing, setInitializing] = React.useState(true);
   const [settingsDrawerOpen, setSettingsDrawerOpen] = React.useState(false);
   const themeActual = useSelector((state) => state.theme.actualTheme);
+  const myActualServers = useSelector((state) => state.firestuff.myActualServers);
 
   // Function Methods
   const signInPopup = (event) => {
@@ -72,7 +73,7 @@ function App(props) {
             });
             serverSubscriptions[serverId] = unsubscribeServer;
           }
-          dispatch(removeOldServers(userSnapshot.data().servers));
+          dispatch(removeOldServers({ new: userSnapshot.data().servers, subs: serverSubscriptions }));
         }
       });
 
@@ -81,8 +82,8 @@ function App(props) {
           serverSubscriptions[unsubServer]();
         }
         console.log(`${Object.keys(serverSubscriptions).length} Server Listeners Stopped.`);
-        unsubscribeUser();
         dispatch(flushActualServers());
+        unsubscribeUser();
         console.log("User Listener Stopped.");
         console.log("Server List Cleared.");
       };

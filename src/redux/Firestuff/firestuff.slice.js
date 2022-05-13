@@ -15,11 +15,12 @@ export const firestuffSlice = createSlice({
     },
     removeOldServers: (state, action) => {
       const oldServers = Object.keys(state.myActualServers);
-      const newServers = action.payload;
+      const newServers = action.payload.new;
       for (const oldServer of oldServers) {
         if (!newServers.includes(oldServer)) {
-          console.log(`Server ${oldServer} removed.`);
+          action.payload.subs[oldServer]();
           delete state.myActualServers[oldServer];
+          console.log(`Server ${oldServer} removed.`);
         }
       }
     },
