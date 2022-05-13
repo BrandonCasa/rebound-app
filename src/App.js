@@ -12,7 +12,7 @@ import StatusBadge from "routes/Common/StatusBadge";
 import HubPage from "routes/Hub/HubPage";
 import LandingPage from "routes/Landing/Landing";
 import ServerPage from "routes/Server/ServerPage";
-import { flushActualServers, setActualServer, setMyServers } from "./redux/Firestuff/firestuff.slice";
+import { flushActualServers, setActualServer } from "./redux/Firestuff/firestuff.slice";
 import CreateServerDialog from "./routes/Dialogs/CreateServerDialog";
 import JoinServerDialog from "./routes/Dialogs/JoinServerDialog";
 import ServerDialog from "./routes/Dialogs/ServerDialog";
@@ -23,9 +23,9 @@ function App(props) {
 
   // Function State
   const [currentUser, setCurrentUser] = React.useState({});
+  const [initializing, setInitializing] = React.useState(true);
   const [settingsDrawerOpen, setSettingsDrawerOpen] = React.useState(false);
   const themeActual = useSelector((state) => state.theme.actualTheme);
-  const myActualServers = useSelector((state) => state.firestuff.myActualServers);
 
   // Function Methods
   const signInPopup = (event) => {
@@ -33,70 +33,49 @@ function App(props) {
     const provider = new GoogleAuthProvider();
     provider.addScope("profile");
     provider.addScope("email");
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        // ...
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error(errorCode, errorMessage);
-        // The email of the user's account used.
-        const email = error.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-      });
+    signInWithPopup(auth, provider).catch((error) => console.error(error.code, error.message));
   };
 
   const signOut = () => {
-    auth
-      .signOut()
-      .then(() => {
-        // Sign-out successful.
-      })
-      .catch((error) => {
-        // An error happened.
-        console.error(error);
-      });
+    auth.signOut().catch((error) => console.error(error));
+  };
+
+  const onAuthStateChangedFunc = (user) => {
+    setCurrentUser(user);
+    if (initializing) setInitializing(false);
   };
 
   // Function Hooks
   React.useEffect(() => {
-    let unsubscribe;
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-
-        // Listen to User
-
-        unsubscribe = onSnapshot(doc(db, "users", auth.currentUser.uid), async (userSnap) => {
-          if (userSnap.data() && userSnap.data().servers) {
-            for (const serverId of userSnap.data().servers) {
-              const serverSnap = await getDoc(doc(db, "servers", serverId));
-              dispatch(setActualServer({ serverId: serverId, serverData: serverSnap.data().serverData }));
-            }
-
-            dispatch(setMyServers(userSnap.data().servers));
-          }
-          //console.log("Current data: ", doc.data());
-        });
-      } else {
-        if (unsubscribe) {
-          unsubscribe();
-        }
-        setCurrentUser(null);
-        dispatch(setMyServers([]));
-        dispatch(flushActualServers());
-      }
-    });
+    const unsubscribeAuth = onAuthStateChanged(auth, onAuthStateChangedFunc);
+    return () => {
+      unsubscribeAuth();
+      console.log("Auth Listener Stopped.");
+    };
   }, []);
+
+  React.useEffect(() => {
+    if (currentUser && currentUser.hasOwnProperty("uid")) {
+      const unsubscribeUser = onSnapshot(doc(db, "users", currentUser.uid), async (userSnap) => {
+        if (userSnap.data() && userSnap.data().servers) {
+          for (const serverId of userSnap.data().servers) {
+            const serverSnap = await getDoc(doc(db, "servers", serverId));
+            dispatch(setActualServer({ serverId: serverId, serverData: serverSnap.data().serverData }));
+          }
+        }
+      });
+      return () => {
+        unsubscribeUser();
+        dispatch(flushActualServers());
+        console.log("User Listener Stopped.");
+        console.log("Server List Cleared.");
+      };
+    } else {
+      return () => {};
+    }
+  }, [currentUser]);
+
+  if (initializing) return null;
 
   return (
     <ThemeProvider theme={{ ...themeActual }}>
