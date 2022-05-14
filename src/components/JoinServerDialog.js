@@ -3,7 +3,7 @@ import { useTheme } from "@mui/material/styles";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { closeDialog } from "redux/Dialogs/dialogs.slice";
-import { auth, functions } from "../../server/index";
+import { auth, functions } from "../server/index";
 
 function JoinServerDialog(props) {
   const theme = useTheme();

@@ -6,16 +6,16 @@ import { doc, onSnapshot } from "firebase/firestore";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import PageDrawer from "routes/Common/PageDrawer";
-import SettingsDrawer from "routes/Common/SettingsDrawer";
-import StatusBadge from "routes/Common/StatusBadge";
-import HubPage from "routes/Hub/HubPage";
-import LandingPage from "routes/Landing/Landing";
-import ServerPage from "routes/Server/ServerPage";
+import CreateServerDialog from "./components/CreateServerDialog";
+import JoinServerDialog from "./components/JoinServerDialog";
+import PageDrawer from "./components/PageDrawer";
+import ServerDialog from "./components/ServerDialog";
+import SettingsDrawer from "./components/SettingsDrawer";
+import StatusBadge from "./components/StatusBadge";
+import HubPage from "./pages/Hub.page";
+import LandingPage from "./pages/Landing.page";
+import ServerPage from "./pages/Server.page";
 import { flushActualServers, removeOldServers, setActualServer } from "./redux/Firestuff/firestuff.slice";
-import CreateServerDialog from "./routes/Dialogs/CreateServerDialog";
-import JoinServerDialog from "./routes/Dialogs/JoinServerDialog";
-import ServerDialog from "./routes/Dialogs/ServerDialog";
 import { auth, db } from "./server/index";
 
 function App(props) {

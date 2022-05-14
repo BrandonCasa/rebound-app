@@ -1,15 +1,15 @@
 import { Divider, Grid, Paper, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import * as React from "react";
-import ChatCard from "./ChatCard";
-import CommunitiesCard from "./CommunitiesCard";
-import ThemeCard from "./ThemeCard";
+import ChatCard from "../components/Chat.card";
+import CommunitiesCard from "../components/Community.card";
+import ThemeCard from "../components/Theme.card";
 
 function LandingPage() {
   const theme = useTheme();
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, alignItems: "center", marginLeft: "61px" }}>
+    <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, alignItems: "center", marginLeft: "60px" }}>
       <div style={{ width: "50%", minWidth: "225px" }}>
         <Paper elevation={1} sx={{ margin: 2 }}>
           <Typography variant="h3" fontWeight={700} fontSize="24px" component="div" textAlign={"center"} sx={{ padding: "8px", color: theme.palette.mode === "light" ? "coral" : "orange" }}>

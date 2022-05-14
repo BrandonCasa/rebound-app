@@ -6,7 +6,7 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { openDialog } from "redux/Dialogs/dialogs.slice";
-import { auth } from "../../server/index";
+import { auth } from "../server/index";
 
 function PageDrawer(props) {
   const theme = useTheme();
