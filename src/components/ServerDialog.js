@@ -3,7 +3,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import { useTheme } from "@mui/material/styles";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { closeDialog, openDialog } from "redux/Dialogs/dialogs.slice";
+import { closeDialog, openDialog } from "../redux/Dialogs/dialogs.slice";
 
 function ServerDialog(props) {
   const theme = useTheme();

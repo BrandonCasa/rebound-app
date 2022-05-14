@@ -1,12 +1,16 @@
-// @ts-nocheck
 import * as IconSvgs from "@mui/icons-material";
 import { Box, Divider, Drawer, IconButton, List, ListItem, ListItemText, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import * as React from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setMode } from "redux/Theme/theme.slice";
+import { setMode, themeSelector } from "../redux/Theme/theme.slice";
 
-function SettingsDrawer(props) {
-  const themeValue = useSelector((state) => state.theme.value);
+interface SettingsDrawerProps {
+  settingsDrawerOpen: boolean;
+  setSettingsDrawerOpen: Function;
+}
+
+function SettingsDrawer(props: SettingsDrawerProps) {
+  const themeState = useSelector(themeSelector);
   const dispatch = useDispatch();
 
   return (
@@ -26,7 +30,7 @@ function SettingsDrawer(props) {
           </ListItem>
           <ListItem>
             <ToggleButtonGroup
-              value={themeValue}
+              value={themeState.mode}
               fullWidth
               exclusive
               onChange={(event, newTheme) => {

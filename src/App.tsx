@@ -16,6 +16,7 @@ import HubPage from "./pages/Hub.page";
 import LandingPage from "./pages/Landing.page";
 import ServerPage from "./pages/Server.page";
 import { flushActualServers, removeOldServers, setActualServer } from "./redux/Firestuff/firestuff.slice";
+import { themeSelector } from "./redux/Theme/theme.slice";
 import { auth, db } from "./server/index";
 
 function App(props) {
@@ -25,7 +26,7 @@ function App(props) {
   const [currentUser, setCurrentUser] = React.useState({});
   const [initializing, setInitializing] = React.useState(true);
   const [settingsDrawerOpen, setSettingsDrawerOpen] = React.useState(false);
-  const themeActual = useSelector((state) => state.theme.actualTheme);
+  const themeState = useSelector(themeSelector);
   const myActualServers = useSelector((state) => state.firestuff.myActualServers);
 
   // Function Methods
@@ -95,13 +96,17 @@ function App(props) {
   if (initializing) return null;
 
   return (
-    <ThemeProvider theme={{ ...themeActual }}>
+    <ThemeProvider theme={{ ...themeState.themeObject }}>
       <CssBaseline />
       <BrowserRouter>
         <CreateServerDialog />
         <JoinServerDialog />
         <ServerDialog />
-        <AppBar position="fixed" height="48px" sx={{ backgroundColor: themeActual.palette.primary.dark, backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))" }}>
+        <AppBar
+          position="fixed"
+          height="48px"
+          sx={{ backgroundColor: themeState.themeObject.palette.primary.dark, backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))" }}
+        >
           <Toolbar variant="dense" disableGutters>
             <div style={{ width: "77px" }} />
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -112,7 +117,7 @@ function App(props) {
                 <StatusBadge status={"online"}>
                   <Avatar
                     src={auth.currentUser && auth.currentUser.photoURL}
-                    sx={{ width: 38, height: 38, boxShadow: `0 0 4px 2px ${themeActual.palette.background.paper}90` }}
+                    sx={{ width: 38, height: 38, boxShadow: `0 0 4px 2px ${themeState.themeObject.palette.background.paper}90` }}
                     onClick={() => {
                       signOut();
                     }}

@@ -5,7 +5,7 @@ import { useTheme } from "@mui/material/styles";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { openDialog } from "redux/Dialogs/dialogs.slice";
+import { openDialog } from "../redux/Dialogs/dialogs.slice";
 import { auth } from "../server/index";
 
 function PageDrawer(props) {
