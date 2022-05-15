@@ -1,7 +1,7 @@
 {
   "name": "rebound-app",
   "version": "0.1.0-alpha",
-  "private": true,
+  "private": false,
   "dependencies": {
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
@@ -24,7 +24,7 @@
     "react-firebase-hooks": "^5.0.3",
     "react-redux": "^8.0.1",
     "react-router-dom": "6",
-    "react-scripts": "5.0.0",
+    "react-scripts": "5.0.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.4.1",
     "typescript": "^4.6.4",
@@ -32,7 +32,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "deploy-all": "firebase deploy",
+    "deploy-hosting": "firebase deploy --only hosting",
+    "deploy-functions": "firebase deploy --only functions",
+    "audit-fix": "yarn-audit-fix"
   },
   "eslintConfig": {
     "extends": [
@@ -53,6 +57,7 @@
     ]
   },
   "devDependencies": {
-    "prettier-plugin-organize-imports": "^2.3.4"
+    "prettier-plugin-organize-imports": "^2.3.4",
+    "yarn-audit-fix": "^9.3.1"
   }
 }

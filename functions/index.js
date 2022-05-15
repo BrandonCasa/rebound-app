@@ -44,21 +44,6 @@ exports.addServerChannel = functions.https.onRequest(async (req, res) => {
     res.json({ result: `Server with ID ${req.body.serverID} does not exist.` });
   }
 });
-/*
-exports.addServerNew = functions.https.onRequest(async (req, res) => {
-  const serverData = {
-    name: req.body.name,
-    description: req.body.description,
-    subject: req.body.subject,
-    iconPath: "",
-    bannerPath: "",
-    ownerID: "",
-  };
-  const writtenServer = await admin.firestore().collection("server_chat").add({ serverData: serverData });
-  const writtenChannel = await writtenServer.collection("channels").add({ channelData: { name: "General", description: "A generalized place to talk." } });
-  res.json({ result: `Server with ID ${writtenServer.id} created. Channel with ID ${writtenChannel.id} added.` });
-});
-*/
 
 exports.addServerNew = functions.https.onRequest(async (req, res) => {
   cors(req, res, async () => {
@@ -97,18 +82,6 @@ exports.addServerNew = functions.https.onRequest(async (req, res) => {
 
 exports.joinServer = functions.https.onRequest(async (req, res) => {
   cors(req, res, async () => {
-    /*
-    const docs = await admin.firestore().collection("servers").listDocuments();
-    let ids = [];
-    docs.forEach((doc) => {
-      ids.push(doc.id);
-    });
-    const result = ids.findIndex((id) => {
-      return id.startsWith(JSON.parse(req.body).serverID);
-    }, JSON.parse(req.body).serverID);
-    console.log(result);
-    */
-
     //find server that starts with id substring
     const foundServer = await admin
       .firestore()
