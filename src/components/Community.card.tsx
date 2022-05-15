@@ -3,7 +3,7 @@ import { Avatar, Card, CardActions, CardContent, CardHeader, Collapse, Divider, 
 import { useTheme } from "@mui/material/styles";
 import * as React from "react";
 
-const ExpandMore = styled((props) => {
+const ExpandMore = styled((props: any) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
@@ -14,7 +14,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-function ChatCard() {
+function CommunitiesCard() {
   const theme = useTheme();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -26,12 +26,12 @@ function ChatCard() {
     <Card sx={{ maxWidth: "100%" }}>
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: theme.palette.mode === "light" ? "cadetblue" : "#007878" }}>
-            <IconSvgs.Chat sx={{ color: "white" }} />
+          <Avatar sx={{ bgcolor: theme.palette.mode === "light" ? "cadetblue" : "#780078" }}>
+            <IconSvgs.Dashboard sx={{ color: "white" }} />
           </Avatar>
         }
-        title="Text Chat"
-        subheader="Innovative messaging"
+        title="Community"
+        subheader="Groups built to scale"
       />
       <Divider variant="middle" />
       <CardActions disableSpacing>
@@ -43,11 +43,15 @@ function ChatCard() {
         <Divider variant="middle" />
         <CardContent>
           <Typography variant="body2" color="text.secondary">
-            - With swippable and contextual actions, interacting with others' messages has never been easier.
+            - From 3 to 10,000 members, your server can be a powerful platform for your community.
           </Typography>
           <br />
           <Typography variant="body2" color="text.secondary">
-            - Our spam resistant notification system will only notify you once, even if you have multiple messages from the same person.
+            - Seamless communication with Discord and Twitch allows anyone in your Rebound server to see your Discord/Twitch chats all in one place.
+          </Typography>
+          <br />
+          <Typography variant="body2" color="text.secondary">
+            - Built in management tools keep moderation logs and actions in check.
           </Typography>
         </CardContent>
       </Collapse>
@@ -55,4 +59,4 @@ function ChatCard() {
   );
 }
 
-export default ChatCard;
+export default CommunitiesCard;

@@ -1,9 +1,8 @@
-// @ts-nocheck
 import { Badge } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 
-function StatusBadge(props) {
+function StatusBadge(props: any) {
   let statusColor = "";
   if (props.status === "online") {
     statusColor = "#44b700";
@@ -43,7 +42,7 @@ function StatusBadge(props) {
   }));
 
   return (
-    <ActualBadge overlap="circular" anchorOrigin={{ vertical: "bottom", horizontal: "right" }} variant="dot" status={props.status}>
+    <ActualBadge overlap="circular" anchorOrigin={{ vertical: "bottom", horizontal: "right" }} variant="dot">
       {props.children}
     </ActualBadge>
   );

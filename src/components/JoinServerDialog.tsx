@@ -1,16 +1,15 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { closeDialog } from "../redux/Dialogs/dialogs.slice";
+import { useSelector } from "react-redux";
+import { closeDialog, dialogsSelector } from "../redux/Dialogs/dialogs.slice";
+import { useAppDispatch } from "../redux/store";
 import { auth, functions } from "../server/index";
 
-function JoinServerDialog(props) {
-  const theme = useTheme();
-  const dispatch = useDispatch();
+function JoinServerDialog(props: any) {
+  const dialogsState = useSelector(dialogsSelector);
+  const dispatch = useAppDispatch();
 
   const [joinCode, setJoinCode] = React.useState("");
-  const dialogOpen = useSelector((state) => state.dialogs.openedDialogs.includes("joinServerDialog"));
 
   const joinServer = () => {
     fetch(`${functions.customDomain}/joinServer`, {
@@ -28,7 +27,7 @@ function JoinServerDialog(props) {
 
   return (
     <Dialog
-      open={dialogOpen}
+      open={dialogsState.openedDialogs.includes("joinServerDialog")}
       onClose={() => {
         dispatch(closeDialog("joinServerDialog"));
       }}

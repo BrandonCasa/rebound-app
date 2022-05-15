@@ -5,7 +5,7 @@ import ChatCard from "../components/Chat.card";
 import CommunitiesCard from "../components/Community.card";
 import ThemeCard from "../components/Theme.card";
 
-function LandingPage() {
+function LandingPage(props: any) {
   const theme = useTheme();
 
   return (

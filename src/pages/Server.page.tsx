@@ -1,10 +1,7 @@
-// @ts-nocheck
 import * as React from "react";
-import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 
-function ServerPage(props) {
-  const dispatch = useDispatch();
+function ServerPage(props: any) {
   const params = useParams();
 
   return (

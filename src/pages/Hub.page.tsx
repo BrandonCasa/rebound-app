@@ -1,10 +1,6 @@
-// @ts-nocheck
 import * as React from "react";
-import { useDispatch } from "react-redux";
 
-function HubPage(props) {
-  const dispatch = useDispatch();
-
+function HubPage(props: any) {
   return (
     <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, marginLeft: "61px", padding: "16px" }}>
       <span>

@@ -3,7 +3,7 @@ import { Avatar, Card, CardActions, CardContent, CardHeader, Collapse, Divider, 
 import { useTheme } from "@mui/material/styles";
 import * as React from "react";
 
-const ExpandMore = styled((props) => {
+const ExpandMore = styled((props: any) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
@@ -14,7 +14,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-function CommunitiesCard() {
+function ThemeCard() {
   const theme = useTheme();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -26,12 +26,12 @@ function CommunitiesCard() {
     <Card sx={{ maxWidth: "100%" }}>
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: theme.palette.mode === "light" ? "cadetblue" : "#780078" }}>
-            <IconSvgs.Dashboard sx={{ color: "white" }} />
+          <Avatar sx={{ bgcolor: theme.palette.mode === "light" ? "cadetblue" : "#00781e" }}>
+            <IconSvgs.Brush sx={{ color: "white" }} />
           </Avatar>
         }
-        title="Community"
-        subheader="Groups built to scale"
+        title="Custom Themes"
+        subheader="Design your theme"
       />
       <Divider variant="middle" />
       <CardActions disableSpacing>
@@ -43,15 +43,11 @@ function CommunitiesCard() {
         <Divider variant="middle" />
         <CardContent>
           <Typography variant="body2" color="text.secondary">
-            - From 3 to 10,000 members, your server can be a powerful platform for your community.
+            - With swippable and contextual actions, interacting with others' messages has never been easier.
           </Typography>
           <br />
           <Typography variant="body2" color="text.secondary">
-            - Seamless communication with Discord and Twitch allows anyone in your Rebound server to see your Discord/Twitch chats all in one place.
-          </Typography>
-          <br />
-          <Typography variant="body2" color="text.secondary">
-            - Built in management tools keep moderation logs and actions in check.
+            - Our spam resistant notification system will only notify you once, even if you have multiple messages from the same person.
           </Typography>
         </CardContent>
       </Collapse>
@@ -59,4 +55,4 @@ function CommunitiesCard() {
   );
 }
 
-export default CommunitiesCard;
+export default ThemeCard;

@@ -3,7 +3,7 @@ import { Avatar, Card, CardActions, CardContent, CardHeader, Collapse, Divider, 
 import { useTheme } from "@mui/material/styles";
 import * as React from "react";
 
-const ExpandMore = styled((props) => {
+const ExpandMore = styled((props: any) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
@@ -14,7 +14,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-function ThemeCard() {
+function ChatCard() {
   const theme = useTheme();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -26,12 +26,12 @@ function ThemeCard() {
     <Card sx={{ maxWidth: "100%" }}>
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: theme.palette.mode === "light" ? "cadetblue" : "#00781e" }}>
-            <IconSvgs.Brush sx={{ color: "white" }} />
+          <Avatar sx={{ bgcolor: theme.palette.mode === "light" ? "cadetblue" : "#007878" }}>
+            <IconSvgs.Chat sx={{ color: "white" }} />
           </Avatar>
         }
-        title="Custom Themes"
-        subheader="Design your theme"
+        title="Text Chat"
+        subheader="Innovative messaging"
       />
       <Divider variant="middle" />
       <CardActions disableSpacing>
@@ -55,4 +55,4 @@ function ThemeCard() {
   );
 }
 
-export default ThemeCard;
+export default ChatCard;

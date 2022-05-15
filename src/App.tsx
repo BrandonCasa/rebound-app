@@ -4,7 +4,7 @@ import { AppBar, Avatar, Button, CssBaseline, IconButton, Stack, ThemeProvider, 
 import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
 import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import CreateServerDialog from "./components/CreateServerDialog";
 import JoinServerDialog from "./components/JoinServerDialog";
@@ -16,17 +16,18 @@ import HubPage from "./pages/Hub.page";
 import LandingPage from "./pages/Landing.page";
 import ServerPage from "./pages/Server.page";
 import { flushActualServers, removeOldServers, setActualServer } from "./redux/Firestuff/firestuff.slice";
+import { useAppDispatch } from "./redux/store";
 import { themeSelector } from "./redux/Theme/theme.slice";
 import { auth, db } from "./server/index";
 
-function App(props) {
-  const dispatch = useDispatch();
+function App(props: any) {
+  const themeState = useSelector(themeSelector);
+  const dispatch = useAppDispatch();
 
   // Function State
   const [currentUser, setCurrentUser] = React.useState({});
   const [initializing, setInitializing] = React.useState(true);
   const [settingsDrawerOpen, setSettingsDrawerOpen] = React.useState(false);
-  const themeState = useSelector(themeSelector);
 
   // Function Methods
   const signInPopup = (event) => {

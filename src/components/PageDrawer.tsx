@@ -1,25 +1,24 @@
-// @ts-nocheck
 import * as IconSvgs from "@mui/icons-material";
-import { Avatar, Box, Divider, Drawer, IconButton, List, ListItem, ListItemButton, Popover } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Avatar, Box, Divider, Drawer, IconButton, List, ListItem, ListItemButton, Popover, useTheme } from "@mui/material";
 import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { openDialog } from "../redux/Dialogs/dialogs.slice";
 import { firestuffSelector } from "../redux/Firestuff/firestuff.slice";
+import { useAppDispatch } from "../redux/store";
 import { auth } from "../server/index";
 
-function PageDrawer(props) {
+function PageDrawer(props: any) {
   const theme = useTheme();
-  const dispatch = useDispatch();
+  const firestuffState = useSelector(firestuffSelector);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const firestuffState = useSelector(firestuffSelector);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [hoveredId, setHoveredId] = React.useState("");
-  const [currentTimeout, setCurrentTimeout] = React.useState("");
+  const [anchorEl, setAnchorEl] = React.useState<Element | undefined>(undefined);
+  const [hoveredId, setHoveredId] = React.useState<string>("");
+  const [currentTimeout, setCurrentTimeout] = React.useState<NodeJS.Timeout | undefined>(undefined);
 
-  const handlePopoverOpen = async (event, id, popover) => {
+  const handlePopoverOpen = async (event: React.MouseEvent<HTMLDivElement, MouseEvent>, id: string, popover: boolean) => {
     //setCurrentTimeout("");
     clearTimeout(currentTimeout);
     setHoveredId(id);
@@ -29,10 +28,10 @@ function PageDrawer(props) {
   };
 
   const setPopoverClosed = async () => {
-    setAnchorEl(null);
+    setAnchorEl(undefined);
   };
 
-  const handlePopoverClose = async (popover) => {
+  const handlePopoverClose = async (popover: boolean) => {
     if (popover) {
       setCurrentTimeout(setTimeout(setPopoverClosed, 125));
     } else {
@@ -40,7 +39,7 @@ function PageDrawer(props) {
     }
   };
 
-  const loadServer = async (serverId) => {
+  const loadServer = async (serverId: string) => {
     if (serverId === "hub") {
       navigate(`/hub`);
     } else {
@@ -128,7 +127,7 @@ function PageDrawer(props) {
                   }}
                 >
                   {firestuffState.myActualServers[serverId].name.length > 0
-                    ? firestuffState.myActualServers[serverId].name.split(/\s/).reduce((response, word) => (response += word.slice(0, 1)), "")
+                    ? firestuffState.myActualServers[serverId].name.split(/\s/).reduce((response: string, word: string) => (response += word.slice(0, 1)), "")
                     : "?"}
                 </Avatar>
               </ListItemButton>

@@ -1,7 +1,8 @@
 import * as IconSvgs from "@mui/icons-material";
 import { Box, Divider, Drawer, IconButton, List, ListItem, ListItemText, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../redux/store";
 import { setMode, themeSelector } from "../redux/Theme/theme.slice";
 
 interface SettingsDrawerProps {
@@ -11,7 +12,7 @@ interface SettingsDrawerProps {
 
 function SettingsDrawer(props: SettingsDrawerProps) {
   const themeState = useSelector(themeSelector);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return (
     <Drawer anchor={"right"} open={props.settingsDrawerOpen} onClose={() => props.setSettingsDrawerOpen(false)}>

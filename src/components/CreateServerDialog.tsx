@@ -1,16 +1,13 @@
-// @ts-nocheck
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { closeDialog } from "../redux/Dialogs/dialogs.slice";
+import { useSelector } from "react-redux";
+import { closeDialog, dialogsSelector } from "../redux/Dialogs/dialogs.slice";
+import { useAppDispatch } from "../redux/store";
 import { auth, functions } from "../server/index";
 
-function CreateServerDialog(props) {
-  const theme = useTheme();
-  const dispatch = useDispatch();
-
-  const dialogOpen = useSelector((state) => state.dialogs.openedDialogs.includes("createServerDialog"));
+function CreateServerDialog(props: any) {
+  const dialogsState = useSelector(dialogsSelector);
+  const dispatch = useAppDispatch();
 
   const [serverName, setServerName] = React.useState("");
   const [serverDescription, setServerDescription] = React.useState("");
@@ -31,7 +28,7 @@ function CreateServerDialog(props) {
   };
 
   return (
-    <Dialog open={dialogOpen} onClose={() => dispatch(closeDialog("createServerDialog"))}>
+    <Dialog open={dialogsState.openedDialogs.includes("createServerDialog")} onClose={() => dispatch(closeDialog("createServerDialog"))}>
       <DialogTitle>Create a New Server</DialogTitle>
       <DialogContent sx={{ width: "500px", maxWidth: "75vw" }}>
         <DialogContentText>Fill out some basic details.</DialogContentText>
