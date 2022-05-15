@@ -6,6 +6,7 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { openDialog } from "../redux/Dialogs/dialogs.slice";
+import { firestuffSelector } from "../redux/Firestuff/firestuff.slice";
 import { auth } from "../server/index";
 
 function PageDrawer(props) {
@@ -13,7 +14,7 @@ function PageDrawer(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const myActualServers = useSelector((state) => state.firestuff.myActualServers);
+  const firestuffState = useSelector(firestuffSelector);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [hoveredId, setHoveredId] = React.useState("");
   const [currentTimeout, setCurrentTimeout] = React.useState("");
@@ -101,7 +102,7 @@ function PageDrawer(props) {
                 </IconButton>
               </div>
             </ListItem>
-            {Object.keys(myActualServers).map((serverId) => (
+            {Object.keys(firestuffState.myActualServers).map((serverId) => (
               <ListItemButton
                 onClick={() => loadServer(serverId)}
                 key={serverId}
@@ -126,7 +127,9 @@ function PageDrawer(props) {
                     color: theme.palette.text.primary,
                   }}
                 >
-                  {myActualServers[serverId].name.length > 0 ? myActualServers[serverId].name.split(/\s/).reduce((response, word) => (response += word.slice(0, 1)), "") : "?"}
+                  {firestuffState.myActualServers[serverId].name.length > 0
+                    ? firestuffState.myActualServers[serverId].name.split(/\s/).reduce((response, word) => (response += word.slice(0, 1)), "")
+                    : "?"}
                 </Avatar>
               </ListItemButton>
             ))}
@@ -190,7 +193,7 @@ function PageDrawer(props) {
             {hoveredId === "hubServer" && "The Hub"}
 
             {hoveredId !== "addServer" && hoveredId !== "hubServer" && <span style={{ fontWeight: "bold" }}>Server: </span>}
-            {hoveredId !== "addServer" && hoveredId !== "hubServer" && `${myActualServers[hoveredId] && myActualServers[hoveredId].name}`}
+            {hoveredId !== "addServer" && hoveredId !== "hubServer" && `${firestuffState.myActualServers[hoveredId] && firestuffState.myActualServers[hoveredId].name}`}
           </span>
 
           {hoveredId !== "addServer" && hoveredId !== "hubServer" && <Divider sx={{ flexGrow: 1 }} />}

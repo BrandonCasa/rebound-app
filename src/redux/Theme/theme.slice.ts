@@ -1,12 +1,12 @@
-// @ts-nocheck
 import { createTheme } from "@mui/material/styles";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import getDesignTokens from "../../helpers/designTokens";
+import { RootState } from "../store";
 
 export interface ThemeState {
   mode: "light" | "dark" | "system";
   currentTheme: "light" | "dark";
-  themeObject: Theme;
+  themeObject: any;
 }
 
 export const initialState: ThemeState = {
@@ -19,7 +19,7 @@ export const themeSlice = createSlice({
   name: "theme",
   initialState,
   reducers: {
-    setMode: (state, { payload }: PayloadAction) => {
+    setMode: (state, { payload }: PayloadAction<any>) => {
       state.mode = payload;
 
       const systemMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";

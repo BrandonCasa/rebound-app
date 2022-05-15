@@ -1,6 +1,6 @@
 import { grey } from "@mui/material/colors";
 
-const getDesignTokens = (mode) => ({
+const getDesignTokens = (mode: "light" | "dark") => ({
   palette: {
     mode,
     ...(mode === "light"
