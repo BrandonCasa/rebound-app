@@ -6,12 +6,14 @@ import { ThunkAction } from "redux-thunk";
 import dialogsReducer from "./Dialogs/dialogs.slice";
 import firestuffReducer from "./Firestuff/firestuff.slice";
 import themeReducer from "./Theme/theme.slice";
+import dropMenuReducer from "./DropMenu/dropMenu.slice";
 
 const store = configureStore({
   reducer: {
     theme: themeReducer,
     firestuff: firestuffReducer,
     dialogs: dialogsReducer,
+    dropMenu: dropMenuReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

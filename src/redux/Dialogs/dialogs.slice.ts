@@ -15,7 +15,7 @@ export const dialogsSlice = createSlice({
   name: "dialogs",
   initialState,
   reducers: {
-    initDialog: (state, { payload }: PayloadAction<any>) => {
+    addDialog: (state, { payload }: PayloadAction<any>) => {
       state.closedDialogs.push(payload);
     },
     openDialog: (state, { payload }: PayloadAction<any>) => {
@@ -30,7 +30,7 @@ export const dialogsSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { initDialog, openDialog, closeDialog } = dialogsSlice.actions;
+export const { addDialog, openDialog, closeDialog } = dialogsSlice.actions;
 
 export const dialogsSelector = (state: RootState) => state.dialogs;
 export default dialogsSlice.reducer;

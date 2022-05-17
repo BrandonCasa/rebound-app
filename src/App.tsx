@@ -5,7 +5,7 @@ import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "firebas
 import { doc, onSnapshot } from "firebase/firestore";
 import * as React from "react";
 import { useSelector } from "react-redux";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import CreateServerDialog from "./components/CreateServerDialog";
 import JoinServerDialog from "./components/JoinServerDialog";
 import PageDrawer from "./components/PageDrawer";
@@ -19,6 +19,8 @@ import { flushActualServers, removeOldServers, setActualServer } from "./redux/F
 import { useAppDispatch } from "./redux/store";
 import { themeSelector } from "./redux/Theme/theme.slice";
 import { auth, db } from "./server/index";
+import UserDropMenu from "./components/UserDropMenu";
+import { openMenu, closeMenu } from "./redux/DropMenu/dropMenu.slice";
 
 function App(props: any) {
   const themeState = useSelector(themeSelector);
@@ -117,10 +119,8 @@ function App(props: any) {
                 <StatusBadge status={"online"}>
                   <Avatar
                     src={auth.currentUser && auth.currentUser.photoURL}
+                    onClick={(event) => dispatch(openMenu({ menu: "userDropMenu", element: event.currentTarget }))}
                     sx={{ width: 38, height: 38, boxShadow: `0 0 4px 2px ${themeState.themeObject.palette.background.paper}90` }}
-                    onClick={() => {
-                      signOut();
-                    }}
                   />
                 </StatusBadge>
               </Stack>
@@ -144,6 +144,7 @@ function App(props: any) {
             <Route path=":serverId" element={<ServerPage />} />
           </Route>
         </Routes>
+        <UserDropMenu logout={signOut} />
       </BrowserRouter>
     </ThemeProvider>
   );
