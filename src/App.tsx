@@ -21,6 +21,7 @@ import { themeSelector } from "./redux/Theme/theme.slice";
 import { auth, db } from "./server/index";
 import UserDropMenu from "./components/UserDropMenu";
 import { openMenu, closeMenu } from "./redux/DropMenu/dropMenu.slice";
+import UserAvatar from "./components/UserAvatar";
 
 function App(props: any) {
   const themeState = useSelector(themeSelector);
@@ -115,15 +116,7 @@ function App(props: any) {
               Rebound
             </Typography>
             {currentUser ? (
-              <Stack direction="row" spacing={2} sx={{ mr: "10px" }}>
-                <StatusBadge status={"online"}>
-                  <Avatar
-                    src={auth.currentUser && auth.currentUser.photoURL}
-                    onClick={(event) => dispatch(openMenu({ menu: "userDropMenu", element: event.currentTarget }))}
-                    sx={{ width: 38, height: 38, boxShadow: `0 0 4px 2px ${themeState.themeObject.palette.background.paper}90` }}
-                  />
-                </StatusBadge>
-              </Stack>
+              <UserAvatar />
             ) : (
               <Button variant="contained" onClick={(event) => signInPopup(event)} sx={{ mr: "10px" }}>
                 Sign In
@@ -144,7 +137,6 @@ function App(props: any) {
             <Route path=":serverId" element={<ServerPage />} />
           </Route>
         </Routes>
-        <UserDropMenu logout={signOut} />
       </BrowserRouter>
     </ThemeProvider>
   );

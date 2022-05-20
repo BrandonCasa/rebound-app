@@ -1,47 +1,84 @@
-import { Button, Menu, MenuItem } from "@mui/material";
+import { ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import React from "react";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { dropMenuSelector, openMenu, closeMenu } from "../redux/DropMenu/dropMenu.slice";
 import { useAppDispatch } from "../redux/store";
+import { auth } from "../server/index";
+import * as IconSvgs from "@mui/icons-material";
 
 function UserDropMenu(props: any) {
-  const dropMenuState = useSelector(dropMenuSelector);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const openMenuEvent = (event: React.MouseEvent<HTMLButtonElement>) => {
-    dispatch(openMenu({ menu: "userDropMenu", element: event.currentTarget }));
-  };
-  const closeMenuEvent = () => {
-    dispatch(closeMenu({ menu: "userDropMenu" }));
+  const signOut = () => {
+    auth.signOut().catch((error) => console.error(error));
   };
 
   return (
-    <Menu anchorEl={dropMenuState.anchorElement} open={dropMenuState.openedMenus.includes("userDropMenu")} onClose={closeMenuEvent}>
+    <Menu
+      MenuListProps={{ disablePadding: true }}
+      anchorEl={props.anchorElement}
+      open={props.opened}
+      sx={{
+        pointerEvents: "none",
+        marginTop: "7.5px",
+        "& .MuiPaper-root": {
+          pointerEvents: "auto",
+        },
+      }}
+      disableRestoreFocus
+      PaperProps={{ onMouseEnter: (event) => props.handleMenuOpen(event, true), onMouseLeave: (event) => props.handleMenuClose(true) }}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "center",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "center",
+      }}
+    >
       <MenuItem
         onClick={() => {
-          closeMenuEvent();
+          //closeMenuEvent();
           navigate(`/profile`);
         }}
       >
-        Profile
+        <ListItemIcon>
+          <IconSvgs.AccountBox />
+        </ListItemIcon>
+        <ListItemText primary="Profile" />
       </MenuItem>
       <MenuItem
         onClick={() => {
-          closeMenuEvent();
+          //closeMenuEvent();
           navigate(`/settings`);
         }}
       >
-        Settings
+        <ListItemIcon>
+          <IconSvgs.SettingsApplications />
+        </ListItemIcon>
+        <ListItemText primary="Settings" />
       </MenuItem>
       <MenuItem
         onClick={() => {
-          closeMenuEvent();
-          props.logout();
+          //closeMenuEvent();
+          signOut();
         }}
       >
-        Logout
+        <ListItemIcon>
+          <IconSvgs.SwitchAccount />
+        </ListItemIcon>
+        <ListItemText primary="Switch Accounts" />
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          //closeMenuEvent();
+          signOut();
+        }}
+      >
+        <ListItemIcon>
+          <IconSvgs.Logout />
+        </ListItemIcon>
+        <ListItemText primary="Logout" />
       </MenuItem>
     </Menu>
   );

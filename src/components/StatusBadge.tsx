@@ -42,7 +42,7 @@ function StatusBadge(props: any) {
   }));
 
   return (
-    <ActualBadge overlap="circular" anchorOrigin={{ vertical: "bottom", horizontal: "right" }} variant="dot">
+    <ActualBadge overlap="circular" anchorOrigin={{ vertical: "bottom", horizontal: "right" }} variant="dot" sx={{ marginRight: "10px" }}>
       {props.children}
     </ActualBadge>
   );
