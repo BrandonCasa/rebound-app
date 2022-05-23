@@ -39,7 +39,7 @@ function UserDropMenu(props: any) {
       <MenuItem
         onClick={() => {
           //closeMenuEvent();
-          navigate(`/profile`);
+          navigate(`/profile/${auth.currentUser && auth.currentUser.uid}`);
         }}
       >
         <ListItemIcon>

@@ -22,6 +22,7 @@ import { auth, db } from "./server/index";
 import UserDropMenu from "./components/UserDropMenu";
 import { openMenu, closeMenu } from "./redux/DropMenu/dropMenu.slice";
 import UserAvatar from "./components/UserAvatar";
+import ProfilePage from "./pages/Profile.page";
 
 function App(props: any) {
   const themeState = useSelector(themeSelector);
@@ -39,10 +40,6 @@ function App(props: any) {
     provider.addScope("profile");
     provider.addScope("email");
     signInWithPopup(auth, provider).catch((error) => console.error(error.code, error.message));
-  };
-
-  const signOut = () => {
-    auth.signOut().catch((error) => console.error(error));
   };
 
   const onAuthStateChangedFunc = (user) => {
@@ -135,6 +132,9 @@ function App(props: any) {
           <Route path="hub" element={<HubPage />} />
           <Route path="server">
             <Route path=":serverId" element={<ServerPage />} />
+          </Route>
+          <Route path="profile">
+            <Route path=":userId" element={<ProfilePage />} />
           </Route>
         </Routes>
       </BrowserRouter>
