@@ -14,12 +14,18 @@ function ProfileEditComponent(props: any) {
             <Typography variant="subtitle1" fontWeight={400} sx={{ margin: "-8px 0px 0px 0px" }} color="textSecondary">
               Avatar
             </Typography>
-            <Button startIcon={<IconSvgs.Person />} variant="contained" sx={{ height: "38px" }}>
-              Edit
-            </Button>
-            <Button variant="outlined" sx={{ marginLeft: "8px", height: "38px" }}>
-              Default
-            </Button>
+            <div style={{ display: "flex" }}>
+              <Button
+                startIcon={<IconSvgs.Person sx={{ height: "26px", width: "26px", fontSize: "26px", backgroundColor: "#919191", borderRadius: "5px", border: "2px solid rgba(0, 0, 0, 0.5)" }} />}
+                variant="contained"
+                sx={{ height: "38px" }}
+              >
+                Edit
+              </Button>
+              <Button variant="outlined" sx={{ marginLeft: "8px", height: "38px" }}>
+                Default
+              </Button>
+            </div>
           </Paper>
         </Grid>
         <Grid item md={6} xs={12}>
@@ -28,8 +34,11 @@ function ProfileEditComponent(props: any) {
               Color
             </Typography>
             <div style={{ display: "flex" }}>
-              <div style={{ height: "38px", width: "38px", backgroundColor: "red", borderRadius: "6px", border: "2px solid rgba(255, 255, 255, 0.5)" }} />
-              <Button startIcon={<IconSvgs.Brush />} variant="contained" sx={{ height: "38px", marginLeft: "8px" }}>
+              <Button
+                startIcon={<div style={{ height: "26px", width: "26px", backgroundColor: "red", borderRadius: "5px", border: "2px solid rgba(0, 0, 0, 0.5)" }} />}
+                variant="contained"
+                sx={{ height: "38px" }}
+              >
                 Edit
               </Button>
               <Button variant="outlined" sx={{ marginLeft: "8px", height: "38px" }}>
