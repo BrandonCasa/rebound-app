@@ -3,9 +3,13 @@ import * as React from "react";
 import { useParams } from "react-router-dom";
 import { auth } from "../server/index";
 import * as IconSvgs from "@mui/icons-material";
+import "./Profile.page.css";
 
 function ProfileEditComponent(props: any) {
   const params = useParams();
+
+  const [canChange, setCanChange] = React.useState(true);
+
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <Grid container spacing={2} justifyContent="center">
@@ -33,18 +37,32 @@ function ProfileEditComponent(props: any) {
             <Typography variant="subtitle1" fontWeight={400} sx={{ margin: "-8px 0px 0px 0px" }} color="textSecondary">
               Color
             </Typography>
-            <div style={{ display: "flex" }}>
+            <form style={{ display: "flex" }}>
               <Button
-                startIcon={<div style={{ height: "26px", width: "26px", backgroundColor: "red", borderRadius: "5px", border: "2px solid rgba(0, 0, 0, 0.5)" }} />}
+                startIcon={<div style={{ height: "26px", width: "26px", backgroundColor: props.color, borderRadius: "5px", border: "2px solid rgba(0, 0, 0, 0.5)" }} />}
                 variant="contained"
                 sx={{ height: "38px" }}
               >
                 Edit
+                <input
+                  type="color"
+                  onChange={(event: React.ChangeEvent) => {
+                    event.preventDefault();
+                    if (canChange) {
+                      props.setColor((event.target as HTMLInputElement).value);
+                      setCanChange(false);
+                      setTimeout(() => {
+                        setCanChange(true);
+                      }, 50);
+                    }
+                  }}
+                  style={{ position: "absolute", left: 0, top: 0, width: "100%", height: "100%", opacity: 0, cursor: "pointer" }}
+                />
               </Button>
               <Button variant="outlined" sx={{ marginLeft: "8px", height: "38px" }}>
                 Default
               </Button>
-            </div>
+            </form>
           </Paper>
         </Grid>
       </Grid>
@@ -54,6 +72,8 @@ function ProfileEditComponent(props: any) {
 
 function ProfilePage(props: any) {
   const params = useParams();
+
+  const [color, setColor] = React.useState("#ffffff");
 
   if (params.userId === auth.currentUser?.uid) {
     return (
@@ -65,7 +85,7 @@ function ProfilePage(props: any) {
                 <Typography textAlign={"center"} variant="h5" fontWeight={400} sx={{ height: "32px", marginBottom: "8px", marginTop: "-8px" }} color="textSecondary">
                   Your Profile
                 </Typography>
-                <ProfileEditComponent />
+                <ProfileEditComponent setColor={setColor} color={color} />
               </Paper>
             </Grid>
             <Grid item md={4} xs={12}>
@@ -74,7 +94,7 @@ function ProfilePage(props: any) {
                   Preview
                 </Typography>
                 <Card sx={{ width: 300, margin: "auto" }} variant="outlined">
-                  <div style={{ height: "8px", width: "100%", backgroundColor: "red", borderTopLeftRadius: "4px", borderTopRightRadius: "4px", display: "block" }} />
+                  <div style={{ height: "8px", width: "100%", backgroundColor: color, borderTopLeftRadius: "4px", borderTopRightRadius: "4px", display: "block" }} />
                   <CardMedia component="img" alt="profile banner" height="172" image={process.env.PUBLIC_URL + "/images/prof1.gif"} />
                   <CardContent sx={{}}>
                     <div style={{ display: "flex", flexDirection: "row", marginBottom: "16px" }}>
