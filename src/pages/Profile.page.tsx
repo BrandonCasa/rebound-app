@@ -28,7 +28,7 @@ function ProfileEditComponent(props: any) {
               Color
             </Typography>
             <div style={{ display: "flex" }}>
-              <div style={{ height: "38px", width: "25.333px", backgroundColor: "red", borderRadius: "6.333px", border: "2px solid rgba(255, 255, 255, 0.5)" }} />
+              <div style={{ height: "38px", width: "38px", backgroundColor: "red", borderRadius: "6px", border: "2px solid rgba(255, 255, 255, 0.5)" }} />
               <Button startIcon={<IconSvgs.Brush />} variant="contained" sx={{ height: "38px", marginLeft: "8px" }}>
                 Edit
               </Button>
