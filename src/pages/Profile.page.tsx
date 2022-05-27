@@ -3,7 +3,6 @@ import * as React from "react";
 import { useParams } from "react-router-dom";
 import { auth } from "../server/index";
 import * as IconSvgs from "@mui/icons-material";
-import "./Profile.page.css";
 
 function ProfileEditComponent(props: any) {
   const params = useParams();
@@ -59,7 +58,7 @@ function ProfileEditComponent(props: any) {
                   style={{ position: "absolute", left: 0, top: 0, width: "100%", height: "100%", opacity: 0, cursor: "pointer" }}
                 />
               </Button>
-              <Button variant="outlined" sx={{ marginLeft: "8px", height: "38px" }}>
+              <Button variant="outlined" sx={{ marginLeft: "8px", height: "38px" }} onClick={() => props.setColor("#ffffff")}>
                 Default
               </Button>
             </form>
