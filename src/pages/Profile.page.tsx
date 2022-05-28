@@ -3,6 +3,7 @@ import * as React from "react";
 import { useParams } from "react-router-dom";
 import { auth } from "../server/index";
 import * as IconSvgs from "@mui/icons-material";
+import { useFilePicker } from "use-file-picker";
 
 function ProfileEditComponent(props: any) {
   const params = useParams();
@@ -19,11 +20,30 @@ function ProfileEditComponent(props: any) {
             </Typography>
             <div style={{ display: "flex" }}>
               <Button
-                startIcon={<IconSvgs.Person sx={{ height: "26px", width: "26px", fontSize: "26px", backgroundColor: "#919191", borderRadius: "5px", border: "2px solid rgba(0, 0, 0, 0.5)" }} />}
+                startIcon={
+                  <Avatar
+                    sx={[
+                      {
+                        "&": {
+                          height: "26px",
+                          width: "26px",
+                          backgroundColor: "#919191",
+                          borderRadius: "5px",
+                          border: "2px solid rgba(0, 0, 0, 0.5)",
+                        },
+                        svg: {
+                          width: "22px",
+                          height: "22px",
+                        },
+                      },
+                    ]}
+                  />
+                }
                 variant="contained"
                 sx={{ height: "38px" }}
+                onClick={() => props.openFileSelector()}
               >
-                Edit
+                Change
               </Button>
               <Button variant="outlined" sx={{ marginLeft: "8px", height: "38px" }}>
                 Default
@@ -38,11 +58,11 @@ function ProfileEditComponent(props: any) {
             </Typography>
             <form style={{ display: "flex" }}>
               <Button
-                startIcon={<div style={{ height: "26px", width: "26px", backgroundColor: props.color, borderRadius: "5px", border: "2px solid rgba(0, 0, 0, 0.5)" }} />}
+                startIcon={<IconSvgs.Colorize sx={{ height: "26px", width: "26px", fontSize: "26px", backgroundColor: "#919191", borderRadius: "5px", border: "2px solid rgba(0, 0, 0, 0.5)" }} />}
                 variant="contained"
                 sx={{ height: "38px" }}
               >
-                Edit
+                Change
                 <input
                   type="color"
                   onChange={(event: React.ChangeEvent) => {
@@ -59,9 +79,47 @@ function ProfileEditComponent(props: any) {
                 />
               </Button>
               <Button variant="outlined" sx={{ marginLeft: "8px", height: "38px" }} onClick={() => props.setColor("#ffffff")}>
-                Default
+                Auto
               </Button>
             </form>
+          </Paper>
+        </Grid>
+        <Grid item md={6} xs={12}>
+          <Paper variant="outlined" sx={{ padding: "8px" }}>
+            <Typography variant="subtitle1" fontWeight={400} sx={{ margin: "-8px 0px 0px 0px" }} color="textSecondary">
+              Display Name
+            </Typography>
+            <div style={{ display: "flex" }}>
+              <Button
+                startIcon={<IconSvgs.Edit sx={{ height: "26px", width: "26px", fontSize: "26px", backgroundColor: "#919191", borderRadius: "5px", border: "2px solid rgba(0, 0, 0, 0.5)" }} />}
+                variant="contained"
+                sx={{ height: "38px" }}
+              >
+                Change
+              </Button>
+              <Button variant="outlined" sx={{ marginLeft: "8px", height: "38px" }}>
+                Random
+              </Button>
+            </div>
+          </Paper>
+        </Grid>
+        <Grid item md={6} xs={12}>
+          <Paper variant="outlined" sx={{ padding: "8px" }}>
+            <Typography variant="subtitle1" fontWeight={400} sx={{ margin: "-8px 0px 0px 0px" }} color="textSecondary">
+              Bio
+            </Typography>
+            <div style={{ display: "flex" }}>
+              <Button
+                startIcon={<IconSvgs.Article sx={{ height: "26px", width: "26px", fontSize: "26px", backgroundColor: "#919191", borderRadius: "5px", border: "2px solid rgba(0, 0, 0, 0.5)" }} />}
+                variant="contained"
+                sx={{ height: "38px" }}
+              >
+                Change
+              </Button>
+              <Button variant="outlined" sx={{ marginLeft: "8px", height: "38px" }}>
+                Clear
+              </Button>
+            </div>
           </Paper>
         </Grid>
       </Grid>
@@ -74,6 +132,32 @@ function ProfilePage(props: any) {
 
   const [color, setColor] = React.useState("#ffffff");
 
+  const [openFileSelector, { filesContent, loading, errors }] = useFilePicker({
+    readAs: "DataURL",
+    accept: "image/*",
+    multiple: false,
+    limitFilesConfig: { max: 1 },
+    maxFileSize: 2,
+    imageSizeRestrictions: {
+      maxHeight: 1024,
+      maxWidth: 1024,
+      minHeight: 32,
+      minWidth: 32,
+    },
+  });
+
+  const [profilePic, setProfilePic] = React.useState<undefined | string>(undefined);
+
+  React.useEffect(() => {
+    if (filesContent.length > 0) {
+      setProfilePic(filesContent[0].content);
+    } else if (auth.currentUser && auth.currentUser.photoURL) {
+      setProfilePic(auth.currentUser.photoURL);
+    } else {
+      setProfilePic(undefined);
+    }
+  }, [filesContent]);
+
   if (params.userId === auth.currentUser?.uid) {
     return (
       <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, marginLeft: "61px", padding: "16px 16px 0px 16px" }}>
@@ -84,7 +168,7 @@ function ProfilePage(props: any) {
                 <Typography textAlign={"center"} variant="h5" fontWeight={400} sx={{ height: "32px", marginBottom: "8px", marginTop: "-8px" }} color="textSecondary">
                   Your Profile
                 </Typography>
-                <ProfileEditComponent setColor={setColor} color={color} />
+                <ProfileEditComponent setColor={setColor} color={color} openFileSelector={openFileSelector} profilePic={profilePic} />
               </Paper>
             </Grid>
             <Grid item md={4} xs={12}>
@@ -97,7 +181,7 @@ function ProfilePage(props: any) {
                   <CardMedia component="img" alt="profile banner" height="172" image={process.env.PUBLIC_URL + "/images/prof1.gif"} />
                   <CardContent sx={{}}>
                     <div style={{ display: "flex", flexDirection: "row", marginBottom: "16px" }}>
-                      <Avatar src={auth.currentUser?.photoURL ? auth.currentUser?.photoURL : undefined} />
+                      <Avatar src={profilePic} />
                       <Typography gutterBottom variant="h5" component="div" sx={{ margin: "auto 0 auto 16px" }}>
                         {auth.currentUser && auth.currentUser.displayName}
                       </Typography>

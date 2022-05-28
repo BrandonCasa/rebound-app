@@ -28,6 +28,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.4.1",
     "typescript": "^4.6.4",
+    "use-file-picker": "^1.4.2",
     "web-vitals": "^2.1.0"
   },
   "scripts": {
