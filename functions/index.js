@@ -8,43 +8,6 @@ const admin = require("firebase-admin");
 admin.initializeApp();
 admin.firestore().settings({ ignoreUndefinedProperties: true });
 
-exports.addServerMessage = functions.https.onRequest(async (req, res) => {
-  const serverDoc = await admin.firestore().collection("server_chat").doc(req.body.serverID).get();
-  if (serverDoc.exists) {
-    const channelDoc = await admin.firestore().collection("server_chat").doc(req.body.serverID).collection("channels").doc(req.body.channelID).get();
-    if (channelDoc.exists) {
-      const writeResult = await admin
-        .firestore()
-        .collection("server_chat")
-        .doc(req.body.serverID)
-        .collection("channels")
-        .doc(req.body.channelID)
-        .collection("messages")
-        .add({ message: req.body.message, timestamp: admin.firestore.FieldValue.serverTimestamp() });
-      res.json({ result: `Message with ID: ${writeResult.id} added to server with ID ${req.body.serverID}.` });
-    } else {
-      res.json({ error: `Channel with ID ${req.body.channelID} does not exist in the server with ID ${req.body.serverID}.` });
-    }
-  } else {
-    res.json({ result: `Server with ID ${req.body.serverID} does not exist.` });
-  }
-});
-
-exports.addServerChannel = functions.https.onRequest(async (req, res) => {
-  const serverDoc = await admin.firestore().collection("server_chat").doc(req.body.serverID).get();
-  if (serverDoc.exists) {
-    const writtenChannel = await admin
-      .firestore()
-      .collection("server_chat")
-      .doc(req.body.serverID)
-      .collection("channels")
-      .add({ channelData: { name: req.body.name, description: req.body.description } });
-    res.json({ result: `Channel with ID ${writtenChannel.id} added to server with ID ${req.body.serverID}` });
-  } else {
-    res.json({ result: `Server with ID ${req.body.serverID} does not exist.` });
-  }
-});
-
 exports.addServerNew = functions.https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     const serverData = {
@@ -91,7 +54,7 @@ exports.joinServer = functions.https.onRequest(async (req, res) => {
       .get();
 
     // The below returns a list of search results
-    console.log(foundServer.docs);
+    //console.log(foundServer.docs);
 
     const userDoc = await admin.firestore().collection("users").doc(JSON.parse(req.body).auth.currentUser.uid).get();
     if (userDoc.exists) {
@@ -108,6 +71,29 @@ exports.joinServer = functions.https.onRequest(async (req, res) => {
         .collection("users")
         .doc(JSON.parse(req.body).auth.currentUser.uid)
         .set({ servers: [foundServer.docs[0].id] });
+    }
+
+    return res.sendStatus(200);
+  });
+});
+
+exports.changeBio = functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    const userDoc = await admin.firestore().collection("users").doc(JSON.parse(req.body).auth.currentUser.uid).get();
+    if (userDoc.exists) {
+      const writtenUser = await admin
+        .firestore()
+        .collection("users")
+        .doc(JSON.parse(req.body).auth.currentUser.uid)
+        .update({
+          bio: JSON.parse(req.body).newBio,
+        });
+    } else {
+      await admin
+        .firestore()
+        .collection("users")
+        .doc(JSON.parse(req.body).auth.currentUser.uid)
+        .set({ bio: JSON.parse(req.body).newBio });
     }
 
     return res.sendStatus(200);

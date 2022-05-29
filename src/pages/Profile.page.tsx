@@ -4,9 +4,14 @@ import { useParams } from "react-router-dom";
 import { auth } from "../server/index";
 import * as IconSvgs from "@mui/icons-material";
 import { useFilePicker } from "use-file-picker";
+import { useAppDispatch } from "../redux/store";
+import { openDialog } from "../redux/Dialogs/dialogs.slice";
+import { useSelector } from "react-redux";
+import { userstuffSelector } from "../redux/Userstuff/userstuff.slice";
 
 function ProfileEditComponent(props: any) {
   const params = useParams();
+  const dispatch = useAppDispatch();
 
   const [canChange, setCanChange] = React.useState(true);
 
@@ -113,6 +118,7 @@ function ProfileEditComponent(props: any) {
                 startIcon={<IconSvgs.Article sx={{ height: "26px", width: "26px", fontSize: "26px", backgroundColor: "#919191", borderRadius: "5px", border: "2px solid rgba(0, 0, 0, 0.5)" }} />}
                 variant="contained"
                 sx={{ height: "38px" }}
+                onClick={() => dispatch(openDialog("changeBioDialog"))}
               >
                 Change
               </Button>
@@ -129,6 +135,7 @@ function ProfileEditComponent(props: any) {
 
 function ProfilePage(props: any) {
   const params = useParams();
+  const userState = useSelector(userstuffSelector);
 
   const [color, setColor] = React.useState("#ffffff");
 
@@ -190,7 +197,7 @@ function ProfilePage(props: any) {
                       Bio:
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      This is someone's profile.
+                      {userState.bio}
                     </Typography>
                   </CardContent>
                   <Divider />

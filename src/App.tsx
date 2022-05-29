@@ -23,6 +23,8 @@ import UserDropMenu from "./components/UserDropMenu";
 import { openMenu, closeMenu } from "./redux/DropMenu/dropMenu.slice";
 import UserAvatar from "./components/UserAvatar";
 import ProfilePage from "./pages/Profile.page";
+import ChangeBioDialog from "./components/ChangeBioDialog";
+import { setBio } from "./redux/Userstuff/userstuff.slice";
 
 function App(props: any) {
   const themeState = useSelector(themeSelector);
@@ -76,6 +78,9 @@ function App(props: any) {
           }
           dispatch(removeOldServers({ new: userSnapshot.data().servers, subs: serverSubscriptions }));
         }
+        if (userSnapshot.data() && userSnapshot.data().bio) {
+          dispatch(setBio(userSnapshot.data().bio));
+        }
       });
 
       return () => {
@@ -102,6 +107,7 @@ function App(props: any) {
         <CreateServerDialog />
         <JoinServerDialog />
         <ServerDialog />
+        <ChangeBioDialog />
         <AppBar
           position="fixed"
           height="48px"
