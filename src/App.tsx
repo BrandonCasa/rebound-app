@@ -24,7 +24,7 @@ import { openMenu, closeMenu } from "./redux/DropMenu/dropMenu.slice";
 import UserAvatar from "./components/UserAvatar";
 import ProfilePage from "./pages/Profile.page";
 import ChangeBioDialog from "./components/ChangeBioDialog";
-import { setBio, setDisplayName } from "./redux/Userstuff/userstuff.slice";
+import { setBio, setDisplayName, setMyColor } from "./redux/Userstuff/userstuff.slice";
 import ChangeDisplayNameDialog from "./components/ChangeDisplayNameDialog";
 
 function App(props: any) {
@@ -91,6 +91,11 @@ function App(props: any) {
           dispatch(setDisplayName(userSnapshot.data().displayName));
         } else {
           dispatch(setDisplayName(currentUser.displayName));
+        }
+        if (userSnapshot.data() && userSnapshot.data().color) {
+          dispatch(setMyColor(userSnapshot.data().color));
+        } else {
+          dispatch(setMyColor("#ffffff"));
         }
       });
 

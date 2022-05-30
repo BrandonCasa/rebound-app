@@ -1,19 +1,32 @@
 import { Avatar, Button, Card, CardActions, CardContent, CardMedia, Grid, Paper, Typography, Divider, IconButton } from "@mui/material";
 import * as React from "react";
 import { useParams } from "react-router-dom";
-import { auth } from "../server/index";
+import { auth, functions } from "../server/index";
 import * as IconSvgs from "@mui/icons-material";
 import { useFilePicker } from "use-file-picker";
 import { useAppDispatch } from "../redux/store";
 import { openDialog } from "../redux/Dialogs/dialogs.slice";
 import { useSelector } from "react-redux";
-import { userstuffSelector } from "../redux/Userstuff/userstuff.slice";
+import { setMyColor, userstuffSelector } from "../redux/Userstuff/userstuff.slice";
 
 function ProfileEditComponent(props: any) {
   const params = useParams();
   const dispatch = useAppDispatch();
-
+  const userState = useSelector(userstuffSelector);
   const [canChange, setCanChange] = React.useState(true);
+
+  const saveColor = () => {
+    fetch(`${functions.customDomain}/changeColor`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      mode: "no-cors",
+      body: JSON.stringify({ newColor: props.color, auth: auth }),
+    });
+  };
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
@@ -70,6 +83,7 @@ function ProfileEditComponent(props: any) {
                 Change
                 <input
                   type="color"
+                  value={props.color}
                   onChange={(event: React.ChangeEvent) => {
                     event.preventDefault();
                     if (canChange) {
@@ -85,6 +99,13 @@ function ProfileEditComponent(props: any) {
               </Button>
               <Button variant="outlined" sx={{ marginLeft: "8px", height: "38px" }} onClick={() => props.setColor("#ffffff")}>
                 Auto
+              </Button>
+              <Button
+                variant="contained"
+                sx={{ marginLeft: "8px", height: "38px", backgroundColor: "#32cd32", visibility: userState.color === props.color ? "hidden" : "visible" }}
+                onClick={() => saveColor()}
+              >
+                Save
               </Button>
             </form>
           </Paper>
@@ -139,6 +160,10 @@ function ProfilePage(props: any) {
   const userState = useSelector(userstuffSelector);
 
   const [color, setColor] = React.useState("#ffffff");
+
+  React.useEffect(() => {
+    setColor(userState.color);
+  }, [userState.color]);
 
   const [openFileSelector, { filesContent, loading, errors }] = useFilePicker({
     readAs: "DataURL",

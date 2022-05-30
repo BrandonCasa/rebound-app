@@ -122,3 +122,26 @@ exports.changeDisplayName = functions.https.onRequest(async (req, res) => {
     return res.sendStatus(200);
   });
 });
+
+exports.changeColor = functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    const userDoc = await admin.firestore().collection("users").doc(JSON.parse(req.body).auth.currentUser.uid).get();
+    if (userDoc.exists) {
+      const writtenUser = await admin
+        .firestore()
+        .collection("users")
+        .doc(JSON.parse(req.body).auth.currentUser.uid)
+        .update({
+          color: JSON.parse(req.body).newColor,
+        });
+    } else {
+      await admin
+        .firestore()
+        .collection("users")
+        .doc(JSON.parse(req.body).auth.currentUser.uid)
+        .set({ color: JSON.parse(req.body).newColor });
+    }
+
+    return res.sendStatus(200);
+  });
+});
