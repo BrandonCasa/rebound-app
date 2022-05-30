@@ -25,6 +25,7 @@ import UserAvatar from "./components/UserAvatar";
 import ProfilePage from "./pages/Profile.page";
 import ChangeBioDialog from "./components/ChangeBioDialog";
 import { setBio, setDisplayName } from "./redux/Userstuff/userstuff.slice";
+import ChangeDisplayNameDialog from "./components/ChangeDisplayNameDialog";
 
 function App(props: any) {
   const themeState = useSelector(themeSelector);
@@ -118,6 +119,7 @@ function App(props: any) {
         <JoinServerDialog />
         <ServerDialog />
         <ChangeBioDialog />
+        <ChangeDisplayNameDialog />
         <AppBar
           position="fixed"
           height="48px"

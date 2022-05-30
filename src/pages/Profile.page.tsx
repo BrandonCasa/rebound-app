@@ -99,6 +99,7 @@ function ProfileEditComponent(props: any) {
                 startIcon={<IconSvgs.Edit sx={{ height: "26px", width: "26px", fontSize: "26px", backgroundColor: "#919191", borderRadius: "5px", border: "2px solid rgba(0, 0, 0, 0.5)" }} />}
                 variant="contained"
                 sx={{ height: "38px" }}
+                onClick={() => dispatch(openDialog("changeDisplayNameDialog"))}
               >
                 Change
               </Button>
@@ -190,7 +191,7 @@ function ProfilePage(props: any) {
                     <div style={{ display: "flex", flexDirection: "row", marginBottom: "16px" }}>
                       <Avatar src={profilePic} />
                       <Typography gutterBottom variant="h5" component="div" sx={{ margin: "auto 0 auto 16px" }}>
-                        {auth.currentUser && auth.currentUser.displayName}
+                        {userState.displayName}
                       </Typography>
                     </div>
                     <Typography variant="h6" color="text.secondary" style={{ marginTop: "0" }}>
@@ -226,14 +227,14 @@ function ProfilePage(props: any) {
               <div style={{ display: "flex", flexDirection: "row", marginBottom: "16px" }}>
                 <Avatar src={auth.currentUser?.photoURL ? auth.currentUser?.photoURL : undefined} />
                 <Typography gutterBottom variant="h5" component="div" sx={{ margin: "auto 0 auto 16px" }}>
-                  {auth.currentUser && auth.currentUser.displayName}
+                  {params.userId?.substring(0, 8)}
                 </Typography>
               </div>
               <Typography variant="h6" color="text.secondary" style={{ marginTop: "0" }}>
                 Bio:
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                This is someone's profile.
+                This is {params.userId?.substring(0, 8)}'s profile.
               </Typography>
             </CardContent>
             <Divider />
