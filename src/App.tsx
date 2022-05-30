@@ -24,7 +24,7 @@ import { openMenu, closeMenu } from "./redux/DropMenu/dropMenu.slice";
 import UserAvatar from "./components/UserAvatar";
 import ProfilePage from "./pages/Profile.page";
 import ChangeBioDialog from "./components/ChangeBioDialog";
-import { setBio } from "./redux/Userstuff/userstuff.slice";
+import { setBio, setDisplayName } from "./redux/Userstuff/userstuff.slice";
 
 function App(props: any) {
   const themeState = useSelector(themeSelector);
@@ -34,6 +34,7 @@ function App(props: any) {
   const [currentUser, setCurrentUser] = React.useState({});
   const [initializing, setInitializing] = React.useState(true);
   const [settingsDrawerOpen, setSettingsDrawerOpen] = React.useState(false);
+  const [serverSubscriptions, setServerSubscriptions] = React.useState({});
 
   // Function Methods
   const signInPopup = (event) => {
@@ -59,8 +60,6 @@ function App(props: any) {
   }, []);
 
   React.useEffect(() => {
-    let serverSubscriptions = {};
-
     // If logged in
     if (currentUser && currentUser.hasOwnProperty("uid")) {
       // Subscribe to the user
@@ -68,18 +67,29 @@ function App(props: any) {
         if (userSnapshot.data() && userSnapshot.data().servers) {
           // Loop through servers
           for (const serverId of userSnapshot.data().servers) {
-            // Subscribe to the server
-            const unsubscribeServer = onSnapshot(doc(db, "servers", serverId), async (serverSnapshot) => {
-              if (serverSnapshot.data() && serverSnapshot.data().serverData) {
-                dispatch(setActualServer({ serverId: serverId, serverData: serverSnapshot.data().serverData }));
-              }
-            });
-            serverSubscriptions[serverId] = unsubscribeServer;
+            if (!serverSubscriptions.hasOwnProperty(serverId)) {
+              // Subscribe to the server
+              const unsubscribeServer = onSnapshot(doc(db, "servers", serverId), async (serverSnapshot) => {
+                if (serverSnapshot.data() && serverSnapshot.data().serverData) {
+                  dispatch(setActualServer({ serverId: serverId, serverData: serverSnapshot.data().serverData }));
+                }
+              });
+              let setServerSubscriptionsTemp = serverSubscriptions;
+              setServerSubscriptionsTemp[serverId] = unsubscribeServer;
+              setServerSubscriptions(setServerSubscriptionsTemp);
+            }
           }
           dispatch(removeOldServers({ new: userSnapshot.data().servers, subs: serverSubscriptions }));
         }
         if (userSnapshot.data() && userSnapshot.data().bio) {
           dispatch(setBio(userSnapshot.data().bio));
+        } else {
+          dispatch(setBio("You have no bio."));
+        }
+        if (userSnapshot.data() && userSnapshot.data().displayName) {
+          dispatch(setDisplayName(userSnapshot.data().displayName));
+        } else {
+          dispatch(setDisplayName(currentUser.displayName));
         }
       });
 

@@ -99,3 +99,26 @@ exports.changeBio = functions.https.onRequest(async (req, res) => {
     return res.sendStatus(200);
   });
 });
+
+exports.changeDisplayName = functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    const userDoc = await admin.firestore().collection("users").doc(JSON.parse(req.body).auth.currentUser.uid).get();
+    if (userDoc.exists) {
+      const writtenUser = await admin
+        .firestore()
+        .collection("users")
+        .doc(JSON.parse(req.body).auth.currentUser.uid)
+        .update({
+          displayName: JSON.parse(req.body).newDisplayName,
+        });
+    } else {
+      await admin
+        .firestore()
+        .collection("users")
+        .doc(JSON.parse(req.body).auth.currentUser.uid)
+        .set({ displayName: JSON.parse(req.body).newDisplayName });
+    }
+
+    return res.sendStatus(200);
+  });
+});
