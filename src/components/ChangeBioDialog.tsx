@@ -5,7 +5,6 @@ import { closeDialog, dialogsSelector } from "../redux/Dialogs/dialogs.slice";
 import { useAppDispatch } from "../redux/store";
 import { auth, functions } from "../server/index";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../server/index";
 import { userstuffSelector } from "../redux/Userstuff/userstuff.slice";
 
 function ChangeBioDialog(props: any) {
@@ -13,7 +12,7 @@ function ChangeBioDialog(props: any) {
   const dispatch = useAppDispatch();
   const userState = useSelector(userstuffSelector);
 
-  const [newBio, setNewBio] = React.useState(userState.bio);
+  const [newBio, setNewBio] = React.useState("");
 
   const changeBio = () => {
     fetch(`${functions.customDomain}/changeBio`, {
@@ -29,8 +28,18 @@ function ChangeBioDialog(props: any) {
     dispatch(closeDialog("changeBioDialog"));
   };
 
+  React.useEffect(() => {
+    setNewBio(userState.bio);
+  }, [userState.bio]);
+
   return (
-    <Dialog open={dialogsState.openedDialogs.includes("changeBioDialog")} onClose={() => dispatch(closeDialog("changeBioDialog"))}>
+    <Dialog
+      open={dialogsState.openedDialogs.includes("changeBioDialog")}
+      onClose={() => {
+        setNewBio(userState.bio);
+        dispatch(closeDialog("changeBioDialog"));
+      }}
+    >
       <DialogTitle>Change Your Bio</DialogTitle>
       <DialogContent sx={{ width: "500px", maxWidth: "75vw" }}>
         <DialogContentText>Input the new bio you would like to use.</DialogContentText>
@@ -40,7 +49,14 @@ function ChangeBioDialog(props: any) {
         </div>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => dispatch(closeDialog("changeBioDialog"))}>Cancel</Button>
+        <Button
+          onClick={() => {
+            setNewBio(userState.bio);
+            dispatch(closeDialog("changeBioDialog"));
+          }}
+        >
+          Cancel
+        </Button>
         <Button variant="contained" onClick={() => changeBio()}>
           Finish
         </Button>
