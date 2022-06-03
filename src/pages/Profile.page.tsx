@@ -150,6 +150,26 @@ function ProfileEditComponent(props: any) {
             </div>
           </Paper>
         </Grid>
+        <Grid item md={6} xs={12}>
+          <Paper variant="outlined" sx={{ padding: "8px" }}>
+            <Typography variant="subtitle1" fontWeight={400} sx={{ margin: "-8px 0px 0px 0px" }} color="textSecondary">
+              Banner
+            </Typography>
+            <div style={{ display: "flex" }}>
+              <Button
+                startIcon={<IconSvgs.Image sx={{ height: "26px", width: "26px", fontSize: "26px", backgroundColor: "#919191", borderRadius: "5px", border: "2px solid rgba(0, 0, 0, 0.5)" }} />}
+                variant="contained"
+                sx={{ height: "38px" }}
+                onClick={() => dispatch(openDialog("changeBannerDialog"))}
+              >
+                Change
+              </Button>
+              <Button variant="outlined" sx={{ marginLeft: "8px", height: "38px" }}>
+                Default
+              </Button>
+            </div>
+          </Paper>
+        </Grid>
       </Grid>
     </div>
   );
@@ -211,7 +231,7 @@ function ProfilePage(props: any) {
                 </Typography>
                 <Card sx={{ width: 300, margin: "auto" }} variant="outlined">
                   <div style={{ height: "8px", width: "100%", backgroundColor: color, borderTopLeftRadius: "4px", borderTopRightRadius: "4px", display: "block" }} />
-                  <CardMedia component="img" alt="profile banner" height="172" image={process.env.PUBLIC_URL + "/images/prof1.gif"} />
+                  <CardMedia component="img" alt="profile banner" height="172" image={userState.banner} />
                   <CardContent sx={{}}>
                     <div style={{ display: "flex", flexDirection: "row", marginBottom: "16px" }}>
                       <Avatar src={profilePic} />
@@ -247,7 +267,7 @@ function ProfilePage(props: any) {
             Preview
           </Typography>
           <Card sx={{ width: 300, margin: "auto" }} variant="outlined">
-            <CardMedia component="img" alt="profile banner" height="172" image={process.env.PUBLIC_URL + "/images/prof1.gif"} />
+            <CardMedia component="img" alt="profile banner" height="172" image={userState.banner} />
             <CardContent sx={{}}>
               <div style={{ display: "flex", flexDirection: "row", marginBottom: "16px" }}>
                 <Avatar src={auth.currentUser?.photoURL ? auth.currentUser?.photoURL : undefined} />

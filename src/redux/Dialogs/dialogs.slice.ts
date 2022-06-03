@@ -8,7 +8,7 @@ export interface DialogsState {
 
 export const initialState: DialogsState = {
   openedDialogs: [],
-  closedDialogs: ["serverDialog", "createServerDialog", "joinServerDialog", "changeBioDialog", "changeDisplayNameDialog"],
+  closedDialogs: ["serverDialog", "createServerDialog", "joinServerDialog", "changeBioDialog", "changeDisplayNameDialog", "chaneBannerDialog"],
 };
 
 export const dialogsSlice = createSlice({

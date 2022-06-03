@@ -18,14 +18,16 @@ import ServerPage from "./pages/Server.page";
 import { flushActualServers, removeOldServers, setActualServer } from "./redux/Firestuff/firestuff.slice";
 import { useAppDispatch } from "./redux/store";
 import { themeSelector } from "./redux/Theme/theme.slice";
-import { auth, db } from "./server/index";
+import { auth, db, storage } from "./server/index";
 import UserDropMenu from "./components/UserDropMenu";
 import { openMenu, closeMenu } from "./redux/DropMenu/dropMenu.slice";
 import UserAvatar from "./components/UserAvatar";
 import ProfilePage from "./pages/Profile.page";
 import ChangeBioDialog from "./components/ChangeBioDialog";
-import { setBio, setDisplayName, setMyColor } from "./redux/Userstuff/userstuff.slice";
+import { setBanner, setBio, setDisplayName, setMyColor, userstuffSelector } from "./redux/Userstuff/userstuff.slice";
 import ChangeDisplayNameDialog from "./components/ChangeDisplayNameDialog";
+import ChangeBannerDialog from "./components/ChangeBannerDialog";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 function App(props: any) {
   const themeState = useSelector(themeSelector);
@@ -97,6 +99,17 @@ function App(props: any) {
         } else {
           dispatch(setMyColor("#ffffff"));
         }
+        if (userSnapshot.data() && userSnapshot.data().hasOwnProperty("hasBanner")) {
+          if (userSnapshot.data().hasBanner) {
+            const bannerRef = ref(storage, `users/${auth.currentUser?.uid}/banner/userBanner.png`);
+            const bannerURL = await getDownloadURL(bannerRef);
+            dispatch(setBanner(`${bannerURL}?randgarb${Math.floor(Math.random() * 10000)}`));
+          } else {
+            dispatch(setBanner(process.env.PUBLIC_URL + "/images/defaultBanner.gif"));
+          }
+        } else {
+          dispatch(setBanner(process.env.PUBLIC_URL + "/images/defaultBanner.gif"));
+        }
       });
 
       return () => {
@@ -125,6 +138,7 @@ function App(props: any) {
         <ServerDialog />
         <ChangeBioDialog />
         <ChangeDisplayNameDialog />
+        <ChangeBannerDialog />
         <AppBar
           position="fixed"
           height="48px"

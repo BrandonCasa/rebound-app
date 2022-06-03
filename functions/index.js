@@ -145,3 +145,26 @@ exports.changeColor = functions.https.onRequest(async (req, res) => {
     return res.sendStatus(200);
   });
 });
+
+exports.changeBanner = functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    const userDoc = await admin.firestore().collection("users").doc(JSON.parse(req.body).auth.currentUser.uid).get();
+    if (userDoc.exists) {
+      const writtenUser = await admin
+        .firestore()
+        .collection("users")
+        .doc(JSON.parse(req.body).auth.currentUser.uid)
+        .update({
+          hasBanner: JSON.parse(req.body).hasBanner,
+        });
+    } else {
+      await admin
+        .firestore()
+        .collection("users")
+        .doc(JSON.parse(req.body).auth.currentUser.uid)
+        .set({ hasBanner: JSON.parse(req.body).hasBanner });
+    }
+
+    return res.sendStatus(200);
+  });
+});

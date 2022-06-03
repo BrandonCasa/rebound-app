@@ -12,6 +12,7 @@ service cloud.firestore {
       allow create: if request.auth != null;
     }
     // Finish this rule
+    // Right now anyone can manage any server
     match /servers/{document=**} {
       allow create, read, update, delete, write: if request.auth != null;
     }
