@@ -48,7 +48,7 @@ function ChangeBannerDialog(props: any) {
     accept: "image/*",
     multiple: false,
     limitFilesConfig: { max: 1 },
-    maxFileSize: 2,
+    maxFileSize: 10,
     imageSizeRestrictions: {
       maxHeight: 1024,
       maxWidth: 1024,
