@@ -3,6 +3,8 @@
   "version": "0.1.0-alpha",
   "private": false,
   "dependencies": {
+    "@babel/preset-env": "^7.18.2",
+    "@babel/preset-react": "^7.17.12",
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
     "@fontsource/roboto": "^4.5.5",

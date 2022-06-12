@@ -127,7 +127,10 @@ function App(props: any) {
     }
   }, [currentUser]);
 
-  if (initializing) return null;
+  if (initializing) {
+    console.log("lol");
+    return null;
+  }
 
   return (
     <ThemeProvider theme={{ ...themeState.themeObject }}>
