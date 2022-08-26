@@ -36,7 +36,7 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "cross-env FIRESTORE_EMULATOR_HOST=localhost:8181 && react-scripts start",
     "build": "react-scripts build",
     "deploy-all": "firebase deploy",
     "deploy-hosting": "firebase deploy --only hosting",

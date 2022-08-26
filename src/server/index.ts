@@ -1,9 +1,9 @@
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getFunctions } from "firebase/functions";
-import { getStorage } from "firebase/storage";
+import { connectAuthEmulator, getAuth } from "firebase/auth";
+import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
+import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
+import { connectStorageEmulator, getStorage } from "firebase/storage";
 import isDev from "../helpers/devDetect";
 
 const firebaseConfig = {
@@ -24,11 +24,11 @@ const functions = getFunctions(app);
 const storage = getStorage(app);
 
 if (isDev()) {
-  //connectAuthEmulator(auth, "http://localhost:9099");
-  //connectFunctionsEmulator(functions, "localhost", 5001);
-  //connectFirestoreEmulator(db, "localhost", 8181);
-  //connectStorageEmulator(storage, "localhost", 9199);
-  //functions.customDomain = "http://localhost:5001/rebound-380d6/us-central1";
+  connectAuthEmulator(auth, "http://localhost:9099");
+  connectFunctionsEmulator(functions, "localhost", 5001);
+  connectFirestoreEmulator(db, "localhost", 8181);
+  connectStorageEmulator(storage, "localhost", 9199);
+  functions.customDomain = "http://localhost:5001/rebound-380d6/us-central1";
 } else {
   //functions.customDomain = "https://us-central1-rebound-380d6.cloudfunctions.net";
 }
