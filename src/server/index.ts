@@ -28,7 +28,7 @@ if (isDev()) {
   connectFunctionsEmulator(functions, "localhost", 5001);
   connectFirestoreEmulator(db, "localhost", 8181);
   connectStorageEmulator(storage, "localhost", 9199);
-  functions.customDomain = "http://localhost:5001/rebound-380d6/us-central1";
+  //functions.customDomain = "http://localhost:5001/rebound-380d6/us-central1";
 } else {
   //functions.customDomain = "https://us-central1-rebound-380d6.cloudfunctions.net";
 }
