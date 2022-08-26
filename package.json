@@ -21,6 +21,8 @@
     "@types/redux-logger": "^3.0.9",
     "axios": "^0.27.2",
     "firebase": "^9.6.9",
+    "firebase-admin": "^11.0.1",
+    "firebase-functions": "^3.22.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-firebase-hooks": "^5.0.3",
@@ -39,6 +41,7 @@
     "deploy-all": "firebase deploy",
     "deploy-hosting": "firebase deploy --only hosting",
     "deploy-functions": "firebase deploy --only functions",
+    "start-em": "cross-env GOOGLE_APPLICATION_CREDENTIALS=dev_keys/rebound-380d6-firebase-adminsdk-odnv5-fcff4d3bbd.json && npx kill-port --port 9099,5001,8181,6000,9199,4001,4500,4400,4001 && firebase emulators:start --import=data --export-on-exit",
     "audit-fix": "yarn-audit-fix"
   },
   "eslintConfig": {
@@ -61,6 +64,7 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
+    "firebase-functions-test": "^2.3.0",
     "kill-port": "^2.0.1",
     "prettier-plugin-organize-imports": "^2.3.4",
     "yarn-audit-fix": "^9.3.1"
