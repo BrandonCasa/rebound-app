@@ -29,3 +29,5 @@ yarn-error.log*
 credentials.json
 /dev_config/**
 .firebase/**
+
+firebase_export/**
