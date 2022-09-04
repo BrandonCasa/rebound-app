@@ -1,15 +1,14 @@
 import * as firebase from "firebase/app";
 import "firebase/auth";
+import { connectAuthEmulator, getAuth } from "firebase/auth";
 import "firebase/database";
 import "firebase/firestore";
-import { getFirestore } from "firebase/firestore";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import { ReactReduxFirebaseProvider } from "react-redux-firebase";
 import { BrowserRouter } from "react-router-dom";
-import { createFirestoreInstance } from "redux-firestore";
 import App from "./App";
+import isDev from "./helpers/devDetect";
 import { store } from "./store";
 
 const firebaseConfig = {
@@ -22,31 +21,21 @@ const firebaseConfig = {
   measurementId: "G-KN4SQMP7Q3",
 };
 
-// Initialize firebase instance
 const app = firebase.initializeApp(firebaseConfig);
-// Initialize Cloud Firestore through Firebase
-const firestoreDb = getFirestore(app);
 
-const rrfConfig = {
-  userProfile: "users",
-  useFirestoreForProfile: true,
-};
-
-const rrfProps = {
-  firebase,
-  config: rrfConfig,
-  dispatch: store.dispatch,
-  createFirestoreInstance, //since we are using Firestore
-};
+if (isDev()) {
+  const auth = getAuth(app);
+  connectAuthEmulator(auth, "http://127.0.0.1:9099");
+} else {
+  // xd
+}
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <ReactReduxFirebaseProvider {...rrfProps}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </ReactReduxFirebaseProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>,
   document.getElementById("root")
