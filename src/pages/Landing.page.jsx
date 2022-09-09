@@ -15,8 +15,12 @@ function LandingPage(props) {
     <Grid container spacing={2}>
       <Grid xs={8} xsOffset={2}>
         <Item>
-          <Typography variant="h3">Introducing Rebound</Typography>
-          <Typography variant="subtitle1">The social hub for gamers and friends.</Typography>
+          <Typography variant="h3" sx={{ color: "white" }}>
+            Introducing Rebound
+          </Typography>
+          <Typography variant="subtitle1" sx={{ color: "white" }}>
+            The social hub for gamers and friends.
+          </Typography>
         </Item>
       </Grid>
       <Grid xs={12} />
@@ -26,17 +30,21 @@ function LandingPage(props) {
       <Grid xs={12} />
       <Grid xs={12}>
         <Item>
-          <Typography variant="h4">Features:</Typography>
+          <Typography variant="h4" sx={{ color: "white" }}>
+            Features:
+          </Typography>
         </Item>
       </Grid>
       <Grid xs={2}>
         <Item>
-          <Typography variant="h5">Friend Footprints</Typography>
+          <Typography variant="h5" sx={{ color: "white" }}>
+            Friend Footprints
+          </Typography>
         </Item>
       </Grid>
       <Grid xs={10}>
         <Item>
-          <Typography variant="subtitle1" sx={{ textAlign: "center", justifyContent: "center" }}>
+          <Typography variant="subtitle1" sx={{ textAlign: "center", justifyContent: "center", color: "white" }}>
             See when your friends usually play their favorite games and plan game time together!
           </Typography>
         </Item>
