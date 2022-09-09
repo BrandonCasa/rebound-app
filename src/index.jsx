@@ -16,7 +16,30 @@ import { store } from "./store";
 
 const darkTheme = createTheme({
   palette: {
-    mode: "dark",
+    type: "dark",
+    primary: {
+      main: "#b53f3f",
+    },
+    secondary: {
+      main: "#0099f5",
+    },
+    background: {
+      paper: "#383838",
+      default: "#262626",
+    },
+    error: {
+      main: "#ad0000",
+    },
+    warning: {
+      main: "#ffa700",
+    },
+    info: {
+      main: "#21f3dc",
+    },
+  },
+  spacing: 8,
+  shape: {
+    borderRadius: 8,
   },
 });
 

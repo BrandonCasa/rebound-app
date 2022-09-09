@@ -37,7 +37,7 @@ function LandingPage(props) {
       <Grid xs={10}>
         <Item>
           <Typography variant="subtitle1" sx={{ textAlign: "center", justifyContent: "center" }}>
-            Get metrics on when and what your friends play throughout various days of the week so you know when to get together and play.
+            See when your friends usually play their favorite games and plan game time together!
           </Typography>
         </Item>
       </Grid>
