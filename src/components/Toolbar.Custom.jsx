@@ -1,8 +1,22 @@
 import * as IconSvgs from "@mui/icons-material";
 import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
+import { alpha, styled } from "@mui/material/styles";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+
+const CustomLoginButton = styled(Button)(({ theme }) => ({
+  width: 100,
+  backgroundColor: theme.palette.secondary.main,
+  "&:hover": {
+    backgroundColor: theme.palette.secondary.main,
+    boxShadow: `0px 0px 0px 3px ${alpha("#000000", 0.15)}`,
+  },
+  "&:active": {
+    backgroundColor: theme.palette.secondary.main,
+    boxShadow: `0px 0px 0px 6px ${alpha("#000000", 0.15)}`,
+  },
+}));
 
 function ToolbarUserButton(props) {
   const auth = getAuth();
@@ -29,9 +43,9 @@ function ToolbarUserButton(props) {
     );
   } else {
     return (
-      <Button variant="contained" onClick={(event) => signInGoogle(event)} sx={{ mr: "10px" }}>
+      <CustomLoginButton variant="contained" onClick={(event) => signInGoogle(event)} sx={{ mr: "10px" }}>
         Sign In
-      </Button>
+      </CustomLoginButton>
     );
   }
 }
