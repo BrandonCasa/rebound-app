@@ -1,5 +1,5 @@
 import * as IconSvgs from "@mui/icons-material";
-import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Button, IconButton, Toolbar, Typography } from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import React from "react";
@@ -56,13 +56,24 @@ function CustomToolbar(props) {
     <React.Fragment>
       <AppBar position="fixed" height="48px">
         <Toolbar variant="dense" disableGutters>
-          <Typography variant="h6" component="div" sx={{ ml: "24px", flexGrow: 1 }}>
-            Rebound
-          </Typography>
-          <ToolbarUserButton />
-          <IconButton sx={{ mr: "16px", padding: "0px", height: "32px", width: "32px" }}>
-            <IconSvgs.Settings sx={{ fontSize: 24, color: "white" }} />
-          </IconButton>
+          <Box sx={{ flexGrow: 1 }}>
+            <Typography variant="h6" component="div" sx={{ ml: "24px" }}>
+              Rebound
+            </Typography>
+          </Box>
+          <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "row", justifyContent: "center" }}>
+            <IconButton sx={{ padding: "0px", height: "42px", width: "42px" }}>
+              <IconSvgs.AppsRounded sx={{ fontSize: 32 }} color="black" />
+            </IconButton>
+          </Box>
+          <Box sx={{ flexGrow: 1 }}>
+            <IconButton sx={{ mr: "24px", padding: "0px", height: "32px", width: "32px", float: "right" }}>
+              <IconSvgs.Settings sx={{ fontSize: 24, color: "white" }} />
+            </IconButton>
+            <Box sx={{ float: "right" }}>
+              <ToolbarUserButton />
+            </Box>
+          </Box>
         </Toolbar>
       </AppBar>
       <Toolbar variant="dense" disableGutters />
