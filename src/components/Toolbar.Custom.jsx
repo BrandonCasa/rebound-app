@@ -18,6 +18,19 @@ const CustomLoginButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+const CustomControlCenterButton = styled(IconButton)(({ theme }) => ({
+  color: "white",
+  backgroundColor: alpha("#000000", 0.35),
+  "&:hover": {
+    backgroundColor: alpha("#000000", 0.35),
+    boxShadow: `0px 0px 0px 3px ${alpha("#000000", 0.15)}`,
+  },
+  "&:active": {
+    backgroundColor: alpha("#000000", 0.35),
+    boxShadow: `0px 0px 0px 6px ${alpha("#000000", 0.15)}`,
+  },
+}));
+
 function ToolbarUserButton(props) {
   const auth = getAuth();
   const [user, loading, error] = useAuthState(auth);
@@ -62,9 +75,9 @@ function CustomToolbar(props) {
             </Typography>
           </Box>
           <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "row", justifyContent: "center" }}>
-            <IconButton sx={{ padding: "0px", height: "42px", width: "42px" }}>
-              <IconSvgs.AppsRounded sx={{ fontSize: 32 }} color="black" />
-            </IconButton>
+            <CustomControlCenterButton sx={{ padding: "0px", height: "42px", width: "42px" }}>
+              <IconSvgs.AppsRounded sx={{ fontSize: 32 }} />
+            </CustomControlCenterButton>
           </Box>
           <Box sx={{ flexGrow: 1 }}>
             <IconButton sx={{ mr: "24px", padding: "0px", height: "32px", width: "32px", float: "right" }}>
