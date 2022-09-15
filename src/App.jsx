@@ -11,6 +11,7 @@ function App(props) {
   const [user, loading, error] = useAuthState(auth);
 
   const signInGoogle = (event) => {
+    const auth = getAuth();
     const provider = new GoogleAuthProvider();
     //firebase.login({ provider: "google", type: "popup" });
     signInWithPopup(auth, provider).then((result) => {

@@ -4,6 +4,8 @@ import { alpha, styled } from "@mui/material/styles";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useDropdown } from "../helpers/dropDownHelper";
+import CustomDropdown from "./DropDown.Custom";
 
 const CustomLoginButton = styled(Button)(({ theme }) => ({
   width: 100,
@@ -35,6 +37,13 @@ function ToolbarUserButton(props) {
   const auth = getAuth();
   const [user, loading, error] = useAuthState(auth);
 
+  const [menuOpened, anchorEl, handleMenuOpen, handleMenuClose] = useDropdown();
+
+  const signOut = () => {
+    const auth = getAuth();
+    auth.signOut().catch((error) => console.error(error));
+  };
+
   const signInGoogle = (event) => {
     const provider = new GoogleAuthProvider();
     //firebase.login({ provider: "google", type: "popup" });
@@ -48,11 +57,20 @@ function ToolbarUserButton(props) {
       // ...
     });
   };
+
   if (user) {
     return (
-      <IconButton sx={{ mr: "16px", padding: "0px", height: "32px", width: "32px" }}>
-        <IconSvgs.AccountCircle sx={{ fontSize: 24, color: "white" }} />
-      </IconButton>
+      <React.Fragment>
+        <IconButton
+          sx={{ mr: "16px", padding: "0px", height: "32px", width: "32px" }}
+          onClick={signOut}
+          onMouseEnter={(event) => handleMenuOpen(event, false)}
+          onMouseLeave={() => handleMenuClose(false)}
+        >
+          <IconSvgs.AccountCircle sx={{ fontSize: 24, color: "white" }} />
+        </IconButton>
+        <CustomDropdown opened={menuOpened} anchorElement={anchorEl} handleMenuOpen={handleMenuOpen} handleMenuClose={handleMenuClose} />
+      </React.Fragment>
     );
   } else {
     return (
@@ -65,6 +83,7 @@ function ToolbarUserButton(props) {
 
 function CustomToolbar(props) {
   // iconbutton onClick={() => setSettingsDrawerOpen(true)}
+
   return (
     <React.Fragment>
       <AppBar position="fixed" height="48px">
