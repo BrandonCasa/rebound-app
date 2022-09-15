@@ -4,6 +4,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { Route, Routes } from "react-router-dom";
 import CustomToolbar from "./components/Toolbar.Custom";
 import LandingPage from "./pages/Landing.page";
+import ProfilePage from "./pages/Profile.page";
 
 function App(props) {
   const auth = getAuth();
@@ -30,6 +31,9 @@ function App(props) {
       <Box sx={{ margin: "12px", flexGrow: 1, height: "100%" }}>
         <Routes>
           <Route exact path="/" element={<LandingPage />} />
+          <Route path="profile">
+            <Route path=":profileId" element={<ProfilePage />} />
+          </Route>
         </Routes>
       </Box>
     </Box>
