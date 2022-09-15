@@ -6,6 +6,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 
 const CustomMenu = styled(Menu)(({ theme }) => ({
+  color: "white",
   pointerEvents: "none",
   marginTop: "7.5px",
   "& .MuiPaper-root": {
@@ -44,9 +45,10 @@ function CustomDropdown(props) {
           //closeMenuEvent();
           navigate(`/profile/${user?.uid?.toString()}`);
         }}
+        sx={{ color: "white" }}
       >
         <ListItemIcon>
-          <IconSvgs.AccountBox />
+          <IconSvgs.AccountBox color="white" />
         </ListItemIcon>
         <ListItemText primary="Profile" />
       </MenuItem>
@@ -55,9 +57,10 @@ function CustomDropdown(props) {
           //closeMenuEvent();
           navigate(`/settings`);
         }}
+        sx={{ color: "white" }}
       >
         <ListItemIcon>
-          <IconSvgs.SettingsApplications />
+          <IconSvgs.SettingsApplications color="white" />
         </ListItemIcon>
         <ListItemText primary="Settings" />
       </MenuItem>
@@ -66,9 +69,10 @@ function CustomDropdown(props) {
           //closeMenuEvent();
           signOut();
         }}
+        sx={{ color: "white" }}
       >
         <ListItemIcon>
-          <IconSvgs.SwitchAccount />
+          <IconSvgs.SwitchAccount color="white" />
         </ListItemIcon>
         <ListItemText primary="Switch Accounts" />
       </MenuItem>
@@ -77,9 +81,10 @@ function CustomDropdown(props) {
           //closeMenuEvent();
           signOut();
         }}
+        sx={{ color: "white" }}
       >
         <ListItemIcon>
-          <IconSvgs.Logout />
+          <IconSvgs.Logout color="white" />
         </ListItemIcon>
         <ListItemText primary="Logout" />
       </MenuItem>
