@@ -23,13 +23,14 @@ const CustomLoginButton = styled(Button)(({ theme }) => ({
 const CustomControlCenterButton = styled(IconButton)(({ theme }) => ({
   color: "white",
   backgroundColor: alpha("#000000", 0.35),
+  transition: "box-shadow 0.1s ease-in-out",
   "&:hover": {
     backgroundColor: alpha("#000000", 0.35),
-    boxShadow: `0px 0px 0px 3px ${alpha("#000000", 0.15)}`,
+    boxShadow: `0px 0px 3px 3px ${alpha("#000000", 0.175)}`,
   },
   "&:active": {
     backgroundColor: alpha("#000000", 0.35),
-    boxShadow: `0px 0px 0px 6px ${alpha("#000000", 0.15)}`,
+    boxShadow: `0px 0px 2px 4px ${alpha("#000000", 0.175)}`,
   },
 }));
 

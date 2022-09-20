@@ -48,7 +48,7 @@ function CustomDropdown(props) {
         sx={{ color: "white" }}
       >
         <ListItemIcon>
-          <IconSvgs.AccountBox color="white" />
+          <IconSvgs.AccountBox sx={{ fontSize: 24, color: "white" }} />
         </ListItemIcon>
         <ListItemText primary="Profile" />
       </MenuItem>
@@ -60,7 +60,7 @@ function CustomDropdown(props) {
         sx={{ color: "white" }}
       >
         <ListItemIcon>
-          <IconSvgs.SettingsApplications color="white" />
+          <IconSvgs.SettingsApplications sx={{ fontSize: 24, color: "white" }} />
         </ListItemIcon>
         <ListItemText primary="Settings" />
       </MenuItem>
@@ -72,7 +72,7 @@ function CustomDropdown(props) {
         sx={{ color: "white" }}
       >
         <ListItemIcon>
-          <IconSvgs.SwitchAccount color="white" />
+          <IconSvgs.SwitchAccount sx={{ fontSize: 24, color: "white" }} />
         </ListItemIcon>
         <ListItemText primary="Switch Accounts" />
       </MenuItem>
@@ -84,7 +84,7 @@ function CustomDropdown(props) {
         sx={{ color: "white" }}
       >
         <ListItemIcon>
-          <IconSvgs.Logout color="white" />
+          <IconSvgs.Logout sx={{ fontSize: 24, color: "white" }} />
         </ListItemIcon>
         <ListItemText primary="Logout" />
       </MenuItem>
