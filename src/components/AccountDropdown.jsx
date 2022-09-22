@@ -14,7 +14,7 @@ const CustomMenu = styled(Menu)(({ theme }) => ({
   },
 }));
 
-function CustomDropdown(props) {
+function AccountDropdown(props) {
   const auth = getAuth();
   const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
@@ -27,8 +27,8 @@ function CustomDropdown(props) {
   return (
     <CustomMenu
       MenuListProps={{ disablePadding: true }}
-      anchorEl={props.anchorElement}
-      open={props.opened}
+      anchorEl={props.anchorEl}
+      open={props.menuOpened}
       disableRestoreFocus
       PaperProps={{ onMouseEnter: (event) => props.handleMenuOpen(event, true), onMouseLeave: (event) => props.handleMenuClose(true) }}
       anchorOrigin={{
@@ -51,18 +51,6 @@ function CustomDropdown(props) {
           <IconSvgs.AccountBox sx={{ fontSize: 24, color: "white" }} />
         </ListItemIcon>
         <ListItemText primary="Profile" />
-      </MenuItem>
-      <MenuItem
-        onClick={() => {
-          //closeMenuEvent();
-          navigate(`/settings`);
-        }}
-        sx={{ color: "white" }}
-      >
-        <ListItemIcon>
-          <IconSvgs.SettingsApplications sx={{ fontSize: 24, color: "white" }} />
-        </ListItemIcon>
-        <ListItemText primary="Settings" />
       </MenuItem>
       <MenuItem
         onClick={() => {
@@ -92,4 +80,4 @@ function CustomDropdown(props) {
   );
 }
 
-export default CustomDropdown;
+export default AccountDropdown;

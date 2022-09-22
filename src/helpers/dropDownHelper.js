@@ -1,16 +1,11 @@
-import * as IconSvgs from "@mui/icons-material";
-import { AppBar, Box, Button, IconButton, Toolbar, Typography } from "@mui/material";
-import { alpha, styled } from "@mui/material/styles";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import React from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 
-export function useDropdown() {
+export function useDropdown(type) {
   const [anchorEl, setAnchorEl] = React.useState(undefined);
   const [currentTimeout, setCurrentTimeout] = React.useState(undefined);
   const [menuOpened, setMenuOpened] = React.useState(false);
 
-  const handleMenuOpen = async (event: React.MouseEvent<HTMLDivElement, MouseEvent>, menu: boolean) => {
+  const handleMenuOpen = async (event, menu) => {
     //setCurrentTimeout("");
     clearTimeout(currentTimeout);
     if (!menu) {
@@ -24,13 +19,13 @@ export function useDropdown() {
     //setAnchorEl(undefined);
   };
 
-  const handleMenuClose = async (menu: boolean) => {
+  const handleMenuClose = async (menu) => {
     if (menu) {
-      setCurrentTimeout(setTimeout(setMenuClosed, 125));
+      setCurrentTimeout(setTimeout(setMenuClosed, 100));
     } else {
-      setCurrentTimeout(setTimeout(setMenuClosed, 250));
+      setCurrentTimeout(setTimeout(setMenuClosed, 300));
     }
   };
 
-  return [menuOpened, anchorEl, handleMenuOpen, handleMenuClose]
+  return { menuOpened, anchorEl, handleMenuOpen, handleMenuClose }
 }
