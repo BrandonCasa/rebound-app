@@ -1,12 +1,12 @@
 import * as IconSvgs from "@mui/icons-material";
 import { ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 
 const CustomMenu = styled(Menu)(({ theme }) => ({
-  color: "white",
+  color: theme.palette.text.primary,
   pointerEvents: "none",
   marginTop: "7.5px",
   "& .MuiPaper-root": {
@@ -15,6 +15,8 @@ const CustomMenu = styled(Menu)(({ theme }) => ({
 }));
 
 function AccountDropdown(props) {
+  let theme = useTheme();
+  
   const auth = getAuth();
   const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
@@ -45,10 +47,10 @@ function AccountDropdown(props) {
           //closeMenuEvent();
           navigate(`/profile/${user?.uid?.toString()}`);
         }}
-        sx={{ color: "white" }}
+        sx={{ color: theme.palette.text.secondary }}
       >
         <ListItemIcon>
-          <IconSvgs.AccountBox sx={{ fontSize: 24, color: "white" }} />
+          <IconSvgs.AccountBox sx={{ fontSize: 24, color: theme.palette.text.primary }} />
         </ListItemIcon>
         <ListItemText primary="Profile" />
       </MenuItem>
@@ -57,10 +59,10 @@ function AccountDropdown(props) {
           //closeMenuEvent();
           signOut();
         }}
-        sx={{ color: "white" }}
+        sx={{ color: theme.palette.text.secondary }}
       >
         <ListItemIcon>
-          <IconSvgs.SwitchAccount sx={{ fontSize: 24, color: "white" }} />
+          <IconSvgs.SwitchAccount sx={{ fontSize: 24, color: theme.palette.text.primary }} />
         </ListItemIcon>
         <ListItemText primary="Switch Accounts" />
       </MenuItem>
@@ -69,10 +71,10 @@ function AccountDropdown(props) {
           //closeMenuEvent();
           signOut();
         }}
-        sx={{ color: "white" }}
+        sx={{ color: theme.palette.text.secondary }}
       >
         <ListItemIcon>
-          <IconSvgs.Logout sx={{ fontSize: 24, color: "white" }} />
+          <IconSvgs.Logout sx={{ fontSize: 24, color: theme.palette.text.primary }} />
         </ListItemIcon>
         <ListItemText primary="Logout" />
       </MenuItem>

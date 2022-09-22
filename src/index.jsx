@@ -17,6 +17,10 @@ import { store } from "./store";
 const darkTheme = createTheme({
   palette: {
     type: "dark",
+    text: {
+      primary: "#fff",
+      secondary: "#B5B5B5",
+    },
     primary: {
       main: "#b53f3f",
       light: "#ec6f6a",
