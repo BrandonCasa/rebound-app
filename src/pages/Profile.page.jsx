@@ -1,6 +1,6 @@
 import * as IconSvgs from "@mui/icons-material";
 import { Avatar, Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, IconButton, Paper, Typography } from "@mui/material";
-import { red } from "@mui/material/colors";
+import { blue } from "@mui/material/colors";
 import { styled, useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
 import React from "react";
@@ -34,8 +34,8 @@ function ProfilePage(props) {
         <CustomCard>
           <CardHeader
             avatar={
-              <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                R
+              <Avatar sx={{ bgcolor: theme.palette.primary.light }} aria-label="recipe">
+                K
               </Avatar>
             }
             action={
@@ -43,13 +43,13 @@ function ProfilePage(props) {
                 <IconSvgs.MoreVert sx={{ color: theme.palette.text.primary }} />
               </IconButton>
             }
-            title="Shrimp and Chorizo Paella"
-            subheader="September 14, 2016"
+            title="Kannatron"
+            subheader="Joined: September 2022"
           />
-          <CardMedia component="img" height="194" image="https://cdn.discordapp.com/banners/249653920081772544/a_f36332f5ea27fb5b3ccf137ed26c5d37.gif?size=600" alt="Paella dish" />
+          <CardMedia component="img" height="125" image="https://cdn.discordapp.com/banners/249653920081772544/a_f36332f5ea27fb5b3ccf137ed26c5d37.gif?size=600" alt="Banner" />
           <CardContent>
             <Typography variant="body2" color="text.secondary">
-              This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like.
+              certified troller
             </Typography>
           </CardContent>
           <CardActions disableSpacing>
