@@ -5,6 +5,7 @@ import "firebase/auth";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 import "firebase/database";
 import "firebase/firestore";
+import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
@@ -60,6 +61,8 @@ const firebaseConfig = {
 };
 
 const app = firebase.initializeApp(firebaseConfig);
+const functions = getFunctions(app);
+connectFunctionsEmulator(functions, "localhost", 5001);
 
 if (isDev()) {
   const auth = getAuth(app);

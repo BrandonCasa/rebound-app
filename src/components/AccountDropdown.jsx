@@ -4,6 +4,7 @@ import { styled, useTheme } from "@mui/material/styles";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 const CustomMenu = styled(Menu)(({ theme }) => ({
   color: theme.palette.text.primary,
@@ -20,10 +21,18 @@ function AccountDropdown(props) {
   const auth = getAuth();
   const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
+  const functions = getFunctions();
+  const createServer = httpsCallable(functions, 'createServer');
 
   const signOut = () => {
     const auth = getAuth();
     auth.signOut().catch((error) => console.error(error));
+  };
+
+  const runTest = () => {
+    createServer().then((result) => {
+      console.log(result);
+    });
   };
 
   return (
@@ -57,7 +66,7 @@ function AccountDropdown(props) {
       <MenuItem
         onClick={() => {
           //closeMenuEvent();
-          signOut();
+          runTest();
         }}
         sx={{ color: theme.palette.text.secondary }}
       >
