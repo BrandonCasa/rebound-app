@@ -1,10 +1,27 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Route, Routes } from "react-router-dom";
 import CustomToolbar from "./components/Toolbar.Custom";
 import LandingPage from "./pages/Landing.page";
 import ProfilePage from "./pages/Profile.page";
+import { BrowserRouter } from "react-router-dom";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+
+function MainAppContainer(props) {
+  return (
+    <ThemeProvider theme={props.darkTheme}>
+      <CssBaseline />
+      <BrowserRouter>
+        <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+          <CustomToolbar />
+          <Box sx={{ margin: "12px", flexGrow: 1, height: "100%" }}>{props.children}</Box>
+        </Box>
+      </BrowserRouter>
+    </ThemeProvider>
+  );
+}
 
 function App(props) {
   const auth = getAuth();
@@ -26,19 +43,34 @@ function App(props) {
   };
 
   // iconbutton onClick={() => setSettingsDrawerOpen(true)}
-  return (
-    <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
-      <CustomToolbar />
-      <Box sx={{ margin: "12px", flexGrow: 1, height: "100%" }}>
+  if (loading) {
+    return (
+      <MainAppContainer darkTheme={props.darkTheme}>
+        <Typography variant="h4">Loading...</Typography>
+      </MainAppContainer>
+    );
+  } else if (!user) {
+    return (
+      <MainAppContainer darkTheme={props.darkTheme}>
+        <Typography variant="h4">Please Login.</Typography>
+      </MainAppContainer>
+    );
+  } else if (user) {
+    return (
+      <MainAppContainer darkTheme={props.darkTheme}>
         <Routes>
-          <Route exact path="/" element={<LandingPage />} />
-          <Route path="profile">
-            <Route path=":profileId" element={<ProfilePage />} />
-          </Route>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
-      </Box>
-    </Box>
-  );
+      </MainAppContainer>
+    );
+  } else {
+    return (
+      <MainAppContainer darkTheme={props.darkTheme}>
+        <Typography variant="h4">Error.</Typography>
+      </MainAppContainer>
+    );
+  }
 }
 
 export default App;

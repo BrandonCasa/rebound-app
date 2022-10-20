@@ -1,5 +1,4 @@
-import CssBaseline from "@mui/material/CssBaseline";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
@@ -9,7 +8,6 @@ import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import isDev from "./helpers/devDetect";
 import "./index.css";
@@ -74,12 +72,7 @@ if (isDev()) {
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <ThemeProvider theme={darkTheme}>
-        <CssBaseline />
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </ThemeProvider>
+      <App darkTheme={darkTheme} />
     </Provider>
   </React.StrictMode>,
   document.getElementById("root")

@@ -9,7 +9,6 @@ function AccountButton(props) {
 
   const signInGoogle = (event) => {
     const provider = new GoogleAuthProvider();
-    //firebase.login({ provider: "google", type: "popup" });
     signInWithPopup(auth, provider).then((result) => {
       // This gives you a Google Access Token. You can use it to access the Google API.
       const credential = GoogleAuthProvider.credentialFromResult(result);

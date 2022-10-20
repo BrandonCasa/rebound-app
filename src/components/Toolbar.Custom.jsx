@@ -58,7 +58,6 @@ function ToolbarUserButton(props) {
       // ...
     });
   };
-
   if (user) {
     return (
       <React.Fragment>
@@ -75,7 +74,7 @@ function ToolbarUserButton(props) {
     );
   } else {
     return (
-      <CustomLoginButton variant="contained" onClick={(event) => signInGoogle(event)} sx={{ mr: "10px" }}>
+      <CustomLoginButton variant="contained" onClick={(event) => signInGoogle(event)} sx={{ mr: "10px", width: "125px" }}>
         Sign In
       </CustomLoginButton>
     );
