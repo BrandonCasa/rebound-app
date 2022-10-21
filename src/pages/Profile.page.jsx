@@ -21,9 +21,9 @@ const CustomCard = styled(Card)(({ theme }) => ({
 function ProfilePage(props) {
   let params = useParams();
   let theme = useTheme();
+  const user = useContext(UserContext);
 
   const [expanded, setExpanded] = React.useState(false);
-  const { msg, setMsg } = useContext(UserContext);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -32,7 +32,6 @@ function ProfilePage(props) {
   return (
     <Grid container spacing={2}>
       <Grid xs={8} xsOffset={2}>
-        {msg}
         <CustomCard>
           <CardHeader
             avatar={

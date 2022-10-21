@@ -36,7 +36,7 @@ if (isDev()) {
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App darkTheme={darkTheme} />
+      <App />
     </Provider>
   </React.StrictMode>,
   document.getElementById("root")

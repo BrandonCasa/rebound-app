@@ -3,8 +3,10 @@ import { AppBar, Box, Button, IconButton, Toolbar, Typography } from "@mui/mater
 import { alpha, styled } from "@mui/material/styles";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import React from "react";
+import { useContext } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useDropdown } from "../helpers/dropDownHelper";
+import { UserContext } from "../helpers/userContext";
 import AccountDropdown from "./AccountDropdown";
 
 const CustomLoginButton = styled(Button)(({ theme }) => ({
@@ -35,8 +37,7 @@ const CustomControlCenterButton = styled(IconButton)(({ theme }) => ({
 }));
 
 function ToolbarUserButton(props) {
-  const auth = getAuth();
-  const [user, loading, error] = useAuthState(auth);
+  const user = useContext(UserContext);
 
   const accountDropdownState = useDropdown("account");
 
@@ -46,6 +47,7 @@ function ToolbarUserButton(props) {
   };
 
   const signInGoogle = (event) => {
+    const auth = getAuth();
     const provider = new GoogleAuthProvider();
     //firebase.login({ provider: "google", type: "popup" });
     signInWithPopup(auth, provider).then((result) => {
@@ -58,7 +60,7 @@ function ToolbarUserButton(props) {
       // ...
     });
   };
-  if (user) {
+  if (user && user !== "loading") {
     return (
       <React.Fragment>
         <IconButton
@@ -82,6 +84,7 @@ function ToolbarUserButton(props) {
 }
 
 function CustomToolbar(props) {
+  const user = useContext(UserContext);
   // iconbutton onClick={() => setSettingsDrawerOpen(true)}
 
   return (

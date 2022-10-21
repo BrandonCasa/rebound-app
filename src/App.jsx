@@ -11,20 +11,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { UserContext } from "./helpers/userContext";
 import darkTheme from "./themes/darkTheme";
 
-function MainAppContainer(props) {
-  return (
-    <ThemeProvider theme={props.darkTheme}>
-      <CssBaseline />
-      <BrowserRouter>
-        <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
-          <CustomToolbar />
-          <Box sx={{ margin: "12px", flexGrow: 1, height: "100%" }}>{props.children}</Box>
-        </Box>
-      </BrowserRouter>
-    </ThemeProvider>
-  );
-}
-
 function App(props) {
   const auth = getAuth();
   const [user, loading, error] = useAuthState(auth);
@@ -46,7 +32,7 @@ function App(props) {
 
   // iconbutton onClick={() => setSettingsDrawerOpen(true)}
   return (
-    <UserContext.Provider value={"hello"}>
+    <UserContext.Provider value={user || (loading && "loading")}>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
         <BrowserRouter>
@@ -55,7 +41,7 @@ function App(props) {
             <Box sx={{ margin: "12px", flexGrow: 1, height: "100%" }}>
               <Routes>
                 <Route path="/" element={<LandingPage />} />
-                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/profile/:id" element={<ProfilePage />} />
               </Routes>
             </Box>
           </Box>
