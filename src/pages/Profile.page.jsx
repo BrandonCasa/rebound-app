@@ -1,10 +1,10 @@
 import * as IconSvgs from "@mui/icons-material";
-import { Avatar, Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, IconButton, Paper, Typography } from "@mui/material";
-import { blue } from "@mui/material/colors";
+import { Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia, IconButton, Paper, Typography } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
-import React from "react";
+import React, { useContext } from "react";
 import { useParams } from "react-router-dom";
+import { UserContext } from "../helpers/userContext";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -23,6 +23,7 @@ function ProfilePage(props) {
   let theme = useTheme();
 
   const [expanded, setExpanded] = React.useState(false);
+  const { msg, setMsg } = useContext(UserContext);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -31,6 +32,7 @@ function ProfilePage(props) {
   return (
     <Grid container spacing={2}>
       <Grid xs={8} xsOffset={2}>
+        {msg}
         <CustomCard>
           <CardHeader
             avatar={

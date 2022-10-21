@@ -8,6 +8,8 @@ import ProfilePage from "./pages/Profile.page";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import { UserContext } from "./helpers/userContext";
+import darkTheme from "./themes/darkTheme";
 
 function MainAppContainer(props) {
   return (
@@ -43,34 +45,24 @@ function App(props) {
   };
 
   // iconbutton onClick={() => setSettingsDrawerOpen(true)}
-  if (loading) {
-    return (
-      <MainAppContainer darkTheme={props.darkTheme}>
-        <Typography variant="h4">Loading...</Typography>
-      </MainAppContainer>
-    );
-  } else if (!user) {
-    return (
-      <MainAppContainer darkTheme={props.darkTheme}>
-        <Typography variant="h4">Please Login.</Typography>
-      </MainAppContainer>
-    );
-  } else if (user) {
-    return (
-      <MainAppContainer darkTheme={props.darkTheme}>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-        </Routes>
-      </MainAppContainer>
-    );
-  } else {
-    return (
-      <MainAppContainer darkTheme={props.darkTheme}>
-        <Typography variant="h4">Error.</Typography>
-      </MainAppContainer>
-    );
-  }
+  return (
+    <UserContext.Provider value={"hello"}>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <BrowserRouter>
+          <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+            <CustomToolbar />
+            <Box sx={{ margin: "12px", flexGrow: 1, height: "100%" }}>
+              <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+              </Routes>
+            </Box>
+          </Box>
+        </BrowserRouter>
+      </ThemeProvider>
+    </UserContext.Provider>
+  );
 }
 
 export default App;

@@ -17,12 +17,12 @@ const CustomMenu = styled(Menu)(({ theme }) => ({
 
 function AccountDropdown(props) {
   let theme = useTheme();
-  
+
   const auth = getAuth();
   const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
   const functions = getFunctions();
-  const createServer = httpsCallable(functions, 'createServer');
+  const createServer = httpsCallable(functions, "createServer");
 
   const signOut = () => {
     const auth = getAuth();
