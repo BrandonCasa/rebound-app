@@ -58,10 +58,12 @@
     ]
   },
   "devDependencies": {
-    "prettier": "^2.7.1",
     "cross-env": "^7.0.3",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "firebase-functions-test": "^2.3.0",
     "kill-port": "^2.0.1",
+    "prettier": "^2.7.1",
     "prettier-plugin-organize-imports": "^2.3.4",
     "yarn-audit-fix": "^9.3.1"
   }
