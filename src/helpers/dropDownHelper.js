@@ -27,5 +27,5 @@ export function useDropdown(type) {
     }
   };
 
-  return { menuOpened, anchorEl, handleMenuOpen, handleMenuClose }
+  return { menuOpened, anchorEl, handleMenuOpen, handleMenuClose };
 }
