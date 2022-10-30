@@ -32,7 +32,7 @@ function App(props) {
 
   // iconbutton onClick={() => setSettingsDrawerOpen(true)}
   return (
-    <UserContext.Provider value={user || (loading && "loading")}>
+    <UserContext.Provider value={user || (loading ? "loading" : "not logged in")}>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
         <BrowserRouter>
