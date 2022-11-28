@@ -56,11 +56,11 @@ function ToolbarUserButton(props) {
       const token = credential.accessToken;
       // The signed-in user info.
       const user = result.user;
-      console.log(user);
+      accountDropdownState.forceMenuState(false);
       // ...
     });
   };
-  if (user && user !== "loading") {
+  if (user?.uid && user !== "loading") {
     return (
       <React.Fragment>
         <IconButton
