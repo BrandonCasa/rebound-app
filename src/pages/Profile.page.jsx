@@ -5,6 +5,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import React, { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { UserContext } from "../helpers/userContext";
+import { getStorage, ref, getBlob } from "firebase/storage";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -22,12 +23,21 @@ function ProfilePage(props) {
   let params = useParams();
   let theme = useTheme();
   const user = useContext(UserContext);
+  const storage = getStorage();
+  const pathReference = ref(storage, `users/${params.id}/banner/userBanner.png`);
 
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
+  let bannerImage = null;
+  getBlob(pathReference)
+    .then((blob) => {
+      bannerImage = URL.createObjectURL(blob);
+    })
+    .catch((error) => {});
 
   return (
     <Grid container spacing={2}>

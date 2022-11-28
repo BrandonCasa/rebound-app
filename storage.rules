@@ -5,8 +5,7 @@ service firebase.storage {
       allow read, update, delete, write, create: if false;
     }
     match /users/{userId}/banner/{allPaths=**} {
-      allow update, delete, write: if request.auth != null && request.auth.uid == userId && request.resource.size < 15 * 2560 * 1440 && request.resource.contentType.matches('image/.*');
-      allow create: if request.auth != null && request.resource.size < 15 * 2560 * 1440 && request.resource.contentType.matches('image/.*');
+      allow update, delete, write, create: if request.auth != null && request.auth.uid == userId && request.resource.size < 15 * 2560 * 1440 && request.resource.contentType.matches('image/.*');
       allow read: if true;
     }
   }
