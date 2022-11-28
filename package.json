@@ -36,7 +36,7 @@
     "deploy-hosting": "firebase deploy --only hosting",
     "deploy-functions": "firebase deploy --only functions",
     "start-em": "cross-env GOOGLE_APPLICATION_CREDENTIALS=dev_keys/rebound-380d6-firebase-adminsdk-odnv5-fcff4d3bbd.json && npx kill-port --port 9099,5001,8181,6000,9199,4001,4500,4400,4001 && firebase emulators:start --import=data --export-on-exit=data",
-    "start-em2": "npx kill-port --port 9099,5001,8181,6000,9199,4001,4500,4400,4001 && firebase emulators:start --import=data --export-on-exit=data",
+    "start-em2": "kill-port --port 9099,5001,8181,6000,9199,4001,4500,4400,4001 && firebase emulators:start --import=./data --export-on-exit=./data",
     "audit-fix": "yarn-audit-fix"
   },
   "eslintConfig": {

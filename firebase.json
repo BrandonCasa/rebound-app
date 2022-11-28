@@ -39,12 +39,13 @@
     "hosting": {
       "port": 6000
     },
-    "storage": {
-      "port": 9199
-    },
     "ui": {
       "enabled": true,
       "port": 4001
+    },
+    "storage": {
+      "enabled": true,
+      "port": 9199
     }
   }
 }

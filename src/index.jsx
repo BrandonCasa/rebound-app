@@ -4,6 +4,7 @@ import { connectAuthEmulator, getAuth } from "firebase/auth";
 import "firebase/database";
 import "firebase/firestore";
 import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
+import { getStorage, connectStorageEmulator } from "firebase/storage";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
@@ -23,12 +24,14 @@ const firebaseConfig = {
 };
 
 const app = firebase.initializeApp(firebaseConfig);
+const auth = getAuth(app);
 const functions = getFunctions(app);
-connectFunctionsEmulator(functions, "localhost", 5001);
+const storage = getStorage(app);
 
 if (isDev()) {
-  const auth = getAuth(app);
-  connectAuthEmulator(auth, "http://127.0.0.1:9099");
+  connectAuthEmulator(auth, "http://localhost:9099");
+  connectFunctionsEmulator(functions, "localhost", 5001);
+  connectStorageEmulator(storage, "localhost", 9199);
 } else {
   // xd
 }

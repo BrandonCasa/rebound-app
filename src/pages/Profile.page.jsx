@@ -57,7 +57,7 @@ function ProfilePage(props) {
             title="Kannatron"
             subheader="Joined: September 2022"
           />
-          <CardMedia component="img" height="125" image="https://cdn.discordapp.com/banners/249653920081772544/a_f36332f5ea27fb5b3ccf137ed26c5d37.gif?size=600" alt="Banner" />
+          <CardMedia component="img" height="125" image={bannerImage} alt="Banner" />
           <CardContent>
             <Typography variant="body2" color="text.secondary">
               certified troller
