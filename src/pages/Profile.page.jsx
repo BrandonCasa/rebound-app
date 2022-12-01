@@ -1,5 +1,5 @@
 import * as IconSvgs from "@mui/icons-material";
-import { Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia, IconButton, Paper, Typography } from "@mui/material";
+import { Avatar, Button, ButtonBase, Card, CardActions, CardContent, CardHeader, CardMedia, IconButton, Paper, Typography } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
 import React, { useContext } from "react";
@@ -27,17 +27,22 @@ function ProfilePage(props) {
   const pathReference = ref(storage, `users/${params.id}/banner/userBanner.png`);
 
   const [expanded, setExpanded] = React.useState(false);
+  const [bannerImage, setBannerImage] = React.useState(null);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  let bannerImage = null;
-  getBlob(pathReference)
-    .then((blob) => {
-      bannerImage = URL.createObjectURL(blob);
-    })
-    .catch((error) => {});
+  React.useEffect(() => {
+    getBlob(pathReference)
+      .then((blob) => {
+        // 222.2 x 125
+        setBannerImage(URL.createObjectURL(blob));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [params.id]);
 
   return (
     <Grid container spacing={2}>
@@ -57,7 +62,9 @@ function ProfilePage(props) {
             title="Kannatron"
             subheader="Joined: September 2022"
           />
-          <CardMedia component="img" height="125" image={bannerImage} alt="Banner" />
+          <ButtonBase height="125">
+            <CardMedia component="img" height="125" image={bannerImage} alt={JSON.stringify(bannerImage)} />
+          </ButtonBase>
           <CardContent>
             <Typography variant="body2" color="text.secondary">
               certified troller
