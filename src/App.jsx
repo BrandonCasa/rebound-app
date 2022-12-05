@@ -12,8 +12,7 @@ import { UserContext } from "./helpers/userContext";
 import darkTheme from "./themes/darkTheme";
 
 function App(props) {
-  const auth = getAuth();
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading, error] = useAuthState(getAuth());
 
   const signInGoogle = (event) => {
     const auth = getAuth();

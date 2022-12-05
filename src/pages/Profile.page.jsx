@@ -6,6 +6,8 @@ import React, { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { UserContext } from "../helpers/userContext";
 import { getStorage, ref, getBlob } from "firebase/storage";
+import { getFunctions, httpsCallable } from "firebase/functions";
+import { getAuth } from "firebase/auth";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -23,8 +25,6 @@ function ProfilePage(props) {
   let params = useParams();
   let theme = useTheme();
   const user = useContext(UserContext);
-  const storage = getStorage();
-  const pathReference = ref(storage, `users/${params.id}/banner/userBanner.png`);
 
   const [expanded, setExpanded] = React.useState(false);
   const [bannerImage, setBannerImage] = React.useState(null);
@@ -33,7 +33,19 @@ function ProfilePage(props) {
     setExpanded(!expanded);
   };
 
+  const handleBannerChange = () => {
+    let functions = getFunctions();
+    const auth = getAuth();
+    const changeBanner = httpsCallable(functions, "changeBanner");
+    changeBanner({ hasBanner: true }).then((result) => {
+      const data = result.data;
+      console.log(data);
+    });
+  };
+
   React.useEffect(() => {
+    const storage = getStorage();
+    const pathReference = ref(storage, `users/${params.id}/banner/userBanner.png`);
     getBlob(pathReference)
       .then((blob) => {
         // 222.2 x 125
@@ -62,7 +74,7 @@ function ProfilePage(props) {
             title="Kannatron"
             subheader="Joined: September 2022"
           />
-          <ButtonBase height="125">
+          <ButtonBase height="125" onClick={() => handleBannerChange()}>
             <CardMedia component="img" height="125" image={bannerImage} alt={JSON.stringify(bannerImage)} />
           </ButtonBase>
           <CardContent>

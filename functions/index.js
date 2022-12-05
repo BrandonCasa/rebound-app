@@ -1,12 +1,14 @@
 // The Cloud Functions for Firebase SDK to create Cloud Functions and set up triggers.
 const functions = require("firebase-functions");
 const cors = require("cors")({ origin: true });
+var fs = require("fs");
 
 // The Firebase Admin SDK to access Firestore.
 const admin = require("firebase-admin");
 
 admin.initializeApp();
 admin.firestore().settings({ ignoreUndefinedProperties: true });
+const storageRef = admin.storage().bucket("gs://rebound-380d6.appspot.com");
 
 exports.createServer = functions.https.onCall(async (data, context) => {
   if (!context.auth) {
@@ -158,25 +160,20 @@ exports.changeColor = functions.https.onRequest(async (req, res) => {
   });
 });
 
-exports.changeBanner = functions.https.onRequest(async (req, res) => {
-  cors(req, res, async () => {
-    const userDoc = await admin.firestore().collection("users").doc(JSON.parse(req.body).auth.currentUser.uid).get();
-    if (userDoc.exists) {
-      const writtenUser = await admin
-        .firestore()
-        .collection("users")
-        .doc(JSON.parse(req.body).auth.currentUser.uid)
-        .update({
-          hasBanner: JSON.parse(req.body).hasBanner,
-        });
-    } else {
-      await admin
-        .firestore()
-        .collection("users")
-        .doc(JSON.parse(req.body).auth.currentUser.uid)
-        .set({ hasBanner: JSON.parse(req.body).hasBanner });
-    }
+exports.changeBanner = functions.https.onCall(async (data, context) => {
+  // Takes in: auth, newBanner, hasBanner
+  if (!context.auth) {
+    // Throwing an HttpsError so that the client gets the error details.
+    throw new functions.https.HttpsError("failed-precondition", "The function must be called " + "while authenticated.");
+  }
+  const userDoc = await admin.firestore().collection("users").doc(context.auth.uid).get();
+  if (userDoc.exists) {
+    const writtenUser = await admin.firestore().collection("users").doc(context.auth.uid).update({
+      hasBanner: data.hasBanner,
+    });
+  } else {
+    await admin.firestore().collection("users").doc(context.auth.uid).set({ hasBanner: data.hasBanner });
+  }
 
-    return res.sendStatus(200);
-  });
+  return "Complete";
 });
