@@ -5,7 +5,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import React, { Fragment, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { UserContext } from "../helpers/userContext";
-import { getStorage, ref, getBlob } from "firebase/storage";
+import { getStorage, ref, getBlob, listAll } from "firebase/storage";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { getAuth } from "firebase/auth";
 import { useRef } from "react";
@@ -35,12 +35,12 @@ function ProfilePage(props) {
     setExpanded(!expanded);
   };
 
-  const handleBannerChange = () => {
+  const handleBannerChange = (base64Image) => {
     // https://stackoverflow.com/questions/13333378/how-can-javascript-upload-a-blob
     let functions = getFunctions();
     const auth = getAuth();
     const changeBanner = httpsCallable(functions, "changeBanner");
-    changeBanner({ hasBanner: true }).then((result) => {
+    changeBanner({ hasBanner: true, newBanner: base64Image }).then((result) => {
       const data = result.data;
       console.log(data);
     });
@@ -55,20 +55,28 @@ function ProfilePage(props) {
       read.onloadend = () => {
         console.log(read.result);
         setBannerImage(read.result);
+        handleBannerChange(read.result);
       };
     }
   };
 
   React.useEffect(() => {
     const storage = getStorage();
-    const pathReference = ref(storage, `users/${params.id}/banner/userBanner.png`);
-    getBlob(pathReference)
-      .then((blob) => {
-        // 222.2 x 125
-        setBannerImage(URL.createObjectURL(blob));
+    const pathReference = ref(storage, `users/${params.id}/banner`);
+    listAll(pathReference)
+      .then((res) => {
+        getBlob(res.items[0])
+          .then((blob) => {
+            // 222.2 x 125
+            setBannerImage(URL.createObjectURL(blob));
+            console.log(blob);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       })
       .catch((error) => {
-        console.error(error);
+        // Uh-oh, an error occurred!
       });
   }, [params.id]);
 
@@ -76,6 +84,12 @@ function ProfilePage(props) {
     <Grid container spacing={2}>
       <Grid xs={8} xsOffset={2}>
         <CustomCard>
+          <Fragment>
+            <input ref={bannerInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeBannerFile} />
+            <ButtonBase onClick={() => bannerInputRef.current && bannerInputRef.current.click()} height="75" style={{ margin: "-8px" }}>
+              <CardMedia component="img" height="75" image={bannerImage} alt={JSON.stringify(bannerImage)} />
+            </ButtonBase>
+          </Fragment>
           <CardHeader
             avatar={
               <Avatar sx={{ bgcolor: theme.palette.primary.light }} aria-label="recipe">
@@ -90,12 +104,6 @@ function ProfilePage(props) {
             title="Kannatron"
             subheader="Joined: September 2022"
           />
-          <Fragment>
-            <input ref={bannerInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeBannerFile} />
-            <ButtonBase onClick={() => bannerInputRef.current && bannerInputRef.current.click()} height="125">
-              <CardMedia component="img" height="125" image={bannerImage} alt={JSON.stringify(bannerImage)} />
-            </ButtonBase>
-          </Fragment>
           <CardContent>
             <Typography variant="body2" color="text.secondary">
               certified troller

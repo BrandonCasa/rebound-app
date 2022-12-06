@@ -2,7 +2,8 @@
 // The Cloud Functions for Firebase SDK to create Cloud Functions and set up triggers.
 const functions = require("firebase-functions");
 const cors = require("cors")({ origin: true });
-
+const fs = require("fs");
+var CryptoJS = require("crypto-js");
 // The Firebase Admin SDK to access Firestore.
 const admin = require("firebase-admin");
 
@@ -173,17 +174,40 @@ exports.changeBanner = functions.https.onCall(async (data, context) => {
     });
   } else {
     await admin.firestore().collection("users").doc(context.auth.uid).set({ hasBanner: data.hasBanner });
-    const imageBuffer = Buffer.from(data.newBanner, "base64");
-    const imageByteArray = new Uint8Array(imageBuffer);
-    const options = { resumable: false, metadata: { contentType: "image/jpg" } };
-    await fs.writeFile("./xd.jpg", imageByteArray, function (err) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("The file was saved!");
-      }
-    });
   }
+  const imageData = data.newBanner.replace(/^data:image\/\w+;base64,/, "");
+  const imageBuffer = Buffer.from(imageData, "base64");
+  const imageByteArray = new Uint8Array(imageBuffer);
+  const mimeType = data.newBanner.substring(5, data.newBanner.substring(0, 25).indexOf(";"));
+  if (!fs.existsSync(`./tempStorage/`)) {
+    await fs.mkdirSync(`./tempStorage/`);
+    await fs.mkdirSync(`./tempStorage/users/`);
+    await fs.mkdirSync(`./tempStorage/users/${context.auth.uid}/`);
+    await fs.mkdirSync(`./tempStorage/users/${context.auth.uid}/banner/`);
+  } else if (!fs.existsSync(`./tempStorage/users/`)) {
+    await fs.mkdirSync(`./tempStorage/users/`);
+    await fs.mkdirSync(`./tempStorage/users/${context.auth.uid}/`);
+    await fs.mkdirSync(`./tempStorage/users/${context.auth.uid}/banner/`);
+  } else if (!fs.existsSync(`./tempStorage/users/${context.auth.uid}/`)) {
+    await fs.mkdirSync(`./tempStorage/users/${context.auth.uid}/`);
+    await fs.mkdirSync(`./tempStorage/users/${context.auth.uid}/banner/`);
+  } else if (!fs.existsSync(`./tempStorage/users/${context.auth.uid}/banner/`)) {
+    await fs.mkdirSync(`./tempStorage/users/${context.auth.uid}/banner/`);
+  }
+  const uniqueName = CryptoJS.MD5(CryptoJS.enc.Latin1.parse(data.newBanner)).toString().substring(0, 25) + "." + mimeType.split("/")[1];
+  const options = { resumable: false, metadata: { contentType: mimeType }, destination: `users/${context.auth.uid}/banner/${uniqueName}` };
+  await fs.writeFile(`./tempStorage/users/${context.auth.uid}/banner/${uniqueName}`, imageByteArray, async (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("The file was saved!");
+      const [files] = await storageRef.getFiles({ directory: `users/${context.auth.uid}/banner/` });
+      files.forEach(async (file) => {
+        await file.delete();
+      });
+      const uploadSnapshot = await storageRef.upload(`./tempStorage/users/${context.auth.uid}/banner/${uniqueName}`, options);
+    }
+  });
 
   return "Complete";
 });
