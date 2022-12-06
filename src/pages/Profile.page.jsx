@@ -2,12 +2,13 @@ import * as IconSvgs from "@mui/icons-material";
 import { Avatar, Button, ButtonBase, Card, CardActions, CardContent, CardHeader, CardMedia, IconButton, Paper, Typography } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
-import React, { useContext } from "react";
+import React, { Fragment, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { UserContext } from "../helpers/userContext";
 import { getStorage, ref, getBlob } from "firebase/storage";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { getAuth } from "firebase/auth";
+import { useRef } from "react";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -25,6 +26,7 @@ function ProfilePage(props) {
   let params = useParams();
   let theme = useTheme();
   const user = useContext(UserContext);
+  const bannerInputRef = useRef(null);
 
   const [expanded, setExpanded] = React.useState(false);
   const [bannerImage, setBannerImage] = React.useState(null);
@@ -34,6 +36,7 @@ function ProfilePage(props) {
   };
 
   const handleBannerChange = () => {
+    // https://stackoverflow.com/questions/13333378/how-can-javascript-upload-a-blob
     let functions = getFunctions();
     const auth = getAuth();
     const changeBanner = httpsCallable(functions, "changeBanner");
@@ -41,6 +44,19 @@ function ProfilePage(props) {
       const data = result.data;
       console.log(data);
     });
+  };
+
+  const onChangeBannerFile = (event) => {
+    if (bannerInputRef.current.files.length >= 0) {
+      let read = new FileReader();
+
+      read.readAsDataURL(bannerInputRef.current.files[0]);
+
+      read.onloadend = () => {
+        console.log(read.result);
+        setBannerImage(read.result);
+      };
+    }
   };
 
   React.useEffect(() => {
@@ -74,9 +90,12 @@ function ProfilePage(props) {
             title="Kannatron"
             subheader="Joined: September 2022"
           />
-          <ButtonBase height="125" onClick={() => handleBannerChange()}>
-            <CardMedia component="img" height="125" image={bannerImage} alt={JSON.stringify(bannerImage)} />
-          </ButtonBase>
+          <Fragment>
+            <input ref={bannerInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeBannerFile} />
+            <ButtonBase onClick={() => bannerInputRef.current && bannerInputRef.current.click()} height="125">
+              <CardMedia component="img" height="125" image={bannerImage} alt={JSON.stringify(bannerImage)} />
+            </ButtonBase>
+          </Fragment>
           <CardContent>
             <Typography variant="body2" color="text.secondary">
               certified troller
