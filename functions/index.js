@@ -1,7 +1,7 @@
+/* eslint-disable no-undef */
 // The Cloud Functions for Firebase SDK to create Cloud Functions and set up triggers.
 const functions = require("firebase-functions");
 const cors = require("cors")({ origin: true });
-var fs = require("fs");
 
 // The Firebase Admin SDK to access Firestore.
 const admin = require("firebase-admin");
@@ -173,6 +173,16 @@ exports.changeBanner = functions.https.onCall(async (data, context) => {
     });
   } else {
     await admin.firestore().collection("users").doc(context.auth.uid).set({ hasBanner: data.hasBanner });
+    const imageBuffer = Buffer.from(data.newBanner, "base64");
+    const imageByteArray = new Uint8Array(imageBuffer);
+    const options = { resumable: false, metadata: { contentType: "image/jpg" } };
+    await fs.writeFile("./xd.jpg", imageByteArray, function (err) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("The file was saved!");
+      }
+    });
   }
 
   return "Complete";
