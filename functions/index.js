@@ -20,7 +20,7 @@ function randomToken(size = 20) {
   return crypto.randomBytes(64).toString("hex").substr(0, size);
 }
 
-exports.changeBanner = functions.region("us-central").https.onCall(async (data, context) => {
+exports.changeBanner = functions.region("us-central1").https.onCall(async (data, context) => {
   // Takes in: auth, newBanner, hasBanner
   if (!context.auth) {
     // Throwing an HttpsError so that the client gets the error details.
