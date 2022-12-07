@@ -13,6 +13,7 @@ import { getFirestore, doc } from "firebase/firestore";
 import { useDocument } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import CryptoJS from "crypto-js";
+import { getApp } from "firebase/app";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -43,7 +44,7 @@ function ProfileAuthenticated(props) {
 
   const handleBannerChange = (base64Image) => {
     // https://stackoverflow.com/questions/13333378/how-can-javascript-upload-a-blob
-    let functions = getFunctions();
+    let functions = getFunctions(getApp(), "us-central1");
     const auth = getAuth();
     const changeBanner = httpsCallable(functions, "changeBanner");
     changeBanner({ hasBanner: true, newBanner: base64Image }).then((result) => {
