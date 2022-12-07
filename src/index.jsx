@@ -26,6 +26,7 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const functions = getFunctions(app);
+functions.region = "us-central";
 const storage = getStorage(app);
 
 if (isDev()) {
