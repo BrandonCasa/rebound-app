@@ -26,32 +26,32 @@ exports.changeBanner = functions.region("us-central").https.onCall(async (data, 
     // Throwing an HttpsError so that the client gets the error details.
     throw new functions.https.HttpsError("failed-precondition", "The function must be called " + "while authenticated.");
   }
-  const userDoc = await admin.firestore().collection("users").doc(context.auth.uid).get();
-  if (userDoc.exists) {
-    const writtenUser = await admin.firestore().collection("users").doc(context.auth.uid).update({
-      hasBanner: data.hasBanner,
-    });
-  } else {
-    await admin.firestore().collection("users").doc(context.auth.uid).set({ hasBanner: data.hasBanner });
-  }
+
   const imageData = data.newBanner.replace(/^data:image\/\w+;base64,/, "");
   const imageBuffer = Buffer.from(imageData, "base64");
-  const imageByteArray = new Uint8Array(imageBuffer);
   const mimeType = data.newBanner.substring(5, data.newBanner.substring(0, 25).indexOf(";"));
   const uniqueName = CryptoJS.MD5(CryptoJS.enc.Latin1.parse(data.newBanner)).toString().substring(0, 25) + "." + mimeType.split("/")[1];
-  const [files] = await storageRef.getFiles({ directory: `users/${context.auth.uid}/banner/` });
+  const [files] = await bucket.getFiles({ directory: `users/${context.auth.uid}/banner/` });
+  const userDoc = await admin.firestore().collection("users").doc(context.auth.uid).get();
+  if (userDoc.exists) {
+    await admin.firestore().collection("users").doc(context.auth.uid).update({
+      hasBanner: data.hasBanner,
+      bannerName: uniqueName,
+    });
+  } else {
+    await admin.firestore().collection("users").doc(context.auth.uid).set({ hasBanner: data.hasBanner, bannerName: uniqueName });
+  }
   await files.forEach(async (file) => {
     await file.delete();
   });
   bucket
     .file(`users/${context.auth.uid}/banner/${uniqueName}`)
-    .save(imageByteArray, { public: true, gzip: true })
-    .then((data) => {
-      resolve(`${bucketName}/${destination}`);
+    .save(imageBuffer, { public: true, gzip: true })
+    .then(async (data) => {
+      console.log("Image uploaded to bucket");
     })
-    .catch((err) => {
-      reject(err);
+    .catch(async (err) => {
+      console.log(err);
     });
-
   return "Complete";
 });

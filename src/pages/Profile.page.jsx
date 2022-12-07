@@ -9,6 +9,10 @@ import { getStorage, ref, getBlob, listAll } from "firebase/storage";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { getAuth } from "firebase/auth";
 import { useRef } from "react";
+import { getFirestore, doc } from "firebase/firestore";
+import { useDocument } from "react-firebase-hooks/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
+import CryptoJS from "crypto-js";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -22,14 +26,16 @@ const CustomCard = styled(Card)(({ theme }) => ({
   maxWidth: 345,
 }));
 
-function ProfilePage(props) {
+function ProfileAuthenticated(props) {
   let params = useParams();
   let theme = useTheme();
-  const user = useContext(UserContext);
   const bannerInputRef = useRef(null);
 
   const [expanded, setExpanded] = React.useState(false);
   const [bannerImage, setBannerImage] = React.useState(null);
+  const [valuexd, loadingDoc, errorDoc] = useDocument(doc(getFirestore(), "users", props.user.uid), {
+    snapshotListenOptions: { includeMetadataChanges: true },
+  });
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -42,7 +48,7 @@ function ProfilePage(props) {
     const changeBanner = httpsCallable(functions, "changeBanner");
     changeBanner({ hasBanner: true, newBanner: base64Image }).then((result) => {
       const data = result.data;
-      console.log(data);
+      //console.log(data);
     });
   };
 
@@ -53,7 +59,7 @@ function ProfilePage(props) {
       read.readAsDataURL(bannerInputRef.current.files[0]);
 
       read.onloadend = () => {
-        console.log(read.result);
+        //console.log(read.result);
         setBannerImage(read.result);
         handleBannerChange(read.result);
       };
@@ -62,23 +68,27 @@ function ProfilePage(props) {
 
   React.useEffect(() => {
     const storage = getStorage();
-    const pathReference = ref(storage, `users/${params.id}/banner`);
-    listAll(pathReference)
-      .then((res) => {
-        getBlob(res.items[0])
-          .then((blob) => {
-            // 222.2 x 125
-            setBannerImage(URL.createObjectURL(blob));
-            console.log(blob);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      })
-      .catch((error) => {
-        // Uh-oh, an error occurred!
-      });
-  }, [params.id]);
+    if (valuexd?.data()?.bannerName != undefined) {
+      if (bannerImage != null) {
+        const currentType = bannerImage.substring(5, bannerImage.substring(0, 25).indexOf(";"));
+        const currentNameHash = CryptoJS.MD5(CryptoJS.enc.Latin1.parse(bannerImage)).toString().substring(0, 25) + "." + currentType.split("/")[1];
+        if (currentNameHash == valuexd?.data()?.bannerName) {
+          return () => {};
+        }
+      }
+      const pathReference = ref(storage, `users/${params.id}/banner/${valuexd?.data()?.bannerName}`);
+      getBlob(pathReference, undefined)
+        .then((blob) => {
+          // 222.2 x 125
+          setBannerImage(URL.createObjectURL(blob));
+          //console.log(blob);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+    return () => {};
+  }, [valuexd?.data()?.bannerName]);
 
   return (
     <Grid container spacing={2}>
@@ -101,7 +111,7 @@ function ProfilePage(props) {
                 <IconSvgs.MoreVert sx={{ color: theme.palette.text.primary }} />
               </IconButton>
             }
-            title="Kannatron"
+            title={"Kannatron"}
             subheader="Joined: September 2022"
           />
           <CardContent>
@@ -127,6 +137,15 @@ function ProfilePage(props) {
       </Grid>
     </Grid>
   );
+}
+
+function ProfilePage(props) {
+  const [user, loadingUser, errorUser] = useAuthState(getAuth());
+  if (user) {
+    return <ProfileAuthenticated user={user} />;
+  } else {
+    return "Please login to view profiles.";
+  }
 }
 
 export default ProfilePage;
