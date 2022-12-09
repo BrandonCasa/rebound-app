@@ -108,10 +108,10 @@ function ProfileAuthenticated(props) {
                 alt={JSON.stringify(bannerImage)}
                 style={{ height: "75px", width: "345px", outline: "none", border: "none", visibility: bannerImage ? "visible" : "hidden" }}
               />
-              <Typography style={{ position: "fixed" }} sx={{ color: theme.palette.secondary.main, visibility: bannerImage || !(props.user.uid === params.id) ? "hidden" : "visible" }}>
+              <Typography style={{ position: "fixed" }} sx={{ color: theme.palette.text.secondary, visibility: !(props.user.uid === params.id) ? "hidden" : "visible" }}>
                 Change Banner
                 <br />
-                <IconSvgs.AddAPhoto sx={{ color: theme.palette.secondary.light }} />
+                <IconSvgs.AddAPhoto sx={{ color: theme.palette.text.secondary }} />
               </Typography>
             </ButtonBase>
           </Fragment>
