@@ -14,6 +14,7 @@ import { useDocument } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import CryptoJS from "crypto-js";
 import { getApp } from "firebase/app";
+import userBannerBase from "../userBanner.png";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -33,8 +34,8 @@ function ProfileAuthenticated(props) {
   const bannerInputRef = useRef(null);
 
   const [expanded, setExpanded] = React.useState(false);
-  const [bannerImage, setBannerImage] = React.useState(null);
-  const [valuexd, loadingDoc, errorDoc] = useDocument(doc(getFirestore(), "users", props.user.uid), {
+  const [bannerImage, setBannerImage] = React.useState(undefined);
+  const [userDoc, loadingDoc, errorDoc] = useDocument(doc(getFirestore(), "users", params.id), {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
 
@@ -69,36 +70,50 @@ function ProfileAuthenticated(props) {
 
   React.useEffect(() => {
     const storage = getStorage();
-    if (valuexd?.data()?.bannerName != undefined) {
+    if (userDoc?.data()?.bannerName != undefined) {
       if (bannerImage != null) {
         const currentType = bannerImage.substring(5, bannerImage.substring(0, 25).indexOf(";"));
         const currentNameHash = CryptoJS.MD5(CryptoJS.enc.Latin1.parse(bannerImage)).toString().substring(0, 25) + "." + currentType.split("/")[1];
-        if (currentNameHash == valuexd?.data()?.bannerName) {
-          return () => {};
+        if (currentNameHash == userDoc?.data()?.bannerName) {
+          return;
         }
       }
-      const pathReference = ref(storage, `users/${params.id}/banner/${valuexd?.data()?.bannerName}`);
+      const pathReference = ref(storage, `users/${params.id}/banner/${userDoc?.data()?.bannerName}`);
       getBlob(pathReference, undefined)
         .then((blob) => {
           // 222.2 x 125
           setBannerImage(URL.createObjectURL(blob));
+          console.log("banner updated");
           //console.log(blob);
         })
         .catch((error) => {
-          console.error(error);
+          console.log(error);
         });
+    } else {
+      setBannerImage(undefined);
     }
-    return () => {};
-  }, [valuexd?.data()?.bannerName]);
+  }, [userDoc?.data()?.bannerName]);
 
+  if (loadingDoc) {
+    return <div>loading...</div>;
+  }
   return (
     <Grid container spacing={2}>
       <Grid xs={8} xsOffset={2}>
         <CustomCard>
           <Fragment>
             <input ref={bannerInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeBannerFile} />
-            <ButtonBase onClick={() => bannerInputRef.current && bannerInputRef.current.click()} height="75" style={{ margin: "-8px" }}>
-              <CardMedia component="img" height="75" image={bannerImage} alt={JSON.stringify(bannerImage)} />
+            <ButtonBase
+              disabled={!(props.user.uid === params.id)}
+              onClick={() => bannerInputRef.current && bannerInputRef.current.click()}
+              style={{ margin: "-8px", height: "75px", width: "345px", outline: "none", border: "none" }}
+            >
+              <CardMedia
+                component="img"
+                image={bannerImage}
+                alt={JSON.stringify(bannerImage)}
+                style={{ height: "75px", width: "345px", outline: "none", border: "none", visibility: bannerImage ? "visible" : "hidden" }}
+              />
             </ButtonBase>
           </Fragment>
           <CardHeader
@@ -134,7 +149,7 @@ function ProfileAuthenticated(props) {
         </CustomCard>
       </Grid>
       <Grid xs={8} xsOffset={2}>
-        <Item>{params.profileId}</Item>
+        <Item>{params.id}</Item>
       </Grid>
     </Grid>
   );
