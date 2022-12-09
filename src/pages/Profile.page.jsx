@@ -1,5 +1,5 @@
 import * as IconSvgs from "@mui/icons-material";
-import { Avatar, Button, ButtonBase, Card, CardActions, CardContent, CardHeader, CardMedia, IconButton, Paper, Typography } from "@mui/material";
+import { Box, Avatar, Button, ButtonBase, Card, CardActions, CardContent, CardHeader, CardMedia, CircularProgress, IconButton, Paper, Typography } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
 import React, { Fragment, useContext } from "react";
@@ -35,9 +35,6 @@ function ProfileAuthenticated(props) {
 
   const [expanded, setExpanded] = React.useState(false);
   const [bannerImage, setBannerImage] = React.useState(undefined);
-  const [userDoc, loadingDoc, errorDoc] = useDocument(doc(getFirestore(), "users", params.id), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -70,15 +67,15 @@ function ProfileAuthenticated(props) {
 
   React.useEffect(() => {
     const storage = getStorage();
-    if (userDoc?.data()?.bannerName != undefined) {
+    if (props.userDoc?.data()?.bannerName != undefined) {
       if (bannerImage != null) {
         const currentType = bannerImage.substring(5, bannerImage.substring(0, 25).indexOf(";"));
         const currentNameHash = CryptoJS.MD5(CryptoJS.enc.Latin1.parse(bannerImage)).toString().substring(0, 25) + "." + currentType.split("/")[1];
-        if (currentNameHash == userDoc?.data()?.bannerName) {
+        if (currentNameHash == props.userDoc?.data()?.bannerName) {
           return;
         }
       }
-      const pathReference = ref(storage, `users/${params.id}/banner/${userDoc?.data()?.bannerName}`);
+      const pathReference = ref(storage, `users/${params.id}/banner/${props.userDoc?.data()?.bannerName}`);
       getBlob(pathReference, undefined)
         .then((blob) => {
           // 222.2 x 125
@@ -92,11 +89,8 @@ function ProfileAuthenticated(props) {
     } else {
       setBannerImage(undefined);
     }
-  }, [userDoc?.data()?.bannerName]);
+  }, [props.userDoc?.data()?.bannerName]);
 
-  if (loadingDoc) {
-    return <div>loading...</div>;
-  }
   return (
     <Grid container spacing={2}>
       <Grid xs={8} xsOffset={2}>
@@ -114,6 +108,11 @@ function ProfileAuthenticated(props) {
                 alt={JSON.stringify(bannerImage)}
                 style={{ height: "75px", width: "345px", outline: "none", border: "none", visibility: bannerImage ? "visible" : "hidden" }}
               />
+              <Typography style={{ position: "fixed" }} sx={{ color: theme.palette.secondary.main, visibility: bannerImage || !(props.user.uid === params.id) ? "hidden" : "visible" }}>
+                Change Banner
+                <br />
+                <IconSvgs.AddAPhoto sx={{ color: theme.palette.secondary.light }} />
+              </Typography>
             </ButtonBase>
           </Fragment>
           <CardHeader
@@ -156,12 +155,25 @@ function ProfileAuthenticated(props) {
 }
 
 function ProfilePage(props) {
+  let params = useParams();
+  const [userDoc, loadingDoc, errorDoc] = useDocument(doc(getFirestore(), "users", params.id), {
+    snapshotListenOptions: { includeMetadataChanges: true },
+  });
   const [user, loadingUser, errorUser] = useAuthState(getAuth());
-  if (user) {
-    return <ProfileAuthenticated user={user} />;
-  } else {
-    return "Please login to view profiles.";
+  if (loadingUser || loadingDoc) {
+    return (
+      <Box sx={{ display: "flex", width: "100%", justifyContent: "center" }}>
+        <CircularProgress size={120} />
+      </Box>
+    );
   }
+  if (errorUser) {
+    return "Error";
+  }
+  if (!user) {
+    return "Please login.";
+  }
+  return <ProfileAuthenticated userDoc={userDoc} user={user} />;
 }
 
 export default ProfilePage;

@@ -36,7 +36,7 @@ function App(props) {
         <CssBaseline />
         <BrowserRouter>
           <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
-            <CustomToolbar />
+            <CustomToolbar loading={loading} />
             <Box sx={{ margin: "12px", flexGrow: 1, height: "100%" }}>
               <Routes>
                 <Route path="/" element={<LandingPage />} />

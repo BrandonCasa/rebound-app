@@ -84,7 +84,6 @@ function ToolbarUserButton(props) {
 }
 
 function CustomToolbar(props) {
-  const user = useContext(UserContext);
   // iconbutton onClick={() => setSettingsDrawerOpen(true)}
 
   return (
@@ -96,16 +95,11 @@ function CustomToolbar(props) {
               Rebound
             </Typography>
           </Box>
-          <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "row", justifyContent: "center" }}>
-            <CustomControlCenterButton sx={{ padding: "0px", height: "42px", width: "42px" }}>
-              <IconSvgs.AppsRounded sx={{ fontSize: 32 }} />
-            </CustomControlCenterButton>
-          </Box>
           <Box sx={{ flexGrow: 1 }}>
             <IconButton sx={{ mr: "24px", padding: "0px", height: "32px", width: "32px", float: "right" }}>
               <IconSvgs.Settings sx={{ fontSize: 24, color: "white" }} />
             </IconButton>
-            <Box sx={{ float: "right" }}>
+            <Box sx={{ float: "right", visibility: props.loading ? "hidden" : "visible" }}>
               <ToolbarUserButton />
             </Box>
           </Box>
