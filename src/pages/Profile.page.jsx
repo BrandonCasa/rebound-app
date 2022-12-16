@@ -6,7 +6,7 @@ import React, { Fragment, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { UserContext } from "../helpers/userContext";
 import { getStorage, ref, getBlob, listAll } from "firebase/storage";
-import { getFunctions, httpsCallable } from "firebase/functions";
+import { getFunctions, httpsCallable, HttpsCallableOptions } from "firebase/functions";
 import { getAuth } from "firebase/auth";
 import { useRef } from "react";
 import { getFirestore, doc } from "firebase/firestore";
@@ -44,7 +44,7 @@ function ProfileAuthenticated(props) {
     // https://stackoverflow.com/questions/13333378/how-can-javascript-upload-a-blob
     let functions = getFunctions(getApp(), "us-central1");
     const auth = getAuth();
-    const changeBanner = httpsCallable(functions, "changeBanner");
+    const changeBanner = httpsCallable(functions, "changeBanner", {});
     changeBanner({ hasBanner: true, newBanner: base64Image }).then((result) => {
       const data = result.data;
       //console.log(data);
@@ -87,7 +87,7 @@ function ProfileAuthenticated(props) {
           console.log(error);
         });
     } else {
-      setBannerImage(undefined);
+      setBannerImage(userBannerBase);
     }
   }, [props.userDoc?.data()?.bannerName]);
 

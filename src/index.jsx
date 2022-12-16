@@ -26,7 +26,7 @@ const firebaseConfig = {
 
 const app = firebase.initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const functions = getFunctions(app);
+const functions = getFunctions(app, "us-central1");
 functions.region = "us-central1";
 const storage = getStorage(app);
 const firestore = getFirestore(app);
