@@ -5,6 +5,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import React from "react";
 import { useContext } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
 import { useDropdown } from "../helpers/dropDownHelper";
 import { UserContext } from "../helpers/userContext";
 import AccountDropdown from "./AccountDropdown";
@@ -38,7 +39,7 @@ const CustomControlCenterButton = styled(IconButton)(({ theme }) => ({
 
 function ToolbarUserButton(props) {
   const user = useContext(UserContext);
-
+  const navigate = useNavigate();
   const accountDropdownState = useDropdown("account");
 
   const signOut = () => {
@@ -65,7 +66,10 @@ function ToolbarUserButton(props) {
       <React.Fragment>
         <IconButton
           sx={{ mr: "16px", padding: "0px", height: "32px", width: "32px" }}
-          onClick={signOut}
+          onClick={() => {
+            //closeMenuEvent();
+            navigate(`/profile/${user?.uid?.toString()}`);
+          }}
           onMouseEnter={(event) => accountDropdownState.handleMenuOpen(event, false)}
           onMouseLeave={() => accountDropdownState.handleMenuClose(false)}
         >
