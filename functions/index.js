@@ -21,31 +21,59 @@ exports.changeBanner = functions.region("us-central1").https.onCall(async (data,
     throw new functions.https.HttpsError("failed-precondition", "The function must be called " + "while authenticated.");
   }
 
-  const imageData = data.newBanner.replace(/^data:image\/\w+;base64,/, "");
-  const imageBuffer = Buffer.from(imageData, "base64");
-  const mimeType = data.newBanner.substring(5, data.newBanner.substring(0, 25).indexOf(";"));
-  const uniqueName = CryptoJS.MD5(CryptoJS.enc.Latin1.parse(data.newBanner)).toString().substring(0, 25) + "." + mimeType.split("/")[1];
   const [files] = await bucket.getFiles({ directory: `users/${context.auth.uid}/banner/` });
   const userDoc = await admin.firestore().collection("users").doc(context.auth.uid).get();
+
+  // Update the user's banner to changing
   if (userDoc.exists) {
     await admin.firestore().collection("users").doc(context.auth.uid).update({
-      hasBanner: data.hasBanner,
-      bannerName: uniqueName,
+      bannerChanging: true,
+      bannerName: null,
     });
   } else {
-    await admin.firestore().collection("users").doc(context.auth.uid).set({ hasBanner: data.hasBanner, bannerName: uniqueName });
+    await admin.firestore().collection("users").doc(context.auth.uid).set({ bannerChanging: true, bannerName: null });
   }
+
+  // Delete the old banner
   await files.forEach(async (file) => {
     await file.delete();
   });
-  bucket
-    .file(`users/${context.auth.uid}/banner/${uniqueName}`)
-    .save(imageBuffer, { public: true, gzip: true })
-    .then(async (data) => {
-      console.log("Image uploaded to bucket");
-    })
-    .catch(async (err) => {
-      console.log(err);
+
+  // Update the banner to what is provided
+  if (data.newBanner === undefined) {
+    // If no new banner is provided, update the banner to changed
+    await admin.firestore().collection("users").doc(context.auth.uid).update({
+      bannerChanging: false,
+      bannerName: null,
     });
+  } else {
+    // Generate new banner information
+    const imageData = data.newBanner.replace(/^data:image\/\w+;base64,/, "");
+    const imageBuffer = Buffer.from(imageData, "base64");
+    const mimeType = data.newBanner.substring(5, data.newBanner.substring(0, 25).indexOf(";"));
+    const uniqueName = CryptoJS.MD5(CryptoJS.enc.Latin1.parse(data.newBanner)).toString().substring(0, 25) + "." + mimeType.split("/")[1];
+
+    // Upload the new banner
+    let uploaded = false;
+    await bucket
+      .file(`users/${context.auth.uid}/banner/${uniqueName}`)
+      .save(imageBuffer, { public: true, gzip: true })
+      .then((data) => {
+        uploaded = true;
+      })
+      .catch(async (err) => {
+        console.log(err);
+      });
+
+    // Update the user's banner information
+    await admin
+      .firestore()
+      .collection("users")
+      .doc(context.auth.uid)
+      .update({
+        bannerChanging: false,
+        bannerName: uploaded ? uniqueName : null,
+      });
+  }
   return "Complete";
 });

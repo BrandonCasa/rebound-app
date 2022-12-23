@@ -35,17 +35,17 @@ function ProfileAuthenticated(props) {
 
   const [expanded, setExpanded] = React.useState(false);
   const [bannerImage, setBannerImage] = React.useState(undefined);
+  const [uploadingBanner, setUploadingBanner] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
   const handleBannerChange = (base64Image) => {
-    // https://stackoverflow.com/questions/13333378/how-can-javascript-upload-a-blob
     let functions = getFunctions(getApp(), "us-central1");
     const auth = getAuth();
     const changeBanner = httpsCallable(functions, "changeBanner", {});
-    changeBanner({ hasBanner: true, newBanner: base64Image }).then((result) => {
+    changeBanner({ newBanner: base64Image }).then((result) => {
       const data = result.data;
       //console.log(data);
     });
@@ -53,6 +53,7 @@ function ProfileAuthenticated(props) {
 
   const onChangeBannerFile = (event) => {
     if (bannerInputRef.current.files.length >= 0) {
+      setUploadingBanner(true);
       let read = new FileReader();
 
       read.readAsDataURL(bannerInputRef.current.files[0]);
@@ -67,29 +68,41 @@ function ProfileAuthenticated(props) {
 
   React.useEffect(() => {
     const storage = getStorage();
-    if (props.userDoc?.data()?.bannerName != undefined) {
-      if (bannerImage != null) {
-        const currentType = bannerImage.substring(5, bannerImage.substring(0, 25).indexOf(";"));
-        const currentNameHash = CryptoJS.MD5(CryptoJS.enc.Latin1.parse(bannerImage)).toString().substring(0, 25) + "." + currentType.split("/")[1];
-        if (currentNameHash == props.userDoc?.data()?.bannerName) {
-          return;
+
+    if (props.userDoc?.data()?.bannerChanging == false) {
+      // If the banner is not changing, show the banner
+      if (props.userDoc?.data()?.bannerName == undefined || props.userDoc?.data()?.bannerName == null) {
+        // If the banner does not exist, show the default banner
+        setUploadingBanner(false);
+        setBannerImage(userBannerBase);
+      } else {
+        // If the banner exists, show the stored banner
+        setUploadingBanner(false);
+        if (bannerImage != null) {
+          // If there is currently a banner, check if it is the same as the stored banner
+          const currentType = bannerImage.substring(5, bannerImage.substring(0, 25).indexOf(";"));
+          const currentHash = CryptoJS.MD5(CryptoJS.enc.Latin1.parse(bannerImage)).toString().substring(0, 25) + "." + currentType.split("/")[1];
+          if (currentHash == props.userDoc?.data()?.bannerName) {
+            // If the banner is the same as the stored banner, do not update the banner
+            return;
+          }
         }
+        const pathReference = ref(storage, `users/${params.id}/banner/${props.userDoc?.data()?.bannerName}`);
+        getBlob(pathReference, undefined)
+          .then((blob) => {
+            // 222.2 x 125
+            setBannerImage(URL.createObjectURL(blob));
+            console.log("banner updated");
+            //console.log(blob);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
-      const pathReference = ref(storage, `users/${params.id}/banner/${props.userDoc?.data()?.bannerName}`);
-      getBlob(pathReference, undefined)
-        .then((blob) => {
-          // 222.2 x 125
-          setBannerImage(URL.createObjectURL(blob));
-          console.log("banner updated");
-          //console.log(blob);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-      setBannerImage(userBannerBase);
     }
-  }, [props.userDoc?.data()?.bannerName]);
+  }, [props.userDoc?.data()?.bannerName, props.userDoc?.data()?.bannerChanging]);
+
+  let canEditBanner = props.user.uid === params.id && (props.userDoc?.data()?.bannerChanging == false || props.userDoc?.data()?.bannerChanging == undefined) && uploadingBanner == false;
 
   return (
     <Grid container spacing={2}>
@@ -106,9 +119,19 @@ function ProfileAuthenticated(props) {
                 component="img"
                 image={bannerImage}
                 alt={JSON.stringify(bannerImage)}
-                style={{ height: "75px", width: "345px", outline: "none", border: "none", visibility: bannerImage ? "visible" : "hidden" }}
+                style={{
+                  height: "75px",
+                  width: "345px",
+                  outline: "none",
+                  border: "none",
+                  visibility: bannerImage ? "visible" : "hidden",
+                  opacity: props.userDoc?.data()?.bannerChanging == true || uploadingBanner == true ? "0.5" : "1.0",
+                }}
               />
-              <Typography style={{ position: "fixed" }} sx={{ color: theme.palette.text.secondary, visibility: !(props.user.uid === params.id) ? "hidden" : "visible" }}>
+              <Box sx={{ display: "flex", width: "100%", justifyContent: "center", position: "fixed", visibility: props.userDoc?.data()?.bannerChanging ? "visible" : "hidden" }}>
+                <CircularProgress />
+              </Box>
+              <Typography style={{ position: "fixed" }} sx={{ color: theme.palette.text.secondary, visibility: canEditBanner ? "visible" : "hidden" }}>
                 Change Banner
                 <br />
                 <IconSvgs.AddAPhoto sx={{ color: theme.palette.text.secondary }} />
