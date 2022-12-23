@@ -1,9 +1,8 @@
-/* eslint-disable no-undef */
 // The Cloud Functions for Firebase SDK to create Cloud Functions and set up triggers.
+
 const functions = require("firebase-functions");
-const cors = require("cors")({ origin: true });
-const fs = require("fs");
 var CryptoJS = require("crypto-js");
+
 // The Firebase Admin SDK to access Firestore.
 const admin = require("firebase-admin");
 
@@ -14,11 +13,6 @@ admin.firestore().settings({ ignoreUndefinedProperties: true });
 
 const storage = admin.storage();
 const bucket = storage.bucket(bucketName);
-
-function randomToken(size = 20) {
-  // maxsize is 128
-  return crypto.randomBytes(64).toString("hex").substr(0, size);
-}
 
 exports.changeBanner = functions.region("us-central1").https.onCall(async (data, context) => {
   // Takes in: auth, newBanner, hasBanner
