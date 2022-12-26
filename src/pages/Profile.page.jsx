@@ -58,7 +58,7 @@ function ProfileAuthenticated(props) {
           const data = result.data;
           //console.log(data);
         });
-        avatarInputRef.current.files = [];
+        bannerInputRef.current.files = [];
       };
     }
   };
