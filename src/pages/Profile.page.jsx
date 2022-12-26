@@ -99,10 +99,9 @@ function ProfileAuthenticated(props) {
         setUploadingBanner(false);
         if (bannerImage != null) {
           // If there is currently a banner, check if it is the same as the stored banner
-          const imageExtension = bannerImage.match(/[^:/]\w+(?=;|,)/)[0];
-          const imageHash = CryptoJS.MD5(CryptoJS.enc.Latin1.parse(bannerImage)).toString();
-          const imageFileName = `${imageHash.substring(0, 16)}.${imageExtension}`;
-          if (imageFileName == props.userDoc?.data()?.bannerName) {
+          const bannerType = bannerImage.substring(5, bannerImage.substring(0, 25).indexOf(";"));
+          const bannerFileName = CryptoJS.MD5(CryptoJS.enc.Latin1.parse(bannerImage)).toString().substring(0, 16) + "." + bannerType.split("/")[1];
+          if (bannerFileName == props.userDoc?.data()?.bannerName) {
             // If the banner is the same as the stored banner, do not update the banner
             return;
           }
@@ -136,10 +135,9 @@ function ProfileAuthenticated(props) {
         setUploadingAvatar(false);
         if (avatarImage != null) {
           // If there is currently a avatar, check if it is the same as the stored avatar
-          const imageExtension = avatarImage.match(/[^:/]\w+(?=;|,)/)[0];
-          const imageHash = CryptoJS.MD5(CryptoJS.enc.Latin1.parse(avatarImage)).toString();
-          const imageFileName = `${imageHash.substring(0, 16)}.${imageExtension}`;
-          if (imageFileName == props.userDoc?.data()?.avatarName) {
+          const avatarType = avatarImage.substring(5, avatarImage.substring(0, 25).indexOf(";"));
+          const avatarFileName = CryptoJS.MD5(CryptoJS.enc.Latin1.parse(avatarImage)).toString().substring(0, 16) + "." + avatarType.split("/")[1];
+          if (avatarFileName == props.userDoc?.data()?.avatarName) {
             // If the avatar is the same as the stored avatar, do not update the avatar
             return;
           }
