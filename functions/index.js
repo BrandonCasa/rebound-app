@@ -67,7 +67,19 @@ exports.changeBanner = functions.region("us-central1").https.onCall(async (data,
       bannerName: null,
     });
   } else {
-    await admin.firestore().collection("users").doc(context.auth.uid).set({ bannerChanging: true, bannerName: null });
+    await admin
+      .firestore()
+      .collection("users")
+      .doc(context.auth.uid)
+      .set({
+        displayName: (await admin.auth().getUser(context.auth.uid)).displayName,
+        uid: context.auth.uid,
+        bannerChanging: true,
+        bannerName: null,
+        avatarChanging: false,
+        avatarName: null,
+        creationTime: (await admin.auth().getUser(context.auth.uid)).metadata.creationTime,
+      });
   }
 
   // Delete the old banner
@@ -135,7 +147,19 @@ exports.changeAvatar = functions.region("us-central1").https.onCall(async (data,
       avatarName: null,
     });
   } else {
-    await admin.firestore().collection("users").doc(context.auth.uid).set({ avatarChanging: true, avatarName: null });
+    await admin
+      .firestore()
+      .collection("users")
+      .doc(context.auth.uid)
+      .set({
+        displayName: (await admin.auth().getUser(context.auth.uid)).displayName,
+        uid: context.auth.uid,
+        bannerChanging: false,
+        bannerName: null,
+        avatarChanging: true,
+        avatarName: null,
+        creationTime: (await admin.auth().getUser(context.auth.uid)).metadata.creationTime,
+      });
   }
 
   // Delete the old avatar
@@ -198,7 +222,19 @@ exports.changeDisplayName = functions.region("us-central1").https.onCall(async (
       displayName: data.newDisplayName,
     });
   } else {
-    await admin.firestore().collection("users").doc(context.auth.uid).set({ displayName: data.newDisplayName });
+    await admin
+      .firestore()
+      .collection("users")
+      .doc(context.auth.uid)
+      .set({
+        displayName: data.newDisplayName,
+        uid: context.auth.uid,
+        bannerChanging: false,
+        bannerName: null,
+        avatarChanging: false,
+        avatarName: null,
+        creationTime: (await admin.auth().getUser(context.auth.uid)).metadata.creationTime,
+      });
   }
   return "Complete";
 });
