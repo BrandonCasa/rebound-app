@@ -58,6 +58,7 @@ function ProfileAuthenticated(props) {
           const data = result.data;
           //console.log(data);
         });
+        bannerInputRef.current.reset();
       };
     }
   };
@@ -80,6 +81,7 @@ function ProfileAuthenticated(props) {
           const data = result.data;
           //console.log(data);
         });
+        avatarInputRef.current.reset();
       };
     }
   };
