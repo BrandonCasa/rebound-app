@@ -80,9 +80,10 @@ function ProfileAuthenticated(props) {
         setUploadingBanner(false);
         if (bannerImage != null) {
           // If there is currently a banner, check if it is the same as the stored banner
-          const currentType = bannerImage.substring(5, bannerImage.substring(0, 25).indexOf(";"));
-          const currentHash = CryptoJS.MD5(CryptoJS.enc.Latin1.parse(bannerImage)).toString().substring(0, 25) + "." + currentType.split("/")[1];
-          if (currentHash == props.userDoc?.data()?.bannerName) {
+          const imageExtension = bannerImage.match(/[^:/]\w+(?=;|,)/)[0];
+          const imageHash = CryptoJS.MD5(CryptoJS.enc.Latin1.parse(bannerImage)).toString();
+          const imageFileName = `${imageHash.substring(0, 16)}.${imageExtension}`;
+          if (imageFileName == props.userDoc?.data()?.bannerName) {
             // If the banner is the same as the stored banner, do not update the banner
             return;
           }
@@ -149,8 +150,8 @@ function ProfileAuthenticated(props) {
                 <IconSvgs.MoreVert sx={{ color: theme.palette.text.primary }} />
               </IconButton>
             }
-            title={"Kannatron"}
-            subheader="Joined: September 2022"
+            title={props.userDoc?.data()?.displayName}
+            subheader={`Joined: ${new Date(props.userDoc?.data()?.creationTime).toLocaleDateString("en-us", { year: "numeric", month: "short", day: "numeric" })}`}
           />
           <CardContent>
             <Typography variant="body2" color="text.secondary">

@@ -11,7 +11,8 @@
     "firebase-admin": "^10.3.0",
     "firebase-functions": "^3.21.0",
     "firebase-tools": "^10.8.0",
-    "kill-port": "^1.6.1"
+    "kill-port": "^1.6.1",
+    "valid-data-url": "^4.0.1"
   },
   "devDependencies": {
     "firebase-functions-test": "^0.2.0"
