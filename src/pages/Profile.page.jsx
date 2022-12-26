@@ -32,24 +32,13 @@ function ProfileAuthenticated(props) {
   let params = useParams();
   let theme = useTheme();
   const bannerInputRef = useRef(null);
+  const avatarInputRef = useRef(null);
 
   const [expanded, setExpanded] = React.useState(false);
   const [bannerImage, setBannerImage] = React.useState(undefined);
+  const [avatarImage, setAvatarImage] = React.useState(undefined);
   const [uploadingBanner, setUploadingBanner] = React.useState(false);
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
-
-  const handleBannerChange = (base64Image) => {
-    let functions = getFunctions(getApp(), "us-central1");
-    const auth = getAuth();
-    const changeBanner = httpsCallable(functions, "changeBanner", {});
-    changeBanner({ newBanner: base64Image }).then((result) => {
-      const data = result.data;
-      //console.log(data);
-    });
-  };
+  const [uploadingAvatar, setUploadingAvatar] = React.useState(false);
 
   const onChangeBannerFile = (event) => {
     if (bannerInputRef.current.files.length >= 0) {
@@ -61,7 +50,36 @@ function ProfileAuthenticated(props) {
       read.onloadend = () => {
         //console.log(read.result);
         setBannerImage(read.result);
-        handleBannerChange(read.result);
+
+        let functions = getFunctions(getApp(), "us-central1");
+        const auth = getAuth();
+        const changeBanner = httpsCallable(functions, "changeBanner", {});
+        changeBanner({ newBanner: read.result }).then((result) => {
+          const data = result.data;
+          //console.log(data);
+        });
+      };
+    }
+  };
+
+  const onChangeAvatarFile = (event) => {
+    if (avatarInputRef.current.files.length >= 0) {
+      setUploadingAvatar(true);
+      let read = new FileReader();
+
+      read.readAsDataURL(avatarInputRef.current.files[0]);
+
+      read.onloadend = () => {
+        //console.log(read.result);
+        setAvatarImage(read.result);
+
+        let functions = getFunctions(getApp(), "us-central1");
+        const auth = getAuth();
+        const changeAvatar = httpsCallable(functions, "changeAvatar", {});
+        changeAvatar({ newAvatar: read.result }).then((result) => {
+          const data = result.data;
+          //console.log(data);
+        });
       };
     }
   };
@@ -69,6 +87,7 @@ function ProfileAuthenticated(props) {
   React.useEffect(() => {
     const storage = getStorage();
 
+    // Banner
     if (props.userDoc?.data()?.bannerChanging == false) {
       // If the banner is not changing, show the banner
       if (props.userDoc?.data()?.bannerName == undefined || props.userDoc?.data()?.bannerName == null) {
@@ -91,7 +110,6 @@ function ProfileAuthenticated(props) {
         const pathReference = ref(storage, `users/${params.id}/banner/${props.userDoc?.data()?.bannerName}`);
         getBlob(pathReference, undefined)
           .then((blob) => {
-            // 222.2 x 125
             setBannerImage(URL.createObjectURL(blob));
             console.log("banner updated");
             //console.log(blob);
@@ -103,7 +121,45 @@ function ProfileAuthenticated(props) {
     }
   }, [props.userDoc?.data()?.bannerName, props.userDoc?.data()?.bannerChanging]);
 
+  React.useEffect(() => {
+    const storage = getStorage();
+
+    // Avatar
+    if (props.userDoc?.data()?.avatarChanging == false) {
+      // If the avatar is not changing, show the avatar
+      if (props.userDoc?.data()?.avatarName == undefined || props.userDoc?.data()?.avatarName == null) {
+        // If the avatar does not exist, show the default avatar
+        setUploadingAvatar(false);
+        setAvatarImage(null);
+      } else {
+        // If the avatar exists, show the stored avatar
+        setUploadingAvatar(false);
+        if (avatarImage != null) {
+          // If there is currently a avatar, check if it is the same as the stored avatar
+          const imageExtension = avatarImage.match(/[^:/]\w+(?=;|,)/)[0];
+          const imageHash = CryptoJS.MD5(CryptoJS.enc.Latin1.parse(avatarImage)).toString();
+          const imageFileName = `${imageHash.substring(0, 16)}.${imageExtension}`;
+          if (imageFileName == props.userDoc?.data()?.avatarName) {
+            // If the avatar is the same as the stored avatar, do not update the avatar
+            return;
+          }
+        }
+        const pathReference = ref(storage, `users/${params.id}/avatar/${props.userDoc?.data()?.avatarName}`);
+        getBlob(pathReference, undefined)
+          .then((blob) => {
+            setAvatarImage(URL.createObjectURL(blob));
+            console.log("avatar updated");
+            //console.log(blob);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
+  }, [props.userDoc?.data()?.avatarName, props.userDoc?.data()?.avatarChanging]);
+
   let canEditBanner = props.user.uid === params.id && (props.userDoc?.data()?.bannerChanging == false || props.userDoc?.data()?.bannerChanging == undefined) && uploadingBanner == false;
+  let canEditAvatar = props.user.uid === params.id && (props.userDoc?.data()?.avatarChanging == false || props.userDoc?.data()?.avatarChanging == undefined) && uploadingAvatar == false;
 
   return (
     <Grid container spacing={2}>
@@ -111,6 +167,7 @@ function ProfileAuthenticated(props) {
         <CustomCard>
           <Fragment>
             <input ref={bannerInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeBannerFile} />
+            <input ref={avatarInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeAvatarFile} />
             <ButtonBase
               disabled={!(props.user.uid === params.id)}
               onClick={() => bannerInputRef.current && bannerInputRef.current.click()}
@@ -119,7 +176,7 @@ function ProfileAuthenticated(props) {
               <CardMedia
                 component="img"
                 image={bannerImage}
-                alt={JSON.stringify(bannerImage)}
+                alt={"Error loading banner"}
                 style={{
                   height: "75px",
                   width: "345px",
@@ -129,8 +186,17 @@ function ProfileAuthenticated(props) {
                   opacity: props.userDoc?.data()?.bannerChanging == true || uploadingBanner == true ? "0.5" : "1.0",
                 }}
               />
-              <Box sx={{ display: "flex", width: "100%", justifyContent: "center", position: "fixed", visibility: props.userDoc?.data()?.bannerChanging ? "visible" : "hidden" }}>
-                <CircularProgress />
+              <Box
+                sx={{
+                  display: "flex",
+                  width: "64px",
+                  height: "64px",
+                  justifyContent: "center",
+                  position: "fixed",
+                  visibility: props.userDoc?.data()?.bannerChanging || uploadingBanner == true ? "visible" : "hidden",
+                }}
+              >
+                <CircularProgress size="64px" />
               </Box>
               <Typography style={{ position: "fixed" }} sx={{ color: theme.palette.text.secondary, visibility: canEditBanner ? "visible" : "hidden" }}>
                 Change Banner
@@ -140,10 +206,48 @@ function ProfileAuthenticated(props) {
             </ButtonBase>
           </Fragment>
           <CardHeader
+            sx={{ marginTop: "8px" }}
             avatar={
-              <Avatar sx={{ bgcolor: theme.palette.primary.light }} aria-label="recipe">
-                K
-              </Avatar>
+              <ButtonBase
+                disabled={!(props.user.uid === params.id)}
+                onClick={() => avatarInputRef.current && avatarInputRef.current.click()}
+                style={{ width: "40px", height: "40px", outline: "none", border: "none", borderRadius: "20px" }}
+              >
+                <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
+                  <img
+                    src={avatarImage}
+                    alt={"Error loading avatar"}
+                    style={{
+                      height: "40px",
+                      width: "40px",
+                      position: "fixed",
+                      borderRadius: "20px",
+                      border: "2px solid grey",
+                      visibility: avatarImage ? "visible" : "hidden",
+                      opacity: props.userDoc?.data()?.avatarChanging == true || uploadingAvatar == true ? "0.5" : "1.0",
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      width: "30px",
+                      justifyContent: "center",
+                      position: "fixed",
+                      visibility: props.userDoc?.data()?.avatarChanging || uploadingAvatar == true ? "visible" : "hidden",
+                    }}
+                  >
+                    <CircularProgress size="30px" />
+                  </Box>
+                  <Typography sx={{ visibility: avatarImage ? "hidden" : "visible" }}>
+                    {props.userDoc
+                      ?.data()
+                      ?.displayName?.split(" ")
+                      ?.map((word) => word[0])
+                      ?.join("")
+                      ?.toUpperCase()}
+                  </Typography>
+                </Avatar>
+              </ButtonBase>
             }
             action={
               <IconButton aria-label="settings">

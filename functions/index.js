@@ -32,6 +32,18 @@ exports.setupNewUser = functions.auth.user().onCreate(async (user) => {
 exports.deleteOldUser = functions.auth.user().onDelete(async (user) => {
   // Delete the user document
   await admin.firestore().collection("users").doc(user.uid).delete();
+
+  // Delete the old banners
+  const [banners] = await bucket.getFiles({ directory: `users/${context.auth.uid}/banner/` });
+  await banners.forEach(async (file) => {
+    await file.delete();
+  });
+
+  // Delete the old avatars
+  const [avatars] = await bucket.getFiles({ directory: `users/${context.auth.uid}/avatar/` });
+  await avatars.forEach(async (file) => {
+    await file.delete();
+  });
   return;
 });
 
