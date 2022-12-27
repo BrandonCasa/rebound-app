@@ -169,64 +169,66 @@ function ProfileAuthenticated(props) {
           <Typography variant="h5">Profile: {props.userDoc?.data()?.displayName}</Typography>
         </Item>
       </Grid>
-      <Grid xs={12} sm={7}>
-        <input ref={bannerInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeBannerFile} />
-        <input ref={avatarInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeAvatarFile} />
-        <Item sx={{ height: "100%", minHeight: "200px", display: "flex", flexDirection: "column", gap: "8px" }}>
-          <Button
-            disabled={!canEditBanner}
-            variant="contained"
-            sx={{ marginRight: "auto", height: "40px" }}
-            color="secondary"
-            startIcon={<IconSvgs.Image />}
-            onClick={() => bannerInputRef.current && bannerInputRef.current.click()}
-          >
-            Edit Banner
-          </Button>
-          <Button
-            disabled={!canEditAvatar}
-            variant="contained"
-            sx={{ marginRight: "auto", height: "40px" }}
-            color="secondary"
-            startIcon={<IconSvgs.Face />}
-            onClick={() => avatarInputRef.current && avatarInputRef.current.click()}
-          >
-            Edit Avatar
-          </Button>
-          <Box
-            sx={{
-              marginRight: "auto",
-              width: "300px",
-              height: "40px",
-            }}
-          >
+      {props.user.uid === params.id && (
+        <Grid xs={12} sm={7}>
+          <input ref={bannerInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeBannerFile} />
+          <input ref={avatarInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeAvatarFile} />
+          <Item sx={{ height: "100%", minHeight: "200px", display: "flex", flexDirection: "column", gap: "8px" }}>
             <Button
+              disabled={!canEditBanner}
               variant="contained"
-              sx={{
-                minWidth: 0,
-                marginRight: "8px",
-                height: "40px",
-                ".MuiButton-startIcon": {
-                  marginRight: "0px",
-                },
-              }}
+              sx={{ marginRight: "auto", height: "40px" }}
               color="secondary"
-              startIcon={<IconSvgs.Edit />}
-              onClick={() => {
-                let functions = getFunctions(getApp(), "us-central1");
-                const auth = getAuth();
-                const changeBanner = httpsCallable(functions, "changeDisplayName", {});
-                changeBanner({ newDisplayName: displayNameLocal }).then((result) => {
-                  const data = result.data;
-                  //console.log(data);
-                });
+              startIcon={<IconSvgs.Image />}
+              onClick={() => bannerInputRef.current && bannerInputRef.current.click()}
+            >
+              Edit Banner
+            </Button>
+            <Button
+              disabled={!canEditAvatar}
+              variant="contained"
+              sx={{ marginRight: "auto", height: "40px" }}
+              color="secondary"
+              startIcon={<IconSvgs.Face />}
+              onClick={() => avatarInputRef.current && avatarInputRef.current.click()}
+            >
+              Edit Avatar
+            </Button>
+            <Box
+              sx={{
+                marginRight: "auto",
+                width: "300px",
+                height: "40px",
               }}
-            />
-            <TextField onChange={(event) => setDisplayNameLocal(event.target.value)} value={displayNameLocal} label="Nickname" variant="outlined" size="small" />
-          </Box>
-        </Item>
-      </Grid>
-      <Grid xs={12} sm={5} sx={{ display: "flex", justifyContent: "center", flexDirection: "row" }}>
+            >
+              <Button
+                variant="contained"
+                sx={{
+                  minWidth: 0,
+                  marginRight: "8px",
+                  height: "40px",
+                  ".MuiButton-startIcon": {
+                    marginRight: "0px",
+                  },
+                }}
+                color="secondary"
+                startIcon={<IconSvgs.Edit />}
+                onClick={() => {
+                  let functions = getFunctions(getApp(), "us-central1");
+                  const auth = getAuth();
+                  const changeBanner = httpsCallable(functions, "changeDisplayName", {});
+                  changeBanner({ newDisplayName: displayNameLocal }).then((result) => {
+                    const data = result.data;
+                    //console.log(data);
+                  });
+                }}
+              />
+              <TextField onChange={(event) => setDisplayNameLocal(event.target.value)} value={displayNameLocal} label="Nickname" variant="outlined" size="small" />
+            </Box>
+          </Item>
+        </Grid>
+      )}
+      <Grid xs={12} sm={props.user.uid === params.id ? 5 : 12} sx={{ display: "flex", justifyContent: "center", flexDirection: "row" }}>
         <CustomCard>
           <Fragment>
             <CardMedia
