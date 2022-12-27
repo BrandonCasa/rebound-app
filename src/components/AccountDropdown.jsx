@@ -19,7 +19,7 @@ function AccountDropdown(props) {
   let theme = useTheme();
 
   const auth = getAuth();
-  const [user, loading, error] = useAuthState(auth);
+  let [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
   const functions = getFunctions();
   const createServer = httpsCallable(functions, "createServer");

@@ -9,7 +9,8 @@ service cloud.firestore {
     }
     match /users/{userId} {
       allow update, delete, write: if request.auth != null && request.auth.uid == userId;
-      allow read, create: if request.auth != null;
+      allow create: if request.auth != null;
+      allow read;
     }
     // Finish this rule
     // Right now anyone can manage any server
