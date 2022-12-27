@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { useDropdown } from "../helpers/dropDownHelper";
-import { UserContext } from "../helpers/userContext";
+import { AuthContext } from "../helpers/customContext";
 import AccountDropdown from "./AccountDropdown";
 
 const CustomLoginButton = styled(Button)(({ theme }) => ({
@@ -38,7 +38,7 @@ const CustomControlCenterButton = styled(IconButton)(({ theme }) => ({
 }));
 
 function ToolbarUserButton(props) {
-  const user = useContext(UserContext);
+  const [userAuth, userAuthLoading, userAuthError] = useContext(AuthContext);
   const navigate = useNavigate();
   const accountDropdownState = useDropdown("account");
 
@@ -61,14 +61,14 @@ function ToolbarUserButton(props) {
       // ...
     });
   };
-  if (user?.uid && user !== "loading") {
+  if (!userAuthLoading && userAuth?.uid) {
     return (
       <React.Fragment>
         <IconButton
           sx={{ mr: "16px", padding: "0px", height: "32px", width: "32px" }}
           onClick={() => {
             //closeMenuEvent();
-            navigate(`/profile/${user?.uid?.toString()}`);
+            navigate(`/profile/${userAuth?.uid?.toString()}`);
           }}
           onMouseEnter={(event) => accountDropdownState.handleMenuOpen(event, false)}
           onMouseLeave={() => accountDropdownState.handleMenuClose(false)}
@@ -88,7 +88,7 @@ function ToolbarUserButton(props) {
 }
 
 function CustomToolbar(props) {
-  // iconbutton onClick={() => setSettingsDrawerOpen(true)}
+  const [userAuth, userAuthLoading, userAuthError] = useContext(AuthContext);
 
   return (
     <React.Fragment>
@@ -103,7 +103,7 @@ function CustomToolbar(props) {
             <IconButton sx={{ mr: "24px", padding: "0px", height: "32px", width: "32px", float: "right" }}>
               <IconSvgs.Settings sx={{ fontSize: 24, color: "white" }} />
             </IconButton>
-            <Box sx={{ float: "right", visibility: props.loading ? "hidden" : "visible" }}>
+            <Box sx={{ float: "right", visibility: userAuthLoading ? "hidden" : "visible" }}>
               <ToolbarUserButton />
             </Box>
           </Box>

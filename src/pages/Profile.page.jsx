@@ -4,7 +4,7 @@ import { styled, useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
 import React, { Fragment, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { UserContext } from "../helpers/userContext";
+import { AuthContext, UserContext } from "../helpers/customContext";
 import { getStorage, ref, getBlob, listAll } from "firebase/storage";
 import { getFunctions, httpsCallable, HttpsCallableOptions } from "firebase/functions";
 import { getAuth } from "firebase/auth";
@@ -15,6 +15,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import CryptoJS from "crypto-js";
 import { getApp } from "firebase/app";
 import userBannerBase from "../userBanner.png";
+import { useState } from "react";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -28,8 +29,9 @@ const CustomCard = styled(Card)(({ theme }) => ({
   maxWidth: 345,
 }));
 
-function ProfileAuthenticated(props) {
-  const [user, loading, error] = useAuthState(getAuth());
+function UserProfilePage(props) {
+  const [userAuth, userAuthLoading, userAuthError] = useContext(AuthContext);
+  const [userDoc, userDocLoading, userDocError] = useContext(UserContext);
   let params = useParams();
   let theme = useTheme();
   const bannerInputRef = useRef(null);
@@ -40,7 +42,7 @@ function ProfileAuthenticated(props) {
   const [avatarImage, setAvatarImage] = React.useState(undefined);
   const [uploadingBanner, setUploadingBanner] = React.useState(false);
   const [uploadingAvatar, setUploadingAvatar] = React.useState(false);
-  const [displayNameLocal, setDisplayNameLocal] = React.useState(props.userDoc?.displayName || "");
+  const [displayNameLocal, setDisplayNameLocal] = React.useState(props.otherDoc?.displayName || "");
 
   const onChangeBannerFile = (event) => {
     if (bannerInputRef.current.files.length >= 0) {
@@ -92,9 +94,9 @@ function ProfileAuthenticated(props) {
     const storage = getStorage();
 
     // Banner
-    if (props.userDoc?.bannerChanging == false) {
+    if (props.otherDoc?.bannerChanging == false) {
       // If the banner is not changing, show the banner
-      if (props.userDoc?.bannerName == undefined || props.userDoc?.bannerName == null) {
+      if (props.otherDoc?.bannerName == undefined || props.otherDoc?.bannerName == null) {
         // If the banner does not exist, show the default banner
         setUploadingBanner(false);
         setBannerImage(userBannerBase);
@@ -105,12 +107,12 @@ function ProfileAuthenticated(props) {
           // If there is currently a banner, check if it is the same as the stored banner
           const bannerType = bannerImage.substring(5, bannerImage.substring(0, 25).indexOf(";"));
           const bannerFileName = CryptoJS.MD5(CryptoJS.enc.Latin1.parse(bannerImage)).toString().substring(0, 16) + "." + bannerType.split("/")[1];
-          if (bannerFileName == props.userDoc?.bannerName) {
+          if (bannerFileName == props.otherDoc?.bannerName) {
             // If the banner is the same as the stored banner, do not update the banner
             return;
           }
         }
-        const pathReference = ref(storage, `users/${params.id}/banner/${props.userDoc?.bannerName}`);
+        const pathReference = ref(storage, `users/${params.id}/banner/${props.otherDoc?.bannerName}`);
         getBlob(pathReference, undefined)
           .then((blob) => {
             setBannerImage(URL.createObjectURL(blob));
@@ -122,15 +124,15 @@ function ProfileAuthenticated(props) {
           });
       }
     }
-  }, [props.userDoc?.bannerName, props.userDoc?.bannerChanging]);
+  }, [props.otherDoc?.bannerName, props.otherDoc?.bannerChanging]);
 
   React.useEffect(() => {
     const storage = getStorage();
 
     // Avatar
-    if (props.userDoc?.avatarChanging == false) {
+    if (props.otherDoc?.avatarChanging == false) {
       // If the avatar is not changing, show the avatar
-      if (props.userDoc?.avatarName == undefined || props.userDoc?.avatarName == null) {
+      if (props.otherDoc?.avatarName == undefined || props.otherDoc?.avatarName == null) {
         // If the avatar does not exist, show the default avatar
         setUploadingAvatar(false);
         setAvatarImage(null);
@@ -141,12 +143,12 @@ function ProfileAuthenticated(props) {
           // If there is currently a avatar, check if it is the same as the stored avatar
           const avatarType = avatarImage.substring(5, avatarImage.substring(0, 25).indexOf(";"));
           const avatarFileName = CryptoJS.MD5(CryptoJS.enc.Latin1.parse(avatarImage)).toString().substring(0, 16) + "." + avatarType.split("/")[1];
-          if (avatarFileName == props.userDoc?.avatarName) {
+          if (avatarFileName == props.otherDoc?.avatarName) {
             // If the avatar is the same as the stored avatar, do not update the avatar
             return;
           }
         }
-        const pathReference = ref(storage, `users/${params.id}/avatar/${props.userDoc?.avatarName}`);
+        const pathReference = ref(storage, `users/${params.id}/avatar/${props.otherDoc?.avatarName}`);
         getBlob(pathReference, undefined)
           .then((blob) => {
             setAvatarImage(URL.createObjectURL(blob));
@@ -158,19 +160,19 @@ function ProfileAuthenticated(props) {
           });
       }
     }
-  }, [props.userDoc?.avatarName, props.userDoc?.avatarChanging]);
+  }, [props.otherDoc?.avatarName, props.otherDoc?.avatarChanging]);
 
-  let canEditBanner = props?.user?.uid === params.id && (props.userDoc?.bannerChanging == false || props.userDoc?.bannerChanging == undefined) && uploadingBanner == false;
-  let canEditAvatar = props?.user?.uid === params.id && (props.userDoc?.avatarChanging == false || props.userDoc?.avatarChanging == undefined) && uploadingAvatar == false;
+  let canEditBanner = userDoc?.uid === params.id && (props.otherDoc?.bannerChanging == false || props.otherDoc?.bannerChanging == undefined) && uploadingBanner == false;
+  let canEditAvatar = userDoc?.uid === params.id && (props.otherDoc?.avatarChanging == false || props.otherDoc?.avatarChanging == undefined) && uploadingAvatar == false;
 
   return (
     <Grid container spacing={2} sx={{ display: "flex", width: "auto", justifyContent: "center" }}>
       <Grid xs={12}>
         <Item>
-          <Typography variant="h5">Profile: {props.userDoc?.displayName}</Typography>
+          <Typography variant="h5">Profile: {props.otherDoc?.displayName}</Typography>
         </Item>
       </Grid>
-      {props?.user?.uid === params.id && (
+      {userDoc?.uid === params.id && (
         <Grid xs={12} sm={7}>
           <input ref={bannerInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeBannerFile} />
           <input ref={avatarInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeAvatarFile} />
@@ -229,7 +231,7 @@ function ProfileAuthenticated(props) {
           </Item>
         </Grid>
       )}
-      <Grid xs={12} sm={props?.user?.uid === params.id ? 5 : 12} sx={{ display: "flex", justifyContent: "center", flexDirection: "row" }}>
+      <Grid xs={12} sm={userDoc?.uid === params.id ? 5 : 12} sx={{ display: "flex", justifyContent: "center", flexDirection: "row" }}>
         <CustomCard>
           <Fragment>
             <CardMedia
@@ -243,20 +245,20 @@ function ProfileAuthenticated(props) {
                 outline: "none",
                 border: "none",
                 visibility: bannerImage ? "visible" : "hidden",
-                opacity: props.userDoc?.bannerChanging == true || uploadingBanner == true ? "0.5" : "1.0",
+                opacity: props.otherDoc?.bannerChanging == true || uploadingBanner == true ? "0.5" : "1.0",
               }}
             />
             <Box
               sx={{
                 display: "flex",
-                width: "64px",
-                height: "64px",
+                marginTop: "-75px",
+                width: "auto",
+                height: "75px",
                 justifyContent: "center",
-                position: "fixed",
-                visibility: props.userDoc?.bannerChanging || uploadingBanner == true ? "visible" : "hidden",
+                visibility: props.otherDoc?.bannerChanging || uploadingBanner == true ? "visible" : "hidden",
               }}
             >
-              <CircularProgress size="64px" />
+              <CircularProgress sx={{ margin: "5.5px" }} size="64px" />
             </Box>
           </Fragment>
           <CardHeader
@@ -273,7 +275,7 @@ function ProfileAuthenticated(props) {
                     borderRadius: "20px",
                     border: "2px solid grey",
                     visibility: avatarImage ? "visible" : "hidden",
-                    opacity: props.userDoc?.avatarChanging == true || uploadingAvatar == true ? "0.5" : "1.0",
+                    opacity: props.otherDoc?.avatarChanging == true || uploadingAvatar == true ? "0.5" : "1.0",
                   }}
                 />
                 <Box
@@ -282,13 +284,13 @@ function ProfileAuthenticated(props) {
                     width: "30px",
                     justifyContent: "center",
                     position: "fixed",
-                    visibility: props.userDoc?.avatarChanging || uploadingAvatar == true ? "visible" : "hidden",
+                    visibility: props.otherDoc?.avatarChanging || uploadingAvatar == true ? "visible" : "hidden",
                   }}
                 >
                   <CircularProgress size="30px" />
                 </Box>
                 <Typography sx={{ visibility: avatarImage ? "hidden" : "visible" }}>
-                  {props.userDoc?.displayName
+                  {props.otherDoc?.displayName
                     ?.split(" ")
                     ?.map((word) => word[0])
                     ?.join("")
@@ -301,8 +303,8 @@ function ProfileAuthenticated(props) {
                 <IconSvgs.MoreVert sx={{ color: theme.palette.text.primary }} />
               </IconButton>
             }
-            title={props.userDoc?.displayName}
-            subheader={`Joined: ${new Date(props.userDoc?.creationTime).toLocaleDateString("en-us", { year: "numeric", month: "short", day: "numeric" })}`}
+            title={props.otherDoc?.displayName}
+            subheader={`Joined: ${new Date(props.otherDoc?.creationTime).toLocaleDateString("en-us", { year: "numeric", month: "short", day: "numeric" })}`}
           />
           <CardContent>
             <Typography variant="body2" color="text.secondary">
@@ -328,33 +330,34 @@ function ProfileAuthenticated(props) {
 
 function ProfilePage(props) {
   let params = useParams();
-  const [user, loadingUser, errorUser] = useAuthState(getAuth());
-  const [userDoc, setUserDoc] = React.useState(undefined);
-  const [loadingDoc, setLoadingDoc] = React.useState(true);
+  const [userAuth, userAuthLoading, userAuthError] = useContext(AuthContext);
+  const [otherDoc, setOtherDoc] = useState(undefined);
+  const [otherDocLoading, setOtherDocLoading] = useState(true);
 
+  // Update the otherDoc for the currently viewed profile
   React.useEffect(() => {
-    setUserDoc(undefined);
-    setLoadingDoc(true);
+    setOtherDoc(undefined);
+    setOtherDocLoading(true);
     const db = getFirestore();
     const docRef = doc(db, "users", params.id);
     const unsubscribe = onSnapshot(docRef, (doc) => {
-      setUserDoc(doc.data());
-      setLoadingDoc(false);
+      setOtherDoc(doc.data());
+      setOtherDocLoading(false);
     });
     return unsubscribe;
-  }, [user?.uid, params.id]);
+  }, [userAuth?.uid, params.id]);
 
-  if (loadingUser || loadingDoc) {
+  if (userAuthLoading || otherDocLoading) {
     return (
       <Box sx={{ display: "flex", width: "100%", justifyContent: "center" }}>
         <CircularProgress size={120} />
       </Box>
     );
   }
-  if (errorUser) {
+  if (userAuthError) {
     return "Error";
   }
-  return <ProfileAuthenticated userDoc={userDoc} user={user} />;
+  return <UserProfilePage otherDoc={otherDoc} otherDocLoading={otherDocLoading} />;
 }
 
 export default ProfilePage;

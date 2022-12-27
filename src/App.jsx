@@ -8,45 +8,32 @@ import ProfilePage from "./pages/Profile.page";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import { UserContext } from "./helpers/userContext";
+import { AuthContext, AuthProvider, UserContext, UserProvider } from "./helpers/customContext";
 import darkTheme from "./themes/darkTheme";
+import React from "react";
+import { doc, getFirestore, onSnapshot } from "firebase/firestore";
 
 function App(props) {
-  const [user, loading, error] = useAuthState(getAuth());
-
-  const signInGoogle = (event) => {
-    const auth = getAuth();
-    const provider = new GoogleAuthProvider();
-    //firebase.login({ provider: "google", type: "popup" });
-    signInWithPopup(auth, provider).then((result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      // The signed-in user info.
-      const user = result.user;
-      console.log(user);
-      // ...
-    });
-  };
-
   // iconbutton onClick={() => setSettingsDrawerOpen(true)}
   return (
-    <UserContext.Provider value={user || (loading ? "loading" : "not logged in")}>
-      <ThemeProvider theme={darkTheme}>
-        <CssBaseline />
-        <BrowserRouter>
-          <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
-            <CustomToolbar loading={loading} />
-            <Box sx={{ margin: "12px", flexGrow: 1, height: "100%" }}>
-              <Routes>
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/profile/:id" element={<ProfilePage />} />
-              </Routes>
+    <AuthProvider>
+      <UserProvider>
+        <ThemeProvider theme={darkTheme}>
+          <CssBaseline />
+          <BrowserRouter>
+            <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+              <CustomToolbar />
+              <Box sx={{ margin: "12px", flexGrow: 1, height: "100%" }}>
+                <Routes>
+                  <Route path="/" element={<LandingPage />} />
+                  <Route path="/profile/:id" element={<ProfilePage />} />
+                </Routes>
+              </Box>
             </Box>
-          </Box>
-        </BrowserRouter>
-      </ThemeProvider>
-    </UserContext.Provider>
+          </BrowserRouter>
+        </ThemeProvider>
+      </UserProvider>
+    </AuthProvider>
   );
 }
 

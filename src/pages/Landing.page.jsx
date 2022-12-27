@@ -2,10 +2,10 @@ import { Divider, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
 import { useContext } from "react";
-import { UserContext } from "../helpers/userContext";
+import { AuthContext } from "../helpers/customContext";
 
 function LandingPage(props) {
-  const user = useContext(UserContext);
+  const user = useContext(AuthContext);
 
   const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
