@@ -1,5 +1,5 @@
 import * as IconSvgs from "@mui/icons-material";
-import { Box, Avatar, Button, ButtonBase, Card, CardActions, CardContent, CardHeader, CardMedia, CircularProgress, IconButton, Paper, Typography } from "@mui/material";
+import { TextField, Box, Avatar, Button, ButtonBase, Card, CardActions, CardContent, CardHeader, CardMedia, CircularProgress, IconButton, Paper, Typography } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
 import React, { Fragment, useContext } from "react";
@@ -39,6 +39,7 @@ function ProfileAuthenticated(props) {
   const [avatarImage, setAvatarImage] = React.useState(undefined);
   const [uploadingBanner, setUploadingBanner] = React.useState(false);
   const [uploadingAvatar, setUploadingAvatar] = React.useState(false);
+  const [displayNameLocal, setDisplayNameLocal] = React.useState(props.userDoc?.data()?.displayName || "");
 
   const onChangeBannerFile = (event) => {
     if (bannerInputRef.current.files.length >= 0) {
@@ -162,92 +163,136 @@ function ProfileAuthenticated(props) {
   let canEditAvatar = props.user.uid === params.id && (props.userDoc?.data()?.avatarChanging == false || props.userDoc?.data()?.avatarChanging == undefined) && uploadingAvatar == false;
 
   return (
-    <Grid container spacing={2}>
-      <Grid xs={8} xsOffset={2}>
+    <Grid container spacing={2} sx={{ display: "flex", width: "auto", justifyContent: "center" }}>
+      <Grid xs={12}>
+        <Item>
+          <Typography variant="h5">Profile: {props.userDoc?.data()?.displayName}</Typography>
+        </Item>
+      </Grid>
+      <Grid xs={12} sm={7}>
+        <input ref={bannerInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeBannerFile} />
+        <input ref={avatarInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeAvatarFile} />
+        <Item sx={{ height: "100%", minHeight: "200px", display: "flex", flexDirection: "column", gap: "8px" }}>
+          <Button
+            disabled={!canEditBanner}
+            variant="contained"
+            sx={{ marginRight: "auto", height: "40px" }}
+            color="secondary"
+            startIcon={<IconSvgs.Image />}
+            onClick={() => bannerInputRef.current && bannerInputRef.current.click()}
+          >
+            Edit Banner
+          </Button>
+          <Button
+            disabled={!canEditAvatar}
+            variant="contained"
+            sx={{ marginRight: "auto", height: "40px" }}
+            color="secondary"
+            startIcon={<IconSvgs.Face />}
+            onClick={() => avatarInputRef.current && avatarInputRef.current.click()}
+          >
+            Edit Avatar
+          </Button>
+          <Box
+            sx={{
+              marginRight: "auto",
+              width: "300px",
+              height: "40px",
+            }}
+          >
+            <Button
+              variant="contained"
+              sx={{
+                minWidth: 0,
+                marginRight: "8px",
+                height: "40px",
+                ".MuiButton-startIcon": {
+                  marginRight: "0px",
+                },
+              }}
+              color="secondary"
+              startIcon={<IconSvgs.Edit />}
+              onClick={() => {
+                let functions = getFunctions(getApp(), "us-central1");
+                const auth = getAuth();
+                const changeBanner = httpsCallable(functions, "changeDisplayName", {});
+                changeBanner({ newDisplayName: displayNameLocal }).then((result) => {
+                  const data = result.data;
+                  //console.log(data);
+                });
+              }}
+            />
+            <TextField onChange={(event) => setDisplayNameLocal(event.target.value)} value={displayNameLocal} label="Nickname" variant="outlined" size="small" />
+          </Box>
+        </Item>
+      </Grid>
+      <Grid xs={12} sm={5} sx={{ display: "flex", justifyContent: "center", flexDirection: "row" }}>
         <CustomCard>
           <Fragment>
-            <input ref={bannerInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeBannerFile} />
-            <input ref={avatarInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeAvatarFile} />
-            <ButtonBase
-              disabled={!(props.user.uid === params.id)}
-              onClick={() => bannerInputRef.current && bannerInputRef.current.click()}
-              style={{ margin: "-8px", height: "75px", width: "345px", outline: "none", border: "none" }}
+            <CardMedia
+              component="img"
+              image={bannerImage}
+              alt={"Error loading banner"}
+              style={{
+                margin: "-8px",
+                height: "75px",
+                width: "345px",
+                outline: "none",
+                border: "none",
+                visibility: bannerImage ? "visible" : "hidden",
+                opacity: props.userDoc?.data()?.bannerChanging == true || uploadingBanner == true ? "0.5" : "1.0",
+              }}
+            />
+            <Box
+              sx={{
+                display: "flex",
+                width: "64px",
+                height: "64px",
+                justifyContent: "center",
+                position: "fixed",
+                visibility: props.userDoc?.data()?.bannerChanging || uploadingBanner == true ? "visible" : "hidden",
+              }}
             >
-              <CardMedia
-                component="img"
-                image={bannerImage}
-                alt={"Error loading banner"}
-                style={{
-                  height: "75px",
-                  width: "345px",
-                  outline: "none",
-                  border: "none",
-                  visibility: bannerImage ? "visible" : "hidden",
-                  opacity: props.userDoc?.data()?.bannerChanging == true || uploadingBanner == true ? "0.5" : "1.0",
-                }}
-              />
-              <Box
-                sx={{
-                  display: "flex",
-                  width: "64px",
-                  height: "64px",
-                  justifyContent: "center",
-                  position: "fixed",
-                  visibility: props.userDoc?.data()?.bannerChanging || uploadingBanner == true ? "visible" : "hidden",
-                }}
-              >
-                <CircularProgress size="64px" />
-              </Box>
-              <Typography style={{ position: "fixed" }} sx={{ color: theme.palette.text.secondary, visibility: canEditBanner ? "visible" : "hidden" }}>
-                Change Banner
-                <br />
-                <IconSvgs.AddAPhoto sx={{ color: theme.palette.text.secondary }} />
-              </Typography>
-            </ButtonBase>
+              <CircularProgress size="64px" />
+            </Box>
           </Fragment>
           <CardHeader
             sx={{ marginTop: "8px" }}
             avatar={
-              <ButtonBase
-                disabled={!(props.user.uid === params.id)}
-                onClick={() => avatarInputRef.current && avatarInputRef.current.click()}
-                style={{ width: "40px", height: "40px", outline: "none", border: "none", borderRadius: "20px" }}
-              >
-                <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
-                  <img
-                    src={avatarImage}
-                    alt={"Error loading avatar"}
-                    style={{
-                      height: "40px",
-                      width: "40px",
-                      position: "fixed",
-                      borderRadius: "20px",
-                      border: "2px solid grey",
-                      visibility: avatarImage ? "visible" : "hidden",
-                      opacity: props.userDoc?.data()?.avatarChanging == true || uploadingAvatar == true ? "0.5" : "1.0",
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      display: "flex",
-                      width: "30px",
-                      justifyContent: "center",
-                      position: "fixed",
-                      visibility: props.userDoc?.data()?.avatarChanging || uploadingAvatar == true ? "visible" : "hidden",
-                    }}
-                  >
-                    <CircularProgress size="30px" />
-                  </Box>
-                  <Typography sx={{ visibility: avatarImage ? "hidden" : "visible" }}>
-                    {props.userDoc
-                      ?.data()
-                      ?.displayName?.split(" ")
-                      ?.map((word) => word[0])
-                      ?.join("")
-                      ?.toUpperCase()}
-                  </Typography>
-                </Avatar>
-              </ButtonBase>
+              <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
+                <img
+                  src={avatarImage}
+                  alt={"Error loading avatar"}
+                  style={{
+                    height: "40px",
+                    width: "40px",
+                    position: "fixed",
+                    borderRadius: "20px",
+                    border: "2px solid grey",
+                    visibility: avatarImage ? "visible" : "hidden",
+                    opacity: props.userDoc?.data()?.avatarChanging == true || uploadingAvatar == true ? "0.5" : "1.0",
+                  }}
+                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    width: "30px",
+                    justifyContent: "center",
+                    position: "fixed",
+                    visibility: props.userDoc?.data()?.avatarChanging || uploadingAvatar == true ? "visible" : "hidden",
+                  }}
+                >
+                  <CircularProgress size="30px" />
+                </Box>
+                <Typography sx={{ visibility: avatarImage ? "hidden" : "visible" }}>
+                  {props.userDoc
+                    ?.data()
+                    ?.displayName?.split(" ")
+                    ?.map((word) => word[0])
+                    ?.join("")
+                    ?.toUpperCase()}
+                </Typography>
+              </Avatar>
             }
             action={
               <IconButton aria-label="settings">
@@ -259,7 +304,7 @@ function ProfileAuthenticated(props) {
           />
           <CardContent>
             <Typography variant="body2" color="text.secondary">
-              certified troller
+              default bio (WIP)
             </Typography>
           </CardContent>
           <CardActions disableSpacing>
@@ -274,9 +319,6 @@ function ProfileAuthenticated(props) {
             </Button>
           </CardActions>
         </CustomCard>
-      </Grid>
-      <Grid xs={8} xsOffset={2}>
-        <Item>{params.id}</Item>
       </Grid>
     </Grid>
   );
