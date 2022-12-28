@@ -2,7 +2,7 @@ import { Divider, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
 import { useContext } from "react";
-import { AuthContext } from "../helpers/customContext";
+import { AuthContext } from "../helpers/usersContext";
 
 function LandingPage(props) {
   const user = useContext(AuthContext);

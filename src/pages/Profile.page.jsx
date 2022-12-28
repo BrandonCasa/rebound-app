@@ -4,7 +4,7 @@ import { styled, useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
 import React, { Fragment, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { AuthContext, UserContext } from "../helpers/customContext";
+import { AuthContext, UserContext } from "../helpers/usersContext";
 import { getStorage, ref, getBlob, listAll } from "firebase/storage";
 import { getFunctions, httpsCallable, HttpsCallableOptions } from "firebase/functions";
 import { getAuth } from "firebase/auth";

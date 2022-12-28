@@ -8,10 +8,11 @@ import ProfilePage from "./pages/Profile.page";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import { AuthContext, AuthProvider, UserContext, UserProvider } from "./helpers/customContext";
+import { AuthContext, AuthProvider, UserContext, UserProvider } from "./helpers/usersContext";
 import darkTheme from "./themes/darkTheme";
 import React from "react";
 import { doc, getFirestore, onSnapshot } from "firebase/firestore";
+import { Provider } from "react-redux";
 
 function App(props) {
   // iconbutton onClick={() => setSettingsDrawerOpen(true)}

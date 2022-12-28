@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { useDropdown } from "../helpers/dropDownHelper";
-import { AuthContext } from "../helpers/customContext";
+import { AuthContext } from "../helpers/usersContext";
 import AccountDropdown from "./AccountDropdown";
 
 const CustomLoginButton = styled(Button)(({ theme }) => ({
