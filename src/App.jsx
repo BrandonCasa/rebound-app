@@ -15,7 +15,6 @@ import { doc, getFirestore, onSnapshot } from "firebase/firestore";
 import { Provider } from "react-redux";
 
 function App(props) {
-  // iconbutton onClick={() => setSettingsDrawerOpen(true)}
   return (
     <AuthProvider>
       <UserProvider>
