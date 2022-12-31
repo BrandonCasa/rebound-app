@@ -13,6 +13,7 @@ import darkTheme from "./themes/darkTheme";
 import React from "react";
 import { doc, getFirestore, onSnapshot } from "firebase/firestore";
 import { Provider } from "react-redux";
+import HomePage from "./pages/Home.page";
 
 function App(props) {
   return (
@@ -26,6 +27,7 @@ function App(props) {
               <Box sx={{ margin: "12px", flexGrow: 1, height: "100%" }}>
                 <Routes>
                   <Route path="/" element={<LandingPage />} />
+                  <Route path="/home" element={<HomePage />} />
                   <Route path="/profile/:id" element={<ProfilePage />} />
                 </Routes>
               </Box>

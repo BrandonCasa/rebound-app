@@ -32,12 +32,13 @@ const CustomCard = styled(Card)(({ theme }) => ({
 function UserProfilePage(props) {
   const [userAuth, userAuthLoading, userAuthError] = useContext(AuthContext);
   const [userDoc, userDocLoading, userDocError] = useContext(UserContext);
+
   let params = useParams();
   let theme = useTheme();
+
   const bannerInputRef = useRef(null);
   const avatarInputRef = useRef(null);
 
-  const [expanded, setExpanded] = React.useState(false);
   const [bannerImage, setBannerImage] = React.useState(undefined);
   const [avatarImage, setAvatarImage] = React.useState(undefined);
   const [uploadingBanner, setUploadingBanner] = React.useState(false);

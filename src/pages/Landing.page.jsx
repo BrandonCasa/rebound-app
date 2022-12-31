@@ -16,7 +16,7 @@ function LandingPage(props) {
   }));
 
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={2} sx={{ display: "flex", width: "auto", justifyContent: "center" }}>
       <Grid xs={8} xsOffset={2}>
         <Item>
           <Typography variant="h3" sx={{ color: "white" }}>
