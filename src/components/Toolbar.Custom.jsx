@@ -1,6 +1,6 @@
 import * as IconSvgs from "@mui/icons-material";
-import { AppBar, Box, Button, IconButton, Toolbar, Typography } from "@mui/material";
-import { alpha, styled } from "@mui/material/styles";
+import { ButtonBase, AppBar, Box, Button, IconButton, Toolbar, Typography } from "@mui/material";
+import { alpha, styled, useTheme } from "@mui/material/styles";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import React from "react";
 import { useContext } from "react";
@@ -89,15 +89,35 @@ function ToolbarUserButton(props) {
 
 function CustomToolbar(props) {
   const [userAuth, userAuthLoading, userAuthError] = useContext(AuthContext);
+  let theme = useTheme();
+  let navigate = useNavigate();
 
   return (
     <React.Fragment>
       <AppBar position="fixed" height="48px">
         <Toolbar variant="dense" disableGutters>
           <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="h6" component="div" sx={{ ml: "24px" }}>
-              Rebound
-            </Typography>
+            <ButtonBase
+              sx={{
+                ml: 2,
+                borderRadius: 1,
+                backgroundColor: `${theme.palette.primary.dark}75`,
+                transition: "background-color 0.1s ease-in-out",
+                "&:hover": {
+                  background: `${theme.palette.primary.dark}`,
+                },
+              }}
+              onClick={() => {
+                if (userAuthLoading) return;
+                if (userAuth?.uid) navigate(`/home/`);
+                else navigate(`/`);
+              }}
+            >
+              <Typography variant="h6" component="div" sx={{ pl: 1, pr: 1 }}>
+                Rebound
+              </Typography>
+              <IconSvgs.Home sx={{ fontSize: 28, color: "white", pr: 1 }} />
+            </ButtonBase>
           </Box>
           <Box sx={{ flexGrow: 1 }}>
             <IconButton sx={{ mr: "24px", padding: "0px", height: "32px", width: "32px", float: "right" }}>

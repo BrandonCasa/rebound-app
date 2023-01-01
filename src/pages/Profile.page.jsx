@@ -117,7 +117,7 @@ function UserProfilePage(props) {
         getBlob(pathReference, undefined)
           .then((blob) => {
             setBannerImage(URL.createObjectURL(blob));
-            console.log("banner updated");
+            //console.log("banner updated");
             //console.log(blob);
           })
           .catch((error) => {
@@ -153,7 +153,7 @@ function UserProfilePage(props) {
         getBlob(pathReference, undefined)
           .then((blob) => {
             setAvatarImage(URL.createObjectURL(blob));
-            console.log("avatar updated");
+            //console.log("avatar updated");
             //console.log(blob);
           })
           .catch((error) => {
