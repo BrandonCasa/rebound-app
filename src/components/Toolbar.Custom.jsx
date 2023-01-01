@@ -57,8 +57,9 @@ function ToolbarUserButton(props) {
       const tokenNew = credential.accessToken;
       // The signed-in user info.
       const userNew = result.user;
+
       accountDropdownState.forceMenuState(false);
-      // ...
+      navigate(`/home/`);
     });
   };
   if (!userAuthLoading && userAuth?.uid) {

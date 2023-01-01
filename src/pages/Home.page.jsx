@@ -7,6 +7,8 @@ import { useDropdown } from "../helpers/dropDownHelper";
 import FriendActivityDropdown from "../components/FriendActivityDropdown";
 import { useRef } from "react";
 import { useEffect } from "react";
+import imgAvatar from "../img_avatar.png";
+import imgOverwatch from "../overwatch.png";
 
 function FriendComponent(props) {
   let theme = useTheme();
@@ -36,7 +38,7 @@ function FriendComponent(props) {
           badgeContent={<div style={{ backgroundColor: "#22cc00", width: "20px", height: "20px", borderRadius: "10px", border: `3px solid ${theme.palette.background.paper}` }} />}
           sx={{ height: "100px", width: "100px" }}
         >
-          <img style={{ height: "100px", width: "100px" }} src="images/img_avatar.png" alt="random" />
+          <img style={{ height: "100px", width: "100px" }} src={imgAvatar} alt="random" />
         </StyledBadge>
       </CardMedia>
       <CardContent
@@ -72,7 +74,7 @@ function FriendComponent(props) {
             bottom: "8px",
           }}
         >
-          <img style={{ height: "30px", width: "30px" }} src="images/overwatch.png" alt="random" />
+          <img style={{ height: "30px", width: "30px" }} src={imgOverwatch} alt="random" />
         </div>
       </CardContent>
     </Friend>
