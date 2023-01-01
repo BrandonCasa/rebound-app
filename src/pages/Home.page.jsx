@@ -83,14 +83,26 @@ function FriendComponent(props) {
 
 function HomePage(props) {
   const user = useContext(AuthContext);
+  let theme = useTheme();
 
   const friendActivityDropdownState = useDropdown();
 
   return (
-    <Grid container spacing={2} sx={{ display: "flex", width: "auto", justifyContent: "center" }}>
-      <Grid xs={12} sm={4} sx={{ display: "flex", flexGrow: 1 }}>
+    <Grid container spacing={2} sx={{ display: "flex", width: "100%", justifyContent: "center" }}>
+      <Grid
+        xs={12}
+        sm={8}
+        md={5}
+        sx={{
+          display: "flex",
+          transition: theme.transitions.create("all", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+          }),
+        }}
+      >
         <ButtonBase
-          sx={{ display: "flex", flexGrow: 1 }}
+          sx={{ display: "flex", flexGrow: 1, width: "100%" }}
           onMouseEnter={(event) => friendActivityDropdownState.handleMenuOpen(event, false)}
           onMouseLeave={() => friendActivityDropdownState.handleMenuClose(false)}
         >

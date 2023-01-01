@@ -9,7 +9,7 @@ import { getFunctions, httpsCallable } from "firebase/functions";
 const CustomPopover = styled(Popover)(({ theme }) => ({
   color: theme.palette.text.primary,
   pointerEvents: "none",
-  marginLeft: "7.5px",
+  marginTop: "7.5px",
   "& .MuiPaper-root": {
     pointerEvents: "auto",
   },
@@ -30,12 +30,12 @@ function FriendActivityDropdown(props) {
       open={props.menuOpened}
       disableRestoreFocus
       anchorOrigin={{
-        vertical: "top",
+        vertical: "bottom",
         horizontal: "right",
       }}
       transformOrigin={{
         vertical: "top",
-        horizontal: "left",
+        horizontal: "right",
       }}
     >
       <List onClick={() => {}} sx={{ color: theme.palette.text.secondary, width: "200px", pt: 0, pb: 0 }}>

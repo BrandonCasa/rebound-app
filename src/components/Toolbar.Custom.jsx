@@ -130,7 +130,7 @@ function CustomToolbar(props) {
           </Box>
         </Toolbar>
       </AppBar>
-      <Toolbar variant="dense" disableGutters />
+      <Toolbar variant="dense" disableGutters height="48px" />
     </React.Fragment>
   );
 }

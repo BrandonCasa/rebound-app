@@ -25,6 +25,7 @@
     "react-redux": "^8.0.1",
     "react-router-dom": "6",
     "react-scripts": "^5.0.1",
+    "react-transition-group": "^4.4.5",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.4.1",
     "use-file-picker": "^1.4.2",

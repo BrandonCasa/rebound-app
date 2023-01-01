@@ -22,9 +22,9 @@ function App(props) {
         <ThemeProvider theme={darkTheme}>
           <CssBaseline />
           <BrowserRouter>
-            <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+            <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
               <CustomToolbar />
-              <Box sx={{ margin: "12px", flexGrow: 1, height: "100%" }}>
+              <Box sx={{ display: "flex", margin: "12px", maxHeight: `calc(100vh - ${48 + 12 + 12}px)`, justifyContent: "center" }}>
                 <Routes>
                   <Route path="/" element={<LandingPage />} />
                   <Route path="/home" element={<HomePage />} />
