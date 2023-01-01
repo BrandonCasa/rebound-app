@@ -232,7 +232,7 @@ function UserProfilePage(props) {
           </Item>
         </Grid>
       )}
-      <Grid xs={12} sm={userDoc?.uid === params.id ? 5 : 12} sx={{ display: "flex", justifyContent: "center", flexDirection: "row" }}>
+      <Grid xs={12} sm={userDoc?.uid === params.id ? 5 : 12} sx={{ display: "flex", justifyContent: userDoc?.uid === params.id ? "right" : "center", flexDirection: "row" }}>
         <CustomCard>
           <Fragment>
             <CardMedia
