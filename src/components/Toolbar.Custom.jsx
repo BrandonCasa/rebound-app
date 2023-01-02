@@ -5,7 +5,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import React from "react";
 import { useContext } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDropdown } from "../helpers/dropDownHelper";
 import { AuthContext } from "../helpers/usersContext";
 import AccountDropdown from "./AccountDropdown";
@@ -40,6 +40,7 @@ const CustomControlCenterButton = styled(IconButton)(({ theme }) => ({
 function ToolbarUserButton(props) {
   const [userAuth, userAuthLoading, userAuthError] = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
   const accountDropdownState = useDropdown("account");
 
   const signOut = () => {
@@ -59,7 +60,9 @@ function ToolbarUserButton(props) {
       const userNew = result.user;
 
       accountDropdownState.forceMenuState(false);
-      navigate(`/home/`);
+      if (location.pathname === "/") {
+        navigate("/home");
+      }
     });
   };
   if (!userAuthLoading && userAuth?.uid) {

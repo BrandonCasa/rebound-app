@@ -88,29 +88,20 @@ function HomePage(props) {
   const friendActivityDropdownState = useDropdown();
 
   return (
-    <Grid container spacing={2} sx={{ display: "flex", width: "100%", justifyContent: "center" }}>
-      <Grid
-        xs={12}
-        sm={8}
-        md={5}
-        sx={{
-          display: "flex",
-          transition: theme.transitions.create("all", {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-          }),
-        }}
-      >
-        <ButtonBase
-          sx={{ display: "flex", flexGrow: 1, width: "100%" }}
-          onMouseEnter={(event) => friendActivityDropdownState.handleMenuOpen(event, false)}
-          onMouseLeave={() => friendActivityDropdownState.handleMenuClose(false)}
-        >
-          <FriendComponent name={"Kannatron"} activity={"Overwatch 2"} status={"Online"} />
-        </ButtonBase>
-        <FriendActivityDropdown {...friendActivityDropdownState} />
-      </Grid>
-    </Grid>
+    <Box sx={{ display: "flex", justifyContent: "center", flexGrow: 1 }}>
+      <Stack spacing={2} sx={{ height: "100%", width: "50%", minWidth: "325px" }}>
+        <Box sx={{ width: "100%" }}>
+          <ButtonBase
+            sx={{ display: "flex", width: "100%" }}
+            onMouseEnter={(event) => friendActivityDropdownState.handleMenuOpen(event, false)}
+            onMouseLeave={() => friendActivityDropdownState.handleMenuClose(false)}
+          >
+            <FriendComponent name={"Kannatron"} activity={"Overwatch 2"} status={"Online"} />
+          </ButtonBase>
+          <FriendActivityDropdown {...friendActivityDropdownState} />
+        </Box>
+      </Stack>
+    </Box>
   );
 }
 export default HomePage;

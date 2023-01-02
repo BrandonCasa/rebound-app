@@ -1,5 +1,5 @@
 import * as IconSvgs from "@mui/icons-material";
-import { TextField, Box, Avatar, Button, ButtonBase, Card, CardActions, CardContent, CardHeader, CardMedia, CircularProgress, IconButton, Paper, Typography } from "@mui/material";
+import { TextField, Box, Avatar, Button, ButtonBase, Card, CardActions, CardContent, CardHeader, CardMedia, CircularProgress, IconButton, Paper, Typography, Stack } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
 import React, { Fragment, useContext } from "react";
@@ -165,167 +165,164 @@ function UserProfilePage(props) {
 
   let canEditBanner = userDoc?.uid === params.id && (props.otherDoc?.bannerChanging == false || props.otherDoc?.bannerChanging == undefined) && uploadingBanner == false;
   let canEditAvatar = userDoc?.uid === params.id && (props.otherDoc?.avatarChanging == false || props.otherDoc?.avatarChanging == undefined) && uploadingAvatar == false;
+  let canEditName = userDoc?.uid === params.id;
 
   return (
-    <Grid container spacing={2} sx={{ display: "flex", width: "auto", justifyContent: "center" }}>
-      <Grid xs={12}>
-        <Item>
+    <Box sx={{ display: "flex", justifyContent: "center", flexGrow: 1, width: "100%", height: "100%" }}>
+      <input ref={bannerInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeBannerFile} />
+      <input ref={avatarInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeAvatarFile} />
+      <Stack direction="column" alignItems="center" spacing={2} sx={{ display: "flex", width: "100%", flexGrow: 1, justifyContent: "start" }}>
+        <Item sx={{ width: "100%" }}>
           <Typography variant="h5">Profile: {props.otherDoc?.displayName}</Typography>
         </Item>
-      </Grid>
-      {userDoc?.uid === params.id && (
-        <Grid xs={12} sm={7}>
-          <input ref={bannerInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeBannerFile} />
-          <input ref={avatarInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeAvatarFile} />
-          <Item sx={{ height: "100%", minHeight: "200px", display: "flex", flexDirection: "column", gap: "8px" }}>
+        <Item sx={{ flexDirection: "column", gap: 1, width: "fit-content", display: userDoc?.uid === params.id ? "flex" : "none" }}>
+          <Button
+            disabled={!canEditBanner}
+            variant="contained"
+            sx={{ marginRight: "auto", height: "40px" }}
+            color="secondary"
+            startIcon={<IconSvgs.Image />}
+            onClick={() => bannerInputRef.current && bannerInputRef.current.click()}
+          >
+            Edit Banner
+          </Button>
+          <Button
+            disabled={!canEditAvatar}
+            variant="contained"
+            sx={{ marginRight: "auto", height: "40px" }}
+            color="secondary"
+            startIcon={<IconSvgs.Face />}
+            onClick={() => avatarInputRef.current && avatarInputRef.current.click()}
+          >
+            Edit Avatar
+          </Button>
+          <Box
+            sx={{
+              marginRight: "auto",
+              height: "40px",
+            }}
+          >
             <Button
-              disabled={!canEditBanner}
+              disabled={!canEditName}
               variant="contained"
-              sx={{ marginRight: "auto", height: "40px" }}
-              color="secondary"
-              startIcon={<IconSvgs.Image />}
-              onClick={() => bannerInputRef.current && bannerInputRef.current.click()}
-            >
-              Edit Banner
-            </Button>
-            <Button
-              disabled={!canEditAvatar}
-              variant="contained"
-              sx={{ marginRight: "auto", height: "40px" }}
-              color="secondary"
-              startIcon={<IconSvgs.Face />}
-              onClick={() => avatarInputRef.current && avatarInputRef.current.click()}
-            >
-              Edit Avatar
-            </Button>
-            <Box
               sx={{
-                marginRight: "auto",
-                width: "300px",
+                minWidth: 0,
+                marginRight: "8px",
                 height: "40px",
+                ".MuiButton-startIcon": {
+                  marginRight: "0px",
+                },
               }}
-            >
-              <Button
-                variant="contained"
-                sx={{
-                  minWidth: 0,
-                  marginRight: "8px",
-                  height: "40px",
-                  ".MuiButton-startIcon": {
-                    marginRight: "0px",
-                  },
-                }}
-                color="secondary"
-                startIcon={<IconSvgs.Edit />}
-                onClick={() => {
-                  let functions = getFunctions(getApp(), "us-central1");
-                  const auth = getAuth();
-                  const changeBanner = httpsCallable(functions, "changeDisplayName", {});
-                  changeBanner({ newDisplayName: displayNameLocal }).then((result) => {
-                    const data = result.data;
-                    //console.log(data);
-                  });
-                }}
-              />
-              <TextField onChange={(event) => setDisplayNameLocal(event.target.value)} value={displayNameLocal} label="Nickname" variant="outlined" size="small" />
-            </Box>
-          </Item>
-        </Grid>
-      )}
-      <Grid xs={12} sm={userDoc?.uid === params.id ? 5 : 12} sx={{ display: "flex", justifyContent: userDoc?.uid === params.id ? "right" : "center", flexDirection: "row" }}>
-        <CustomCard>
-          <Fragment>
-            <CardMedia
-              component="img"
-              image={bannerImage}
-              alt={"Error loading banner"}
-              style={{
-                margin: "-8px",
-                height: "75px",
-                width: "345px",
-                outline: "none",
-                border: "none",
-                visibility: bannerImage ? "visible" : "hidden",
-                opacity: props.otherDoc?.bannerChanging == true || uploadingBanner == true ? "0.5" : "1.0",
+              color="secondary"
+              startIcon={<IconSvgs.Edit />}
+              onClick={() => {
+                let functions = getFunctions(getApp(), "us-central1");
+                const auth = getAuth();
+                const changeBanner = httpsCallable(functions, "changeDisplayName", {});
+                changeBanner({ newDisplayName: displayNameLocal }).then((result) => {
+                  const data = result.data;
+                  //console.log(data);
+                });
               }}
             />
-            <Box
-              sx={{
-                display: "flex",
-                marginTop: "-75px",
-                width: "auto",
-                height: "75px",
-                justifyContent: "center",
-                visibility: props.otherDoc?.bannerChanging || uploadingBanner == true ? "visible" : "hidden",
-              }}
-            >
-              <CircularProgress sx={{ margin: "5.5px" }} size="64px" />
-            </Box>
-          </Fragment>
-          <CardHeader
-            sx={{ marginTop: "8px" }}
-            avatar={
-              <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
-                <img
-                  src={avatarImage}
-                  alt={"Error loading avatar"}
-                  style={{
-                    height: "40px",
-                    width: "40px",
-                    position: "fixed",
-                    borderRadius: "20px",
-                    border: "2px solid grey",
-                    visibility: avatarImage ? "visible" : "hidden",
-                    opacity: props.otherDoc?.avatarChanging == true || uploadingAvatar == true ? "0.5" : "1.0",
-                  }}
-                />
-                <Box
-                  sx={{
-                    display: "flex",
-                    width: "30px",
-                    justifyContent: "center",
-                    position: "fixed",
-                    visibility: props.otherDoc?.avatarChanging || uploadingAvatar == true ? "visible" : "hidden",
-                  }}
-                >
-                  <CircularProgress size="30px" />
-                </Box>
-                <Typography sx={{ visibility: avatarImage ? "hidden" : "visible" }}>
-                  {props.otherDoc?.displayName
-                    ?.split(" ")
-                    ?.map((word) => word[0])
-                    ?.join("")
-                    ?.toUpperCase()}
-                </Typography>
-              </Avatar>
-            }
-            action={
-              <IconButton aria-label="settings">
-                <IconSvgs.MoreVert sx={{ color: theme.palette.text.primary }} />
+            <TextField disabled={!canEditName} onChange={(event) => setDisplayNameLocal(event.target.value)} value={displayNameLocal} label="Nickname" variant="outlined" size="small" />
+          </Box>
+        </Item>
+        <Box>
+          <CustomCard>
+            <Fragment>
+              <CardMedia
+                component="img"
+                image={bannerImage}
+                alt={"Error loading banner"}
+                style={{
+                  margin: "-8px",
+                  height: "75px",
+                  width: "345px",
+                  outline: "none",
+                  border: "none",
+                  visibility: bannerImage ? "visible" : "hidden",
+                  opacity: props.otherDoc?.bannerChanging == true || uploadingBanner == true ? "0.5" : "1.0",
+                }}
+              />
+              <Box
+                sx={{
+                  display: "flex",
+                  marginTop: "-75px",
+                  width: "auto",
+                  height: "75px",
+                  justifyContent: "center",
+                  visibility: props.otherDoc?.bannerChanging || uploadingBanner == true ? "visible" : "hidden",
+                }}
+              >
+                <CircularProgress sx={{ margin: "5.5px" }} size="64px" />
+              </Box>
+            </Fragment>
+            <CardHeader
+              sx={{ marginTop: "8px" }}
+              avatar={
+                <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
+                  <img
+                    src={avatarImage}
+                    alt={"Error loading avatar"}
+                    style={{
+                      height: "40px",
+                      width: "40px",
+                      position: "fixed",
+                      borderRadius: "20px",
+                      border: "2px solid grey",
+                      visibility: avatarImage ? "visible" : "hidden",
+                      opacity: props.otherDoc?.avatarChanging == true || uploadingAvatar == true ? "0.5" : "1.0",
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      width: "30px",
+                      justifyContent: "center",
+                      position: "fixed",
+                      visibility: props.otherDoc?.avatarChanging || uploadingAvatar == true ? "visible" : "hidden",
+                    }}
+                  >
+                    <CircularProgress size="30px" />
+                  </Box>
+                  <Typography sx={{ visibility: avatarImage ? "hidden" : "visible" }}>
+                    {props.otherDoc?.displayName
+                      ?.split(" ")
+                      ?.map((word) => word[0])
+                      ?.join("")
+                      ?.toUpperCase()}
+                  </Typography>
+                </Avatar>
+              }
+              action={
+                <IconButton aria-label="settings">
+                  <IconSvgs.MoreVert sx={{ color: theme.palette.text.primary }} />
+                </IconButton>
+              }
+              title={props.otherDoc?.displayName}
+              subheader={`Joined: ${new Date(props.otherDoc?.creationTime).toLocaleDateString("en-us", { year: "numeric", month: "short", day: "numeric" })}`}
+            />
+            <CardContent>
+              <Typography variant="body2" color="text.secondary">
+                default bio (WIP)
+              </Typography>
+            </CardContent>
+            <CardActions disableSpacing>
+              <IconButton>
+                <IconSvgs.Favorite sx={{ color: theme.palette.text.primary }} />
               </IconButton>
-            }
-            title={props.otherDoc?.displayName}
-            subheader={`Joined: ${new Date(props.otherDoc?.creationTime).toLocaleDateString("en-us", { year: "numeric", month: "short", day: "numeric" })}`}
-          />
-          <CardContent>
-            <Typography variant="body2" color="text.secondary">
-              default bio (WIP)
-            </Typography>
-          </CardContent>
-          <CardActions disableSpacing>
-            <IconButton>
-              <IconSvgs.Favorite sx={{ color: theme.palette.text.primary }} />
-            </IconButton>
-            <IconButton>
-              <IconSvgs.Share sx={{ color: theme.palette.text.primary }} />
-            </IconButton>
-            <Button variant="contained" sx={{ marginLeft: "auto" }}>
-              Add Friend
-            </Button>
-          </CardActions>
-        </CustomCard>
-      </Grid>
-    </Grid>
+              <IconButton>
+                <IconSvgs.Share sx={{ color: theme.palette.text.primary }} />
+              </IconButton>
+              <Button variant="contained" sx={{ marginLeft: "auto" }}>
+                Add Friend
+              </Button>
+            </CardActions>
+          </CustomCard>
+        </Box>
+      </Stack>
+    </Box>
   );
 }
 
