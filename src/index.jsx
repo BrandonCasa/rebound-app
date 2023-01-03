@@ -13,6 +13,8 @@ import App from "./App";
 import isDev from "./helpers/devDetect";
 import "./index.css";
 import { store } from "./store";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+import reportWebVitals from "./reportWebVitals";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCuaPnICOw47KhFAe8VMV-tlGSRVJdSWO0",
@@ -48,3 +50,6 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById("root")
 );
+
+serviceWorkerRegistration.register();
+reportWebVitals();
