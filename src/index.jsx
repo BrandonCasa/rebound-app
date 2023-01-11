@@ -51,6 +51,5 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-// Disabled for now while I theorize about how to make it work
-serviceWorkerRegistration.unregister();
+serviceWorkerRegistration.register();
 reportWebVitals();

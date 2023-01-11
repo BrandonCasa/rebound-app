@@ -1,6 +1,6 @@
 {
   "name": "rebound-app",
-  "version": "0.1.0-alpha",
+  "version": "0.1.001-alpha",
   "private": false,
   "dependencies": {
     "@babel/preset-env": "^7.18.2",
@@ -58,7 +58,9 @@
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
+      "react-app/jest",
+      "prettier",
+      "prettier/react"
     ]
   },
   "browserslist": {

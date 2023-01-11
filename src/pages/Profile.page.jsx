@@ -182,9 +182,99 @@ function UserProfilePage(props) {
       <input ref={bannerInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeBannerFile} />
       <input ref={avatarInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onChangeAvatarFile} />
       <Stack direction="column" alignItems="center" spacing={2} sx={{ display: "flex", width: "100%", flexGrow: 1, justifyContent: "start" }}>
-        <Item sx={{ width: "100%" }}>
-          <Typography variant="h5">Profile: {props.otherDoc?.displayName}</Typography>
-        </Item>
+        <Box>
+          <CustomCard>
+            <Fragment>
+              <CardMedia
+                component="img"
+                image={bannerImage}
+                alt={"Error loading banner"}
+                style={{
+                  margin: "-8px",
+                  height: "75px",
+                  width: "345px",
+                  outline: "none",
+                  border: "none",
+                  visibility: bannerImage ? "visible" : "hidden",
+                  opacity: props.otherDoc?.bannerChanging == true || uploadingBanner == true ? "0.5" : "1.0",
+                }}
+              />
+              <Box
+                sx={{
+                  display: "flex",
+                  marginTop: "-75px",
+                  width: "auto",
+                  height: "75px",
+                  justifyContent: "center",
+                  visibility: props.otherDoc?.bannerChanging || uploadingBanner == true ? "visible" : "hidden",
+                }}
+              >
+                <CircularProgress sx={{ margin: "5.5px" }} size="64px" />
+              </Box>
+            </Fragment>
+            <CardHeader
+              sx={{ marginTop: "8px" }}
+              avatar={
+                <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
+                  <img
+                    src={avatarImage}
+                    alt={"Error loading avatar"}
+                    style={{
+                      height: "40px",
+                      width: "40px",
+                      position: "fixed",
+                      borderRadius: "20px",
+                      border: "2px solid grey",
+                      visibility: avatarImage ? "visible" : "hidden",
+                      opacity: props.otherDoc?.avatarChanging == true || uploadingAvatar == true ? "0.5" : "1.0",
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      width: "30px",
+                      justifyContent: "center",
+                      position: "fixed",
+                      visibility: props.otherDoc?.avatarChanging || uploadingAvatar == true ? "visible" : "hidden",
+                    }}
+                  >
+                    <CircularProgress size="30px" />
+                  </Box>
+                  <Typography sx={{ visibility: avatarImage ? "hidden" : "visible" }}>
+                    {props.otherDoc?.displayName
+                      ?.split(" ")
+                      ?.map((word) => word[0])
+                      ?.join("")
+                      ?.toUpperCase()}
+                  </Typography>
+                </Avatar>
+              }
+              action={
+                <IconButton aria-label="settings">
+                  <IconSvgs.MoreVert sx={{ color: theme.palette.text.primary }} />
+                </IconButton>
+              }
+              title={props.otherDoc?.displayName}
+              subheader={`Joined: ${new Date(props.otherDoc?.creationTime).toLocaleDateString("en-us", { year: "numeric", month: "short", day: "numeric" })}`}
+            />
+            <CardContent>
+              <Typography variant="body2" color="text.secondary">
+                {props.otherDoc?.bio}
+              </Typography>
+            </CardContent>
+            <CardActions disableSpacing>
+              <IconButton>
+                <IconSvgs.Favorite sx={{ color: theme.palette.text.primary }} />
+              </IconButton>
+              <IconButton>
+                <IconSvgs.Share sx={{ color: theme.palette.text.primary }} />
+              </IconButton>
+              <Button variant="contained" sx={{ marginLeft: "auto" }}>
+                Add Friend
+              </Button>
+            </CardActions>
+          </CustomCard>
+        </Box>
         <Item sx={{ flexDirection: "column", gap: 1, width: "50%", minWidth: "fit-content", display: userDoc?.uid === params.id ? "flex" : "none" }}>
           <Button
             disabled={!canEditBanner}
@@ -291,99 +381,6 @@ function UserProfilePage(props) {
             Edit Avatar
           </Button>
         </Item>
-        <Box>
-          <CustomCard>
-            <Fragment>
-              <CardMedia
-                component="img"
-                image={bannerImage}
-                alt={"Error loading banner"}
-                style={{
-                  margin: "-8px",
-                  height: "75px",
-                  width: "345px",
-                  outline: "none",
-                  border: "none",
-                  visibility: bannerImage ? "visible" : "hidden",
-                  opacity: props.otherDoc?.bannerChanging == true || uploadingBanner == true ? "0.5" : "1.0",
-                }}
-              />
-              <Box
-                sx={{
-                  display: "flex",
-                  marginTop: "-75px",
-                  width: "auto",
-                  height: "75px",
-                  justifyContent: "center",
-                  visibility: props.otherDoc?.bannerChanging || uploadingBanner == true ? "visible" : "hidden",
-                }}
-              >
-                <CircularProgress sx={{ margin: "5.5px" }} size="64px" />
-              </Box>
-            </Fragment>
-            <CardHeader
-              sx={{ marginTop: "8px" }}
-              avatar={
-                <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
-                  <img
-                    src={avatarImage}
-                    alt={"Error loading avatar"}
-                    style={{
-                      height: "40px",
-                      width: "40px",
-                      position: "fixed",
-                      borderRadius: "20px",
-                      border: "2px solid grey",
-                      visibility: avatarImage ? "visible" : "hidden",
-                      opacity: props.otherDoc?.avatarChanging == true || uploadingAvatar == true ? "0.5" : "1.0",
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      display: "flex",
-                      width: "30px",
-                      justifyContent: "center",
-                      position: "fixed",
-                      visibility: props.otherDoc?.avatarChanging || uploadingAvatar == true ? "visible" : "hidden",
-                    }}
-                  >
-                    <CircularProgress size="30px" />
-                  </Box>
-                  <Typography sx={{ visibility: avatarImage ? "hidden" : "visible" }}>
-                    {props.otherDoc?.displayName
-                      ?.split(" ")
-                      ?.map((word) => word[0])
-                      ?.join("")
-                      ?.toUpperCase()}
-                  </Typography>
-                </Avatar>
-              }
-              action={
-                <IconButton aria-label="settings">
-                  <IconSvgs.MoreVert sx={{ color: theme.palette.text.primary }} />
-                </IconButton>
-              }
-              title={props.otherDoc?.displayName}
-              subheader={`Joined: ${new Date(props.otherDoc?.creationTime).toLocaleDateString("en-us", { year: "numeric", month: "short", day: "numeric" })}`}
-            />
-            <CardContent>
-              <Typography variant="body2" color="text.secondary">
-                {props.otherDoc?.bio}
-              </Typography>
-            </CardContent>
-            <CardActions disableSpacing>
-              <IconButton>
-                <IconSvgs.Favorite sx={{ color: theme.palette.text.primary }} />
-              </IconButton>
-              <IconButton>
-                <IconSvgs.Share sx={{ color: theme.palette.text.primary }} />
-              </IconButton>
-              <Button variant="contained" sx={{ marginLeft: "auto" }}>
-                Add Friend
-              </Button>
-            </CardActions>
-          </CustomCard>
-        </Box>
       </Stack>
     </Box>
   );
