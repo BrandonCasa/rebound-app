@@ -44,6 +44,7 @@ function UserProfilePage(props) {
   const [uploadingBanner, setUploadingBanner] = React.useState(false);
   const [uploadingAvatar, setUploadingAvatar] = React.useState(false);
   const [displayNameLocal, setDisplayNameLocal] = React.useState(props.otherDoc?.displayName || "");
+  const [userBioLocal, setUserBioLocal] = React.useState(props.otherDoc?.bio || "");
 
   const onChangeBannerFile = (event) => {
     if (bannerInputRef.current.files.length >= 0) {
@@ -128,6 +129,14 @@ function UserProfilePage(props) {
   }, [props.otherDoc?.bannerName, props.otherDoc?.bannerChanging]);
 
   React.useEffect(() => {
+    setDisplayNameLocal(props.otherDoc?.displayName || "");
+  }, [props.otherDoc?.displayName]);
+
+  React.useEffect(() => {
+    setUserBioLocal(props.otherDoc?.bio || "");
+  }, [props.otherDoc?.bio]);
+
+  React.useEffect(() => {
     const storage = getStorage();
 
     // Avatar
@@ -166,6 +175,7 @@ function UserProfilePage(props) {
   let canEditBanner = userDoc?.uid === params.id && (props.otherDoc?.bannerChanging == false || props.otherDoc?.bannerChanging == undefined) && uploadingBanner == false;
   let canEditAvatar = userDoc?.uid === params.id && (props.otherDoc?.avatarChanging == false || props.otherDoc?.avatarChanging == undefined) && uploadingAvatar == false;
   let canEditName = userDoc?.uid === params.id;
+  let canEditBio = userDoc?.uid === params.id;
 
   return (
     <Box sx={{ display: "flex", justifyContent: "center", flexGrow: 1, width: "100%", height: "100%" }}>
@@ -175,31 +185,23 @@ function UserProfilePage(props) {
         <Item sx={{ width: "100%" }}>
           <Typography variant="h5">Profile: {props.otherDoc?.displayName}</Typography>
         </Item>
-        <Item sx={{ flexDirection: "column", gap: 1, width: "fit-content", display: userDoc?.uid === params.id ? "flex" : "none" }}>
+        <Item sx={{ flexDirection: "column", gap: 1, width: "50%", minWidth: "fit-content", display: userDoc?.uid === params.id ? "flex" : "none" }}>
           <Button
             disabled={!canEditBanner}
             variant="contained"
-            sx={{ marginRight: "auto", height: "40px" }}
+            sx={{ marginRight: "auto", height: "40px", width: "35%", minWidth: "fit-content" }}
             color="secondary"
             startIcon={<IconSvgs.Image />}
             onClick={() => bannerInputRef.current && bannerInputRef.current.click()}
           >
             Edit Banner
           </Button>
-          <Button
-            disabled={!canEditAvatar}
-            variant="contained"
-            sx={{ marginRight: "auto", height: "40px" }}
-            color="secondary"
-            startIcon={<IconSvgs.Face />}
-            onClick={() => avatarInputRef.current && avatarInputRef.current.click()}
-          >
-            Edit Avatar
-          </Button>
           <Box
             sx={{
               marginRight: "auto",
               height: "40px",
+              display: "flex",
+              width: "100%",
             }}
           >
             <Button
@@ -218,15 +220,76 @@ function UserProfilePage(props) {
               onClick={() => {
                 let functions = getFunctions(getApp(), "us-central1");
                 const auth = getAuth();
-                const changeBanner = httpsCallable(functions, "changeDisplayName", {});
-                changeBanner({ newDisplayName: displayNameLocal }).then((result) => {
+                const changeDisplayName = httpsCallable(functions, "changeDisplayName", {});
+                changeDisplayName({ newDisplayName: displayNameLocal }).then((result) => {
                   const data = result.data;
                   //console.log(data);
                 });
               }}
             />
-            <TextField disabled={!canEditName} onChange={(event) => setDisplayNameLocal(event.target.value)} value={displayNameLocal} label="Nickname" variant="outlined" size="small" />
+            <TextField
+              sx={{ width: "100%" }}
+              disabled={!canEditName}
+              onChange={(event) => setDisplayNameLocal(event.target.value)}
+              value={displayNameLocal}
+              label="Nickname"
+              variant="outlined"
+              size="small"
+            />
           </Box>
+          <Box
+            sx={{
+              marginRight: "auto",
+              height: "86px",
+              display: "flex",
+              width: "100%",
+            }}
+          >
+            <Button
+              disabled={!canEditBio}
+              variant="contained"
+              sx={{
+                minWidth: 0,
+                marginRight: "8px",
+                height: "86px",
+                ".MuiButton-startIcon": {
+                  marginRight: "0px",
+                },
+              }}
+              color="secondary"
+              startIcon={<IconSvgs.Edit />}
+              onClick={() => {
+                let functions = getFunctions(getApp(), "us-central1");
+                const auth = getAuth();
+                const changeBio = httpsCallable(functions, "changeBio", {});
+                changeBio({ newBio: userBioLocal }).then((result) => {
+                  const data = result.data;
+                  //console.log(data);
+                });
+              }}
+            />
+            <TextField
+              sx={{ width: "100%" }}
+              multiline
+              rows={3}
+              disabled={!canEditBio}
+              onChange={(event) => setUserBioLocal(event.target.value)}
+              value={userBioLocal}
+              label="About Me"
+              variant="outlined"
+              size="small"
+            />
+          </Box>
+          <Button
+            disabled={!canEditAvatar}
+            variant="contained"
+            sx={{ marginRight: "auto", height: "40px", width: "35%", minWidth: "fit-content" }}
+            color="secondary"
+            startIcon={<IconSvgs.Face />}
+            onClick={() => avatarInputRef.current && avatarInputRef.current.click()}
+          >
+            Edit Avatar
+          </Button>
         </Item>
         <Box>
           <CustomCard>
@@ -305,7 +368,7 @@ function UserProfilePage(props) {
             />
             <CardContent>
               <Typography variant="body2" color="text.secondary">
-                default bio (WIP)
+                {props.otherDoc?.bio}
               </Typography>
             </CardContent>
             <CardActions disableSpacing>
