@@ -72,6 +72,7 @@ exports.changeBanner = functions.region("us-central1").https.onCall(async (data,
     // If the user does not exist in Firestore, create the document with default values
     const { displayName, metadata } = await admin.auth().getUser(userId);
     await userRef.set({
+      bio: "Hello! I'm a new user.",
       displayName: displayName,
       uid: userId,
       bannerChanging: true,
@@ -144,6 +145,7 @@ exports.changeAvatar = functions.region("us-central1").https.onCall(async (data,
     // If the user does not exist in Firestore, create the document with default values
     const { displayName, metadata } = await admin.auth().getUser(userId);
     await userRef.set({
+      bio: "Hello! I'm a new user.",
       displayName: displayName,
       uid: userId,
       bannerChanging: false,
@@ -215,6 +217,7 @@ exports.changeDisplayName = functions.region("us-central1").https.onCall(async (
     // If the user does not exist in Firestore, create the document with default values
     const { metadata } = await admin.auth().getUser(userId);
     await userRef.set({
+      bio: "Hello! I'm a new user.",
       displayName: data.newDisplayName,
       uid: userId,
       bannerChanging: false,
