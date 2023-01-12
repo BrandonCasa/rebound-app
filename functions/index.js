@@ -15,17 +15,75 @@ admin.firestore().settings({ ignoreUndefinedProperties: true });
 const storage = admin.storage();
 const bucket = storage.bucket(bucketName);
 
-exports.setupNewUser = functions.auth.user().onCreate(async (user) => {
-  // Create a new user document
-  await admin.firestore().collection("users").doc(user.uid).set({
-    displayName: user.displayName,
-    uid: user.uid,
+const defaultUser = {
+  baseValues: ["displayName", "uid", "creationTime"],
+  newValues: {
     bannerChanging: false,
     bannerName: null,
     avatarChanging: false,
     avatarName: null,
-    creationTime: user.metadata.creationTime,
-  });
+    bio: "Hello! I'm a new user.",
+  },
+};
+
+async function checkUserExists(userId, newUser) {
+  // Setup variables
+  let newName = undefined;
+  let newMeta = undefined;
+  if (newUser !== null) {
+    newName = newUser.displayName;
+    newMeta = newUser.metadata;
+  } else {
+    newName = null;
+    newMeta = null;
+  }
+
+  // Check if the user exists
+  const userRef = admin.firestore().collection("users").doc(userId);
+  if (!(await userRef.get()).exists) {
+    // If the user doesn't exist, create the document with default values
+    let formedUser = {
+      displayName: newName || userId,
+      uid: userId,
+      creationTime: newMeta?.creationTime || new Date().toISOString(),
+    };
+    Object.keys(defaultUser.newValues).forEach(async (key) => {
+      formedUser[key] = defaultUser.newValues[key];
+    });
+    await userRef.set({
+      ...formedUser,
+    });
+  } else {
+    // If the user does exists, check if all the default values are present
+    const userDoc = await userRef.get();
+    const data = userDoc.data();
+    let formedUser = {};
+    if (!data["displayName"]) {
+      formedUser.displayName = newName || userId;
+    }
+    if (!data["creationTime"]) {
+      formedUser.creationTime = newMeta?.creationTime || new Date().toISOString();
+    }
+    if (!data["uid"]) {
+      formedUser.uid = userId;
+    }
+    Object.keys(defaultUser.newValues).forEach((key) => {
+      if (!data[key]) {
+        formedUser[key] = defaultUser.newValues[key];
+      }
+    });
+    if (Object.keys(formedUser).length > 0) {
+      await userRef.update({
+        ...formedUser,
+      });
+    }
+  }
+  return await userRef.get();
+}
+
+exports.setupNewUser = functions.auth.user().onCreate(async (user) => {
+  // Create a new user document
+  await checkUserExists(user.uid, user);
   return;
 });
 
@@ -59,29 +117,14 @@ exports.changeBanner = functions.region("us-central1").https.onCall(async (data,
   }
 
   const userId = context.auth.uid;
+  const userDoc = await checkUserExists(userId, null);
   const userRef = admin.firestore().collection("users").doc(userId);
-  let userDoc = await userRef.get();
 
   // Update the user's banner to "changing"
-  if (userDoc.exists) {
-    await userRef.update({
-      bannerChanging: true,
-      bannerName: null,
-    });
-  } else {
-    // If the user does not exist in Firestore, create the document with default values
-    const { displayName, metadata } = await admin.auth().getUser(userId);
-    await userRef.set({
-      bio: "Hello! I'm a new user.",
-      displayName: displayName,
-      uid: userId,
-      bannerChanging: true,
-      bannerName: null,
-      avatarChanging: false,
-      avatarName: null,
-      creationTime: metadata.creationTime,
-    });
-  }
+  await userRef.update({
+    bannerChanging: true,
+    bannerName: null,
+  });
 
   // Delete the old banner if it exists
   let files = await bucket.getFiles({ directory: `users/${userId}/banner/` });
@@ -132,27 +175,14 @@ exports.changeAvatar = functions.region("us-central1").https.onCall(async (data,
   }
 
   const userId = context.auth.uid;
+  const userDoc = await checkUserExists(userId, null);
   const userRef = admin.firestore().collection("users").doc(userId);
-  let userDoc = await userRef.get();
 
   // Update the user's avatar to "changing"
   if (userDoc.exists) {
     await userRef.update({
       avatarChanging: true,
       avatarName: null,
-    });
-  } else {
-    // If the user does not exist in Firestore, create the document with default values
-    const { displayName, metadata } = await admin.auth().getUser(userId);
-    await userRef.set({
-      bio: "Hello! I'm a new user.",
-      displayName: displayName,
-      uid: userId,
-      bannerChanging: false,
-      bannerName: null,
-      avatarChanging: true,
-      avatarName: null,
-      creationTime: metadata.creationTime,
     });
   }
 
@@ -205,26 +235,13 @@ exports.changeDisplayName = functions.region("us-central1").https.onCall(async (
   }
 
   const userId = context.auth.uid;
+  const userDoc = await checkUserExists(userId, null);
   const userRef = admin.firestore().collection("users").doc(userId);
-  const userDoc = await userRef.get();
 
   // Update the user's display name
   if (userDoc.exists) {
     await userRef.update({
       displayName: data.newDisplayName,
-    });
-  } else {
-    // If the user does not exist in Firestore, create the document with default values
-    const { metadata } = await admin.auth().getUser(userId);
-    await userRef.set({
-      bio: "Hello! I'm a new user.",
-      displayName: data.newDisplayName,
-      uid: userId,
-      bannerChanging: false,
-      bannerName: null,
-      avatarChanging: false,
-      avatarName: null,
-      creationTime: metadata.creationTime,
     });
   }
 
@@ -243,25 +260,13 @@ exports.changeBio = functions.region("us-central1").https.onCall(async (data, co
   }
 
   const userId = context.auth.uid;
+  const userDoc = await checkUserExists(userId, null);
   const userRef = admin.firestore().collection("users").doc(userId);
-  const userDoc = await userRef.get();
 
   // Update the user's bio
   if (userDoc.exists) {
     await userRef.update({
       bio: data.newBio,
-    });
-  } else {
-    // If the user does not exist in Firestore, create the document with default values
-    const { metadata } = await admin.auth().getUser(userId);
-    await userRef.set({
-      bio: data.newBio,
-      uid: userId,
-      bannerChanging: false,
-      bannerName: null,
-      avatarChanging: false,
-      avatarName: null,
-      creationTime: metadata.creationTime,
     });
   }
 
