@@ -23,6 +23,7 @@ const defaultUser = {
     avatarChanging: false,
     avatarName: null,
     bio: "Hello! I'm a new user.",
+    friends: [],
   },
 };
 
@@ -268,6 +269,45 @@ exports.changeBio = functions.region("us-central1").https.onCall(async (data, co
     await userRef.update({
       bio: data.newBio,
     });
+  }
+
+  return "Complete";
+});
+
+exports.addFriend = functions.region("us-central1").https.onCall(async (data, context) => {
+  // Verify that the function is called while authenticated
+  if (!context.auth) {
+    throw new functions.https.HttpsError("unauthenticated", "The function must be called while authenticated.");
+  }
+
+  // Verify that a friendID is provided
+  if (!data.friendID) {
+    throw new functions.https.HttpsError("invalid-argument", "The function must be called with a friend ID to add.");
+  }
+
+  const userId = context.auth.uid;
+  const userDoc = await checkUserExists(userId, null);
+  const userRef = admin.firestore().collection("users").doc(userId);
+
+  // Update the user's friends list
+  if (userDoc.exists) {
+    let oldFriends = userDoc.data()?.friends || [];
+
+    // Check if the friend being added exists
+    const friendRef = admin.firestore().collection("users").doc(data.friendID);
+    if (!(await friendRef.get()).exists) {
+      throw new functions.https.HttpsError("not-found", "The friend you are trying to add does not exist.");
+    } else {
+      // Add the friend if they aren't already friends
+      if (oldFriends.includes(data.friendID)) {
+        throw new functions.https.HttpsError("already-exists", "The user is already friends with the provided friend ID.");
+      } else {
+        oldFriends.push(data.friendID);
+        await userRef.update({
+          friends: oldFriends,
+        });
+      }
+    }
   }
 
   return "Complete";

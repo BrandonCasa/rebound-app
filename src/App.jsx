@@ -14,6 +14,7 @@ import React from "react";
 import { doc, getFirestore, onSnapshot } from "firebase/firestore";
 import { Provider } from "react-redux";
 import HomePage from "./pages/Home.page";
+import FriendHubPage from "./pages/FriendHubPage.page";
 
 function App(props) {
   return (
@@ -28,6 +29,7 @@ function App(props) {
                 <Routes>
                   <Route path="/" element={<LandingPage />} />
                   <Route path="/home" element={<HomePage />} />
+                  <Route path="/friendhub" element={<FriendHubPage />} />
                   <Route path="/profile/:id" element={<ProfilePage />} />
                 </Routes>
               </Box>
