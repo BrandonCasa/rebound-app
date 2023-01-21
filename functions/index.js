@@ -300,7 +300,7 @@ exports.addFriend = functions.region("us-central1").https.onCall(async (data, co
     } else {
       // Add the friend if they aren't already friends
       if (oldFriends.includes(data.friendID)) {
-        throw new functions.https.HttpsError("already-exists", "The user is already friends with the provided friend ID.");
+        throw new functions.https.HttpsError("already-exists", "The user is already friends with the provided user ID.");
       } else {
         oldFriends.push(data.friendID);
         await userRef.update({
