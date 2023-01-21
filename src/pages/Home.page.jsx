@@ -87,21 +87,20 @@ function HomePage(props) {
 
   const friendActivityDropdownState = useDropdown();
 
-  return (
-    <Box sx={{ display: "flex", justifyContent: "center", flexGrow: 1 }}>
-      <Stack spacing={2} sx={{ height: "100%", width: "50%", minWidth: "325px" }}>
-        <Box sx={{ width: "100%" }}>
-          <ButtonBase
-            sx={{ display: "flex", width: "100%" }}
-            onMouseEnter={(event) => friendActivityDropdownState.handleMenuOpen(event, false)}
-            onMouseLeave={() => friendActivityDropdownState.handleMenuClose(false)}
-          >
-            <FriendComponent name={"Kannatron"} activity={"Overwatch 2"} status={"Online"} />
-          </ButtonBase>
-          <FriendActivityDropdown {...friendActivityDropdownState} />
-        </Box>
-      </Stack>
-    </Box>
-  );
+  return <Box sx={{ display: "flex", justifyContent: "center", flexGrow: 1, width: "100%", height: "100%" }}>xd</Box>;
 }
 export default HomePage;
+/*
+<Stack spacing={2} sx={{ height: "100%", width: "50%", minWidth: "325px" }}>
+  <Box sx={{ width: "100%" }}>
+    <ButtonBase
+      sx={{ display: "flex", width: "100%" }}
+      onMouseEnter={(event) => friendActivityDropdownState.handleMenuOpen(event, false)}
+      onMouseLeave={() => friendActivityDropdownState.handleMenuClose(false)}
+    >
+      <FriendComponent name={"Kannatron"} activity={"Overwatch 2"} status={"Online"} />
+    </ButtonBase>
+    <FriendActivityDropdown {...friendActivityDropdownState} />
+  </Box>
+</Stack>
+*/
