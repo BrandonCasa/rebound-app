@@ -7,9 +7,9 @@ import { useDropdown } from "../helpers/dropDownHelper";
 import FriendActivityDropdown from "../components/FriendActivityDropdown";
 
 function FriendHubPage(props) {
-  const user = useContext(AuthContext);
+  let user = useContext(AuthContext);
   let theme = useTheme();
 
-  return <Box sx={{ display: "flex", justifyContent: "center", flexGrow: 1 }}>xd</Box>;
+  return <Box sx={{ display: "flex", justifyContent: "center", flexGrow: 1, width: "100%", height: "100%" }}>xd</Box>;
 }
 export default FriendHubPage;
