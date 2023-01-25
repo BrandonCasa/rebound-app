@@ -30,7 +30,7 @@ export async function register(req, res) {
 // A method to login a user and return their data
 export async function login(req, res) {
   try {
-    passport.authenticate("local", (err, user, info) => {
+    passport.authenticate("local", { successReturnToOrRedirect: '/home', failureRedirect: '/login' }, (err, user, info) => {
       if (err) { throw new Error(err); }
       if (!user) { return res.status(400).json({ msg: info.message }); }
       req.login(user, (err) => {

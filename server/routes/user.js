@@ -10,6 +10,9 @@ const router = express.Router();
 router.get("/profile/:userId", getUser);
 
 // Update
+router.get("/checklogin", verifyToken, (req, res) => {
+  return res.send(req.user);
+});
 router.get("/me/changename", verifyToken, setDisplayName);
 router.get("/me/changeaboutme", verifyToken, setAboutMe);
 router.get("/me/changeinterests", verifyToken, setInterests);
