@@ -25,7 +25,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "nodemon server.js"
+    "serve": "nodemon server.js",
+    "connect": "ssh -i rebound_server.pk -L 27017:127.0.0.1:27017 ubuntu@ec2-44-194-181-255.compute-1.amazonaws.com"
   },
   "keywords": [],
   "author": "",
