@@ -74,7 +74,7 @@ app.use("/user", userRoutes);
 
 // Mongoose Setup
 const PORT = process.env.PORT || 6001;
-mongoose.connect(process.env.MONGO_URL, {
+mongoose.connect("mongodb://localhost:27017/rebound?retryWrites=true&w=majority&authSource=rebound", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => {
