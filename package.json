@@ -21,11 +21,11 @@
   },
   "name": "server",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "./src/server.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "nodemon server.js",
+    "serve": "nodemon ./src/server.js",
     "connect": "ssh -i ./keys/rebound_server.pk -L 27017:127.0.0.1:27017 ubuntu@ec2-44-194-181-255.compute-1.amazonaws.com"
   },
   "keywords": [],
@@ -33,6 +33,7 @@
   "license": "GNU AFFERO GPLV3",
   "description": "Server of Rebound",
   "devDependencies": {
-    "prettier": "^2.8.3"
+    "prettier": "^2.8.3",
+    "rimraf": "^4.1.2"
   }
 }
