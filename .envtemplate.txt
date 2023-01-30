@@ -3,3 +3,5 @@
 MONGO_URL="mongodb://localhost:27017/rebound?retryWrites=true&w=majority&authSource=rebound"
 PORT=6001
 SECRET="test_secret"
+DB_USER="test_user"
+DB_PASS="test_pass"
