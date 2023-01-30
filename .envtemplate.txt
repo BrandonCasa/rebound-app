@@ -1,0 +1,5 @@
+// Note, this is a template file. You should copy this file to .env and src/.env and fill in the values for your environment Also remove line 1 and 2 of this template.
+
+MONGO_URL="mongodb://localhost:27017/rebound?retryWrites=true&w=majority&authSource=rebound"
+PORT=6001
+SECRET="test_secret"
