@@ -80,7 +80,8 @@ mongoose.connect("mongodb://localhost:27017/rebound?retryWrites=true&w=majority&
   useNewUrlParser: true,
   useUnifiedTopology: true,
   user: process.env.DB_USER,
-  pass: process.env.DB_PASS
+  pass: process.env.DB_PASS,
+  authSource: "admin"
 }).then(() => {
   app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`);
