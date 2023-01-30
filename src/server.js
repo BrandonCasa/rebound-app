@@ -16,6 +16,7 @@ import passport from "passport";
 import session from "express-session";
 import LocalStrategy from "passport-local";
 import { User } from "./models/User.js";
+import cookieParser from "cookie-parser";
 
 // Configurations
 const __filename = fileURLToPath(import.meta.url);
@@ -41,9 +42,9 @@ app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
-app.use(express.cookieParser(process.env.SECRET));
+app.use(cookieParser(process.env.SECRET));
 app.use(session({
-  resave: false,
+  resave: true,
   saveUninitialized: true,
   secret: process.env.SECRET
 }));
