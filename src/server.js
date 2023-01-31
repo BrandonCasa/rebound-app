@@ -68,11 +68,11 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 // Routes With Files
-app.post("/auth/register", upload.single("picture"), register);
+app.post("/api/auth/register", upload.single("picture"), register);
 
 // Routes
-app.use("/auth", authRoutes);
-app.use("/user", userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
 
 // Mongoose Setup
 const PORT = process.env.PORT || 6001;
