@@ -1,8 +1,0 @@
-{
-  "compilerOptions": {
-    "jsx": "preserve",
-    "strictNullChecks": true,
-    "strictFunctionTypes": true
-  },
-  "exclude": ["node_modules", "**/node_modules/*"]
-}
