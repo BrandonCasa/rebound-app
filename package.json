@@ -1,9 +1,7 @@
 {
-  "name": "rebound-client",
+  "name": "rebound-app",
   "version": "0.1.0",
   "private": true,
-  "description": "Website for Rebound",
-  "proxy": "http://localhost:6001",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -16,7 +14,9 @@
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -43,8 +43,5 @@
     ]
   },
   "author": "Brandon Casamichana",
-  "license": "GNU AFFERO GPLV3",
-  "devDependencies": {
-    "electron": "^22.2.0"
-  }
+  "license": "GNU AFFERO GPLV3"
 }
